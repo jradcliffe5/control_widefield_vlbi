@@ -23,18 +23,6 @@ ctrl_file = {}
 for i in ["exper_name","cross_polarize","number_channels","slices_per_integration","setup_station","integr_time","message_level","slices_per_integration","LO_offset","multi_phase_center","sub_integr_time","fft_size_correlation"]:
     ctrl_file[i] = ast.literal_eval(inputs[i])
 
-if ast.literal_eval(inputs['delay_directory']) == "":
-	rmdirs(["%s/%s_delays"%(o_dir,ast.literal_eval(inputs["exper_name"]))])
-	os.mkdir("%s/%s_delays"%(o_dir,ast.literal_eval(inputs["exper_name"])))
-	ctrl_file["delay_directory"] = "file://%s/%s_delays"%(o_dir,ast.literal_eval(inputs["exper_name"]))
-else:
-	ctrl_file["delay_directory"] = "file://%s/%s"%(o_dir,ast.literal_eval(inputs["delay_directory"]))
-	
-if ast.literal_eval(inputs['tsys_file']) == "":
-	ctrl_file["tsys_file"] = "file://%s/%s.tsys"%(o_dir,ast.literal_eval(inputs["exper_name"]))
-else:
-	ctrl_file["tsys_file"] = "file://%s/%s"%(o_dir,ast.literal_eval(inputs["tsys_file"]))
-
 if ast.literal_eval(inputs['output_file']) == "":
 	ctrl_file["output_file"] = "file://%s/%s.corr"%(o_dir,ast.literal_eval(inputs["exper_name"]))
 else:
@@ -91,26 +79,50 @@ def find_stop(dt,scan_length):
 print(ss)
 if ast.literal_eval(inputs['parallelise_scans']) == True:
 	for i in ss.keys():
-		sub_ctrl = ctrl_file.copy()
 		scan_c = i.capitalize()
+		sub_ctrl = ctrl_file.copy()
+		rmdirs(["%s/%s"%(o_dir,scan_c)])
+		os.mkdir("%s/%s"%(o_dir,scan_c))
+		os.mkdir("%s/%s/%s_delays"%(o_dir,scan_c,ctrl_file["exper_name"]))
+		sub_ctrl["delay_directory"] = "file://%s/%s/%s_delays"%(o_dir,scan_c,ctrl_file["exper_name"])
+		sub_ctrl["tsys_file"] = "file://%s/%s/%s.tsys"%(o_dir,scan_c,ctrl_file["exper_name"])
 		sub_ctrl['scans']=[scan_c]
 		sub_ctrl['start']=vexfile['SCHED'][scan_c]['start']
 		scan_length = int(vexfile['SCHED'][scan_c]["station"][2].split(" sec")[0])
 		sub_ctrl['stop']=find_stop(vexfile['SCHED'][scan_c]['start'],scan_length)
-
+		sub_ctrl['stations'] = ss[i]
+		data_sources = {}
+		for k,j in enumerate(ss[i]):
+			if j in data_sources:
+				data_sources[j] = data_sources[j]+['file://%s/%s'%(bb_loc,ss_s[i][k])]
+			else:
+				data_sources[j] = ['file://%s/%s'%(bb_loc,ss_s[i][k])]
+		sub_ctrl['data_sources'] = data_sources
+		rmfiles(["%s/%s/%s.%s.ctrl"%(o_dir,scan_c,ctrl_file["exper_name"],scan_c)]
+		with open("%s/%s/%s.%s.ctrl"%(o_dir,scan_c,ctrl_file["exper_name"],scan_c), "w") as outfile:
+			json.dump(sub_ctrl, outfile, indent=4)
 else:
 	data_sources = {}
+	if ast.literal_eval(inputs['delay_directory']) == "":
+		rmdirs(["%s/%s_delays"%(o_dir,ctrl_file["exper_name"])])
+		os.mkdir("%s/%s_delays"%(o_dir,ctrl_file["exper_name"]))
+		ctrl_file["delay_directory"] = "file://%s/%s_delays"%(o_dir,ctrl_file["exper_name"])
+	else:
+		ctrl_file["delay_directory"] = "file://%s/%s"%(o_dir,ctrl_file["exper_name"])
+	if ast.literal_eval(inputs['tsys_file']) == "":
+		ctrl_file["tsys_file"] = "file://%s/%s.tsys"%(o_dir,ctrl_file["exper_name"])
+	else:
+		ctrl_file["tsys_file"] = "file://%s/%s"%(o_dir,ctrl_file["exper_name"])
 	for i in ss.keys():
 		for k,j in enumerate(ss[i]):
 			if j in data_sources:
 				data_sources[j] = data_sources[j]+['file://%s/%s'%(bb_loc,ss_s[i][k])]
-				ctrl_file['start']=vexfile['SCHED'][i.capitalize()]['start']
 			else:
 				data_sources[j] = ['file://%s/%s'%(bb_loc,ss_s[i][k])]
+				ctrl_file['start']=vexfile['SCHED'][i.capitalize()]['start']
 	scan_length = int(vexfile['SCHED'][i.capitalize()]["station"][2].split(" sec")[0])
 	ctrl_file['stop']=find_stop(vexfile['SCHED'][i.capitalize()]['start'],scan_length)
 	ctrl_file['data_sources'] = data_sources
-
 
 	rmfiles(["%s.ctrl"%ast.literal_eval(inputs['exper_name'])])
 	with open("%s.ctrl"%ast.literal_eval(inputs['exper_name']), "w") as outfile:

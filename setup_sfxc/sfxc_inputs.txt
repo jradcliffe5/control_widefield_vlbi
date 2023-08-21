@@ -11,7 +11,7 @@ vex_file="ek051e.vix"
 
 #### CORRELATOR CONFIGURATION ####
 correlator="sfxc"
-parallelise_scans=False
+parallelise_scans=True
 ##################################
 
 #### OUTPUTS ####
