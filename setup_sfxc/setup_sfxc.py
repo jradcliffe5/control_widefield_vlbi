@@ -23,10 +23,6 @@ ctrl_file = {}
 for i in ["exper_name","cross_polarize","number_channels","slices_per_integration","setup_station","integr_time","message_level","slices_per_integration","LO_offset","multi_phase_center","sub_integr_time","fft_size_correlation"]:
     ctrl_file[i] = ast.literal_eval(inputs[i])
 
-if ast.literal_eval(inputs['output_file']) == "":
-	ctrl_file["output_file"] = "file://%s/%s.corr"%(o_dir,ast.literal_eval(inputs["exper_name"]))
-else:
-	ctrl_file["output_file"] = "file://%s/%s"%(o_dir,ast.literal_eval(inputs["output_file"]))
 ########################
 
 #### MAKE CHANNELS #####
@@ -86,6 +82,7 @@ if ast.literal_eval(inputs['parallelise_scans']) == True:
 		os.mkdir("%s/%s/%s_delays"%(o_dir,scan_c,ctrl_file["exper_name"]))
 		sub_ctrl["delay_directory"] = "file://%s/%s/%s_delays"%(o_dir,scan_c,ctrl_file["exper_name"])
 		sub_ctrl["tsys_file"] = "file://%s/%s/%s.tsys"%(o_dir,scan_c,ctrl_file["exper_name"])
+		sub_ctrl['output_file'] = "file://%s/%s/%s.%s.cor"%(o_dir,scan_c,ctrl_file["exper_name"],scan_c)
 		sub_ctrl['scans']=[scan_c]
 		sub_ctrl['start']=vexfile['SCHED'][scan_c]['start']
 		scan_length = int(vexfile['SCHED'][scan_c]["station"][2].split(" sec")[0])
@@ -113,6 +110,10 @@ else:
 		ctrl_file["tsys_file"] = "file://%s/%s.tsys"%(o_dir,ctrl_file["exper_name"])
 	else:
 		ctrl_file["tsys_file"] = "file://%s/%s"%(o_dir,ctrl_file["exper_name"])
+	if ast.literal_eval(inputs['output_file']) == "":
+		ctrl_file["output_file"] = "file://%s/%s.cor"%(o_dir,ast.literal_eval(inputs["exper_name"]))
+	else:
+		ctrl_file["output_file"] = "file://%s/%s"%(o_dir,ast.literal_eval(inputs["output_file"]))
 	for i in ss.keys():
 		for k,j in enumerate(ss[i]):
 			if j in data_sources:
