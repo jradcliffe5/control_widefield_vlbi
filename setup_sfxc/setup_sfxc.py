@@ -120,7 +120,7 @@ else:
 	else:
 		ctrl_file["output_file"] = "file://%s/%s"%(o_dir,ast.literal_eval(inputs["output_file"]))
 	for i in ss.keys():
-		if ctrl_file['multi_phase_center'] = "auto":
+		if ctrl_file['multi_phase_center'] == "auto":
 			if len(vexfile['SCHED'][i.capitalize()]['source']) > 1:
 				ctrl_file['multi_phase_center'] = True
 			else:
@@ -131,7 +131,7 @@ else:
 			else:
 				data_sources[j] = ['file://%s/%s'%(bb_loc,ss_s[i][k])]
 				ctrl_file['start']=vexfile['SCHED'][i.capitalize()]['start']
-	if ctrl_file['multi_phase_center'] = "auto":
+	if ctrl_file['multi_phase_center'] == "auto":
 		ctrl_file['multi_phase_center'] = False
 	scan_length = int(vexfile['SCHED'][i.capitalize()]["station"][2].split(" sec")[0])
 	ctrl_file['stop']=find_stop(vexfile['SCHED'][i.capitalize()]['start'],scan_length)
