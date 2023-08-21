@@ -99,7 +99,7 @@ if ast.literal_eval(inputs['parallelise_scans']) == True:
 		rmfiles(["%s/%s/%s.%s.ctrl"%(o_dir,scan_c,ctrl_file["exper_name"],scan_c)])
 		with open("%s/%s/%s.%s.ctrl"%(o_dir,scan_c,ctrl_file["exper_name"],scan_c), "w") as outfile:
 			json.dump(sub_ctrl, outfile, indent=4)
-		commands.append('%s %s/%s/%s.%s.ctrl %s > %s/sfxc_run.stdout 2> %s/sfxc_run.err'%(sfxc_exec,o_dir,scan_c,ctrl_file["exper_name"],scan_c,ast.literal_eval(inputs["vex_file"]),o_dir,o_dir))
+		commands.append('%s %s/%s/%s.%s.ctrl %s > %s/sfxc_run.stdout 2> %s/sfxc_run.stderr'%(sfxc_exec,o_dir,scan_c,ctrl_file["exper_name"],scan_c,ast.literal_eval(inputs["vex_file"]),o_dir,o_dir))
 		for j in vexfile['SCHED'][scan_c]['source']:
 			if j == ast.literal_eval(inputs["calibrator_target"]):
 				if ctrl_file["exper_name"] in list(corr_files.keys()):
