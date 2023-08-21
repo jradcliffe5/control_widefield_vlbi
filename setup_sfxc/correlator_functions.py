@@ -1,9 +1,15 @@
-import os, sys, json, ast, inspect, re
+import os, glob, re, datetime
+
 def flatten_extend(matrix):
     flat_list = []
     for row in matrix:
         flat_list.extend(row)
     return flat_list
+
+def write_job(step,commands,job_manager):
+	with open('./job_%s.%s'%(step,job_manager), 'a') as filehandle:
+			for listitem in commands:
+				filehandle.write('%s\n' % listitem)
 
 def rmfiles(files):
 	for i in files:
@@ -67,3 +73,9 @@ def headless(inputfile):
 			else:
 				control[param] = ','.join(valuelist)
 	return control
+
+def find_stop(dt,scan_length):
+	dateformat = '%Yy%jd%Hh%Mm%Ss'
+	dt = datetime.datetime.strptime(dt,dateformat)
+	dt = dt + datetime.timedelta(seconds=scan_length)
+	return dt.strftime(dateformat)

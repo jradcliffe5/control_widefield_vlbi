@@ -64,13 +64,7 @@ for i in list(ss.keys()):
     scans.append(i.capitalize())
 ctrl_file['scans']=scans
 
-import datetime
-def find_stop(dt,scan_length):
-	dateformat = '%Yy%jd%Hh%Mm%Ss'
-	dt = datetime.datetime.strptime(dt,dateformat)
-	dt = dt + datetime.timedelta(seconds=scan_length)
-	return dt.strftime(dateformat)
-
+commands = []
 if ast.literal_eval(inputs['parallelise_scans']) == True:
 	os.mkdir("%s/%s_delays"%(o_dir,ctrl_file["exper_name"]))
 	for i in ss.keys():
@@ -103,6 +97,8 @@ if ast.literal_eval(inputs['parallelise_scans']) == True:
 		rmfiles(["%s/%s/%s.%s.ctrl"%(o_dir,scan_c,ctrl_file["exper_name"],scan_c)])
 		with open("%s/%s/%s.%s.ctrl"%(o_dir,scan_c,ctrl_file["exper_name"],scan_c), "w") as outfile:
 			json.dump(sub_ctrl, outfile, indent=4)
+		commands.append('%s %s/%s/%s.%s.ctrl %s'%(sfxc_exec,o_dir,scan_c,ctrl_file["exper_name"],scan_c,ast.literal_eval(inputs["vex_file"])))
+	write_job(step='run_sfxc',commands=commands,job_manager='bash')
 else:
 	data_sources = {}
 	if ast.literal_eval(inputs['delay_directory']) == "":

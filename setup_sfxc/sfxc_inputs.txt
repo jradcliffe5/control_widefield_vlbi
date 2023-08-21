@@ -7,7 +7,7 @@ exper_name="EK051E"
 baseband_location="/home/Jack/DATA/EK051E/baseband"
 output_dir="/DATA/radcliffe/EK051E"
 vex_file="ek051e.vix"
-sfxc_exec="mpirun -n 80 /EXEC/IPP_SFXC/bin/sfxc"
+sfxc_exec="mpirun -n 32 /EXEC/IPP_SFXC/bin/sfxc"
 #########################
 
 #### CORRELATOR CONFIGURATION ####
@@ -31,7 +31,7 @@ correlator_channels=16
 setup_station="Ef"
 LO_offset={}
 message_level=1
-####################
+###########################
 
 #### MULTI PHASE CENTRE ####
 multi_phase_center="auto"
