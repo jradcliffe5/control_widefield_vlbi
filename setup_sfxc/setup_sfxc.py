@@ -98,7 +98,7 @@ if ast.literal_eval(inputs['parallelise_scans']) == True:
 			else:
 				data_sources[j] = ['file://%s/%s'%(bb_loc,ss_s[i][k])]
 		sub_ctrl['data_sources'] = data_sources
-		rmfiles(["%s/%s/%s.%s.ctrl"%(o_dir,scan_c,ctrl_file["exper_name"],scan_c)]
+		rmfiles(["%s/%s/%s.%s.ctrl"%(o_dir,scan_c,ctrl_file["exper_name"],scan_c)])
 		with open("%s/%s/%s.%s.ctrl"%(o_dir,scan_c,ctrl_file["exper_name"],scan_c), "w") as outfile:
 			json.dump(sub_ctrl, outfile, indent=4)
 else:
