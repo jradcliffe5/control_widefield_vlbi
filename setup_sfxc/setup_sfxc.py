@@ -101,7 +101,7 @@ if ast.literal_eval(inputs['parallelise_scans']) == True:
 			json.dump(sub_ctrl, outfile, indent=4)
 		commands.append('%s %s/%s/%s.%s.ctrl %s'%(sfxc_exec,o_dir,scan_c,ctrl_file["exper_name"],scan_c,ast.literal_eval(inputs["vex_file"])))
 		for j in vexfile['SCHED'][scan_c]['source']:
-			print(corr)
+			print(corr_files)
 			if len(vexfile['SCHED'][scan_c]['source']) == 1:
 				if ctrl_file["exper_name"] in list(corr_files.keys()):
 					corr_files[ctrl_file["exper_name"]] = corr_files[ctrl_file["exper_name"]].append("%s/%s/%s.%s.cor"%(o_dir,scan_c,ctrl_file["exper_name"],scan_c))
