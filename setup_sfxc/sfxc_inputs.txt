@@ -36,7 +36,7 @@ message_level=1
 ####################
 
 #### MULTI PHASE CENTRE ####
-multi_phase_center=False
+multi_phase_center="auto"
 sub_integr_time=13056
 fft_size_correlation=16384
 ############################

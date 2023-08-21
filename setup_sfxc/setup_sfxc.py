@@ -17,12 +17,12 @@ inputs = headless(sys.argv[i])
 bb_loc = ast.literal_eval(inputs['baseband_location'])
 o_dir = ast.literal_eval(inputs["output_dir"])
 vexfile = vex.Vex(ast.literal_eval(inputs["vex_file"]))
+sfxc_exec = ast.literal_eval(inputs['sfxc_exec'])
 ctrl_file = {}
 
 ### READ INPUT FILE ###
 for i in ["exper_name","cross_polarize","number_channels","slices_per_integration","setup_station","integr_time","message_level","slices_per_integration","LO_offset","multi_phase_center","sub_integr_time","fft_size_correlation"]:
     ctrl_file[i] = ast.literal_eval(inputs[i])
-
 ########################
 
 #### MAKE CHANNELS #####
@@ -71,8 +71,6 @@ def find_stop(dt,scan_length):
 	dt = dt + datetime.timedelta(seconds=scan_length)
 	return dt.strftime(dateformat)
 
-
-print(ss)
 if ast.literal_eval(inputs['parallelise_scans']) == True:
 	for i in ss.keys():
 		scan_c = i.capitalize()
@@ -88,6 +86,13 @@ if ast.literal_eval(inputs['parallelise_scans']) == True:
 		scan_length = int(vexfile['SCHED'][scan_c]["station"][2].split(" sec")[0])
 		sub_ctrl['stop']=find_stop(vexfile['SCHED'][scan_c]['start'],scan_length)
 		sub_ctrl['stations'] = ss[i]
+		if ctrl_file['multi_phase_center'] == 'auto':
+			if len(vexfile['SCHED'][scan_c]['source']) > 1:
+				sub_ctrl['multi_phase_center'] = True
+			else:
+				sub_ctrl['multi_phase_center'] = False
+		else:
+			sub_ctrl['multi_phase_center'] = ctrl_file['multi_phase_center']
 		data_sources = {}
 		for k,j in enumerate(ss[i]):
 			if j in data_sources:
@@ -115,12 +120,19 @@ else:
 	else:
 		ctrl_file["output_file"] = "file://%s/%s"%(o_dir,ast.literal_eval(inputs["output_file"]))
 	for i in ss.keys():
+		if ctrl_file['multi_phase_center'] = "auto":
+			if len(vexfile['SCHED'][i.capitalize()]['source']) > 1:
+				ctrl_file['multi_phase_center'] = True
+			else:
+				pass
 		for k,j in enumerate(ss[i]):
 			if j in data_sources:
 				data_sources[j] = data_sources[j]+['file://%s/%s'%(bb_loc,ss_s[i][k])]
 			else:
 				data_sources[j] = ['file://%s/%s'%(bb_loc,ss_s[i][k])]
 				ctrl_file['start']=vexfile['SCHED'][i.capitalize()]['start']
+	if ctrl_file['multi_phase_center'] = "auto":
+		ctrl_file['multi_phase_center'] = False
 	scan_length = int(vexfile['SCHED'][i.capitalize()]["station"][2].split(" sec")[0])
 	ctrl_file['stop']=find_stop(vexfile['SCHED'][i.capitalize()]['start'],scan_length)
 	ctrl_file['data_sources'] = data_sources
