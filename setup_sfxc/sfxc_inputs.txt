@@ -3,6 +3,7 @@
 exper_name="EK051E"
 baseband_location="/home/Jack/DATA/EK051E/baseband"
 output_dir="/DATA/radcliffe/EK051E"
+vex_file=""
 delay_directory=""
 tsys_file=""
 output_file=""

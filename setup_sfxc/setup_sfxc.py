@@ -1,5 +1,10 @@
-import os, sys, inspect, json, ast, re
+import os, sys, json, ast, re, inspect
 import numpy as np
+
+filename = inspect.getframeinfo(inspect.currentframe()).filename
+sys.path.append(os.path.dirname(os.path.realpath(filename)+'/../vex'))
+
+import vex
 
 def flatten_extend(matrix):
     flat_list = []
@@ -26,7 +31,6 @@ def rmfiles(files):
 	return
 
 def rmdirs(dirs):
-	func_name = inspect.stack()[0][3]
 	for i in dirs:
 		if "*" in i:
 			files_to_die = glob.glob(i)
@@ -83,7 +87,7 @@ o_dir = ast.literal_eval(inputs["output_dir"])
 ctrl_file = {}
 
 
-for i in ["exper_name","cross_polarize","number_channels","slices_per_integration","stop","start","setup_station","integr_time","message_level","slices_per_integration","LO_offset","multi_phase_center","sub_integr_time","fft_size_correlation"]:
+for i in ["exper_name","vex_file","cross_polarize","number_channels","slices_per_integration","stop","start","setup_station","integr_time","message_level","slices_per_integration","LO_offset","multi_phase_center","sub_integr_time","fft_size_correlation"]:
     ctrl_file[i] = ast.literal_eval(inputs[i])
 
 if ast.literal_eval(inputs['delay_directory']) == "":
