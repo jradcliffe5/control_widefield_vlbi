@@ -120,6 +120,7 @@ if ast.literal_eval(inputs['parallelise_scans']) == True:
 	commands = []
 	for i in list(corr_files.keys()):
 		commands.append('%s %s -o %s.ms'%(ast.literal_eval(inputs["j2ms2_exec"])," ".join(corr_files[i]),i))
+	write_job(step='run_j2ms2',commands=commands,job_manager='bash')
 
 				
 
