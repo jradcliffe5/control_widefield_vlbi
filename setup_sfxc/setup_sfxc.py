@@ -80,18 +80,35 @@ for i in list(ss.keys()):
     scans.append(i.capitalize())
 ctrl_file['scans']=scans
 
+import datetime
+def find_stop(dt,scan_length):
+	dateformat = '%Yy%jd%Hh%Mm%Ss'
+	dt = datetime.datetime.strptime(dt,dateformat)
+	dt = dt + datetime.timedelta(seconds=scan_length)
+	return dt.strftime(dateformat)
+
+
 print(ss)
 if ast.literal_eval(inputs['parallelise_scans']) == True:
-	for i in ctrl_file['scans']:
+	for i in ss.keys():
 		sub_ctrl = ctrl_file.copy()
+		scan_c = i.capitalize()
+		sub_ctrl['scans']=[scan_c]
+		sub_ctrl['start']=vexfile['SCHED'][scan_c]['start']
+		scan_length = int(vexfile['SCHED'][scan_c]["station"][2].split(" sec")[0])
+		sub_ctrl['stop']=find_stop(vexfile['SCHED'][scan_c]['start'],scan_length)
+
 else:
 	data_sources = {}
 	for i in ss.keys():
 		for k,j in enumerate(ss[i]):
 			if j in data_sources:
 				data_sources[j] = data_sources[j]+['file://%s/%s'%(bb_loc,ss_s[i][k])]
+				ctrl_file['start']=vexfile['SCHED'][i.capitalize()]['start']
 			else:
 				data_sources[j] = ['file://%s/%s'%(bb_loc,ss_s[i][k])]
+	scan_length = int(vexfile['SCHED'][i.capitalize()]["station"][2].split(" sec")[0])
+	ctrl_file['stop']=find_stop(vexfile['SCHED'][i.capitalize()]['start'],scan_length)
 	ctrl_file['data_sources'] = data_sources
 
 
