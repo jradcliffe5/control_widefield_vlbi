@@ -77,8 +77,8 @@ if ast.literal_eval(inputs['parallelise_scans']) == True:
 		sub_ctrl = ctrl_file.copy()
 		rmdirs(["%s/%s"%(o_dir,scan_c)])
 		os.mkdir("%s/%s"%(o_dir,scan_c))
-		os.mkdir("%s/%s/%s_delays"%(o_dir,scan_c,ctrl_file["exper_name"]))
-		sub_ctrl["delay_directory"] = "file://%s/%s/%s_delays"%(o_dir,scan_c,ctrl_file["exper_name"])
+		os.mkdir("%s/%s_delays"%(o_dir,ctrl_file["exper_name"]))
+		sub_ctrl["delay_directory"] = "file://%s/%s_delays"%(o_dir,ctrl_file["exper_name"])
 		sub_ctrl["tsys_file"] = "file://%s/%s/%s.tsys"%(o_dir,scan_c,ctrl_file["exper_name"])
 		sub_ctrl['output_file'] = "file://%s/%s/%s.%s.cor"%(o_dir,scan_c,ctrl_file["exper_name"],scan_c)
 		sub_ctrl['scans']=[scan_c]

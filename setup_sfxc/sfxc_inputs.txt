@@ -21,11 +21,8 @@ tsys_file=""
 output_file=""
 #################
 
-#start="2022y264d20h04m38s"
-#stop="2022y265d05h56m06s"
-min_stations_per_scan=4
-
 #### CORRELATOR INPUTS ####
+min_stations_per_scan=4
 cross_polarize=True
 number_channels=64
 integr_time=2.0
