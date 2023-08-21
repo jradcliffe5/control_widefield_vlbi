@@ -1,26 +1,42 @@
-## Some inputs for the sfxc ctrl file
+#######################################
+### Inputs to setup VLBI correlator ###
+#######################################
 
+#### PATHS AND FILES ####
 exper_name="EK051E"
 baseband_location="/home/Jack/DATA/EK051E/baseband"
 output_dir="/DATA/radcliffe/EK051E"
-vex_file=""
+vex_file="ek051e.vix"
+#########################
+
+#### CORRELATOR CONFIGURATION ####
+correlator="sfxc"
+parallelise_scans=True
+##################################
+
+#### OUTPUTS ####
 delay_directory=""
 tsys_file=""
 output_file=""
-start="2022y264d20h04m38s"
-stop="2022y265d05h56m06s"
-min_stations_per_scan=4
-setup_station="Ef"
-LO_offset={}
-message_level=1
+#################
 
+#start="2022y264d20h04m38s"
+#stop="2022y265d05h56m06s"
+min_stations_per_scan=4
+
+#### CORRELATOR INPUTS ####
 cross_polarize=True
 number_channels=64
 integr_time=2.0
 slices_per_integration=8
 correlator_channels=16
+setup_station="Ef"
+LO_offset={}
+message_level=1
+####################
 
-## multi_phase_center commands
+#### MULTI PHASE CENTRE ####
 multi_phase_center=False
 sub_integr_time=13056
 fft_size_correlation=16384
+############################
