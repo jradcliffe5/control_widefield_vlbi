@@ -65,7 +65,9 @@ for i in list(ss.keys()):
 ctrl_file['scans']=scans
 
 commands = []
+corr_files = {}
 if ast.literal_eval(inputs['parallelise_scans']) == True:
+	rmdirs([os.mkdir("%s/%s_delays"%(o_dir,ctrl_file["exper_name"]))])
 	os.mkdir("%s/%s_delays"%(o_dir,ctrl_file["exper_name"]))
 	for i in ss.keys():
 		scan_c = i.capitalize()
@@ -98,7 +100,29 @@ if ast.literal_eval(inputs['parallelise_scans']) == True:
 		with open("%s/%s/%s.%s.ctrl"%(o_dir,scan_c,ctrl_file["exper_name"],scan_c), "w") as outfile:
 			json.dump(sub_ctrl, outfile, indent=4)
 		commands.append('%s %s/%s/%s.%s.ctrl %s'%(sfxc_exec,o_dir,scan_c,ctrl_file["exper_name"],scan_c,ast.literal_eval(inputs["vex_file"])))
+		for j in vexfile['SCHED'][scan_c]['source']:
+			if len(vexfile['SCHED'][scan_c]['source']) == 1:
+				if ctrl_file["exper_name"] in list(corr_files.keys()):
+					corr_files[ctrl_file["exper_name"]] = corr_files.append("%s/%s/%s.%s.cor"%(o_dir,scan_c,ctrl_file["exper_name"],scan_c))
+				else:
+					corr_files[ctrl_file["exper_name"]] = ["%s/%s/%s.%s.cor"%(o_dir,scan_c,ctrl_file["exper_name"],scan_c)]
+			elif j == inputs["calibrator_target"]:
+				if ctrl_file["exper_name"] in list(corr_files.keys()):
+					corr_files[ctrl_file["exper_name"]] = corr_files.append("%s/%s/%s.%s.cor_%s"%(o_dir,scan_c,ctrl_file["exper_name"],scan_c,j))
+				else:
+					corr_files[ctrl_file["exper_name"]] = ["%s/%s/%s.%s.cor_%s"%(o_dir,scan_c,ctrl_file["exper_name"],scan_c,j)]
+			else:
+				if j in list(corr_files.keys()):
+					corr_files[j] = corr_files.append("%s/%s/%s.%s.cor_%s"%(o_dir,scan_c,ctrl_file["exper_name"],scan_c,j))
+				else:
+					corr_files[j] = ["%s/%s/%s.%s.cor_%s"%(o_dir,scan_c,ctrl_file["exper_name"],scan_c,j)]
 	write_job(step='run_sfxc',commands=commands,job_manager='bash')
+	commands = []
+	for i in list(corr_files.keys()):
+		commands.append('%s %s -o %s.ms'%(ast.literal_eval(inputs["j2ms2_exec"])," ".join(corr_files[i]),i))
+
+				
+
 else:
 	data_sources = {}
 	if ast.literal_eval(inputs['delay_directory']) == "":
