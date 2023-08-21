@@ -67,7 +67,7 @@ ctrl_file['scans']=scans
 commands = []
 corr_files = {}
 if ast.literal_eval(inputs['parallelise_scans']) == True:
-	rmdirs([os.mkdir("%s/%s_delays"%(o_dir,ctrl_file["exper_name"]))])
+	rmdirs(["%s/%s_delays"%(o_dir,ctrl_file["exper_name"])])
 	os.mkdir("%s/%s_delays"%(o_dir,ctrl_file["exper_name"]))
 	for i in ss.keys():
 		scan_c = i.capitalize()
