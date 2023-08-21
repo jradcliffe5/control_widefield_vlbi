@@ -72,12 +72,12 @@ def find_stop(dt,scan_length):
 	return dt.strftime(dateformat)
 
 if ast.literal_eval(inputs['parallelise_scans']) == True:
+	os.mkdir("%s/%s_delays"%(o_dir,ctrl_file["exper_name"]))
 	for i in ss.keys():
 		scan_c = i.capitalize()
 		sub_ctrl = ctrl_file.copy()
 		rmdirs(["%s/%s"%(o_dir,scan_c)])
 		os.mkdir("%s/%s"%(o_dir,scan_c))
-		os.mkdir("%s/%s_delays"%(o_dir,ctrl_file["exper_name"]))
 		sub_ctrl["delay_directory"] = "file://%s/%s_delays"%(o_dir,ctrl_file["exper_name"])
 		sub_ctrl["tsys_file"] = "file://%s/%s/%s.tsys"%(o_dir,scan_c,ctrl_file["exper_name"])
 		sub_ctrl['output_file'] = "file://%s/%s/%s.%s.cor"%(o_dir,scan_c,ctrl_file["exper_name"],scan_c)
