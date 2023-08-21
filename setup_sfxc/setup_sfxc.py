@@ -2,9 +2,7 @@ import os, sys, json, ast, inspect
 import numpy as np
 
 filename = inspect.getframeinfo(inspect.currentframe()).filename
-sys.path.append(os.path.dirname(os.path.realpath(filename))+'/../vex')
-print(os.path.realpath(filename)+'/../vex')
-#sys.path.append(os.path.dirname(os.path.realpath(filename)))
+sys.path.append(os.path.dirname(os.path.realpath(filename)))
 
 import vex
 from correlator_functions import *
@@ -83,7 +81,7 @@ for i in list(ss.keys()):
 ctrl_file['scans']=scans
 
 print(ss)
-if inputs['parallelise_scans'] == True:
+if ast.literal_eval(inputs['parallelise_scans']) == True:
 	for i in ctrl_file['scans']:
 		sub_ctrl = ctrl_file.copy()
 else:

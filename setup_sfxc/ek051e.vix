@@ -1,0 +1,2808 @@
+VEX_rev = 1.5;
+*    SCHED vers: Development version 11.5. Started Apr. 2
+*    VEX/SCHED:  1.5.87
+*    Other versions: Sched:  11.5  Plot: 1.06  JPL-ephem: 0.00
+*------------------------------------------------------------------------------
+$GLOBAL;
+     ref $EXPER = EK051E;
+     ref $EOP = EOP263;
+*                                                      +------------+
+*                         PI revision number:          |    1.0000  |
+*                                                      +------------+
+*    mode:       FRB follow up at L-band (21cm) at 1/2/4 Gbit/s
+*------------------------------------------------------------------------------
+$EXPER;
+*
+def EK051E;
+     exper_name = EK051E;
+     exper_description = "No description given.";
+     PI_name = "Franz Kirsten";
+     PI_email = franz.kirsten@chalmers.se;
+*    address:   OSO
+*                
+*                
+*                
+*    phone:     1234
+*    during obs: 
+*    fax:        
+*               PCAL off
+*               AGC off, cont_cal OFF
+*
+*    year, doy: 2022, 264
+*    date     : Wed 21 Sep 2022
+*    MJD      : 59843
+     exper_nominal_start=2022y264d20h00m00s;
+     exper_nominal_stop=2022y265d06h00m51s;
+*
+     target_correlator = JIVE;
+*
+*    integr_time    :     2.000 s
+*    number_channels:    32
+*    number_antenna :  6
+*    cross_polarize : Yes
+*    weight_func    : UNIFORM
+*    distrib_medium : FTP
+*    distrib_format : FITS
+*    source_pos_cat : FROM SCHEDULE
+*    distribute_to  : 
+*                     Onsala Space Observatory
+*                     Onsala
+*                     Sweden
+*    corr_notes : 
+*               SFXC correlator with gating
+*
+enddef;
+*------------------------------------------------------------------------------
+$MODE;
+*
+def EFF_BAND_32;
+     ref $PROCEDURES = Mode_01;
+     ref $FREQ = 1286.00MHz16x32MHz:Ef:Tr:O8;
+     ref $FREQ = 1350.00MHz8x32MHz:Wb;
+     ref $FREQ = 1350.00MHz16x32MHz:Nt;
+*     ref $FREQ = 1350.00MHz2x64MHz:Cm:Du:De;
+*     ref $FREQ = 1286.00MHz2x64MHz:Pi:Kn:Da:Jm;
+     ref $FREQ = 1286.00MHz2x64MHz:Cm:Du:De;
+     ref $FREQ = 1350.00MHz2x64MHz:Pi:Kn:Da:Jm;
+     ref $FREQ = 1382.00MHz8x32MHz:Mc;
+     ref $IF = LO@1232MHzDPolNoTone:Ef;
+     ref $IF = LO@2130MHzDPolNoTone:Tr;
+     ref $IF = LO@979MHzDPolNoTone:Wb;
+     ref $IF = LO@1279MHzDPolNoTone:Nt;
+     ref $IF = LO@708MHzDPolNoTone:O8;
+     ref $IF = LO@2272MHzDPolNoTone:Cm:Da:Du:Kn:Pi:De:Jm;
+     ref $IF = LO@1036MHzDPolNoTone:Mc;
+     ref $BBC = 16BBCs:Ef;
+     ref $BBC = 16BBCs#03:Tr;
+     ref $BBC = 8BBCs#02:Wb;
+     ref $BBC = 16BBCs#04:Nt;
+     ref $BBC = 16BBCs#02:O8;
+     ref $BBC = 2BBCs:Cm:Da:Du:Kn:Pi:De:Jm;
+     ref $BBC = 8BBCs:Mc;
+     ref $TRACKS = VDIF.16Ch2bit1to1:Ef:Tr:Nt:O8;
+     ref $TRACKS = VDIF.8Ch2bit1to1:Wb:Mc;
+     ref $TRACKS = VDIF.2Ch2bit1to1:Cm:Da:Du:Kn:Pi:De:Jm;
+     ref $THREADS = EfThreads:Ef:O8:Nt;
+     ref $THREADS = TrThreads:Tr;
+     ref $THREADS = CmThreads:Kn:De:Jm:Cm:Pi:Da:Du;
+     ref $THREADS = McThreads:Mc:Wb;
+*    ref $HEAD_POS = DiskVoid <= obsolete definition
+     ref $ROLL = NoRoll:Ef:Tr:Wb:Nt:O8:Cm:Da:Du:Kn:Pi:De:Jm:Mc;
+*    ref $PASS_ORDER = DiskVoid <= obsolete definition
+     ref $PHASE_CAL_DETECT = NoDetect#03:Ef:Tr:O8;
+     ref $PHASE_CAL_DETECT = NoDetect#02:Wb;
+     ref $PHASE_CAL_DETECT = NoDetect#04:Nt;
+     ref $PHASE_CAL_DETECT = NoDetect#05:Cm:Da:Du:Kn:De;
+     ref $PHASE_CAL_DETECT = NoDetect#06:Pi:Jm;
+     ref $PHASE_CAL_DETECT = NoDetect:Mc;
+enddef;
+*------------------------------------------------------------------------------
+$STATION;
+*
+def Ef;
+     ref $SITE = EFLSBERG;
+     ref $ANTENNA = EFLSBERG;
+     ref $DAS = 2DBBC+NONE<;
+     ref $TAPELOG_OBS = EF;
+     ref $CLOCK = EF;
+enddef;
+*
+def Tr;
+     ref $SITE = TORUN;
+     ref $ANTENNA = TORUN;
+     ref $DAS = 2DBBC+NONE<;
+     ref $TAPELOG_OBS = TR;
+     ref $CLOCK = TR;
+enddef;
+*
+def Wb;
+     ref $SITE = WSTRBORK;
+     ref $ANTENNA = WSTRBORK;
+     ref $DAS = 2DBBC+NONE<;
+     ref $TAPELOG_OBS = WB;
+     ref $CLOCK = WB;
+enddef;
+*
+def Nt;
+     ref $SITE = NOTO;
+     ref $ANTENNA = NOTO;
+     ref $DAS = 2DBBC+NONE<;
+     ref $TAPELOG_OBS = NT;
+     ref $CLOCK = NT;
+enddef;
+*
+def O8;
+     ref $SITE = ONSALA85;
+     ref $ANTENNA = ONSALA85;
+     ref $DAS = 2DBBC+NONE<;
+     ref $TAPELOG_OBS = O8;
+     ref $CLOCK = O8;
+enddef;
+*
+def Cm;
+     ref $SITE = CAMBG32M;
+     ref $ANTENNA = CAMBG32M;
+     ref $DAS = 2NONE<;
+     ref $TAPELOG_OBS = CM;
+     ref $CLOCK = CM;
+enddef;
+*
+def Da;
+     ref $SITE = DARNHALL;
+     ref $ANTENNA = DARNHALL;
+     ref $DAS = 2NONE<;
+     ref $TAPELOG_OBS = DA;
+     ref $CLOCK = DA;
+enddef;
+*
+def Du;
+     ref $SITE = DARN_HI; 
+     ref $ANTENNA = DARN_HI; 
+     ref $DAS = 2NONE<;
+     ref $TAPELOG_OBS = DU;
+     ref $CLOCK = DU;
+enddef;
+*
+def Kn;
+     ref $SITE = KNOCKIN;
+     ref $ANTENNA = KNOCKIN;
+     ref $DAS = 2NONE<;
+     ref $TAPELOG_OBS = KN;
+     ref $CLOCK = KN;
+enddef;
+*
+def Pi;
+     ref $SITE = PICKMERE;
+     ref $ANTENNA = PICKMERE;
+     ref $DAS = 2NONE<;
+     ref $TAPELOG_OBS = PI;
+     ref $CLOCK = PI;
+enddef;
+*
+def De;
+     ref $SITE = DEFFORD;
+     ref $ANTENNA = DEFFORD;
+     ref $DAS = 2NONE<;
+     ref $TAPELOG_OBS = DE;
+     ref $CLOCK = DE;
+enddef;
+*
+def Jm;
+     ref $SITE = JB2_MERL;
+     ref $ANTENNA = JB2_MERL;
+     ref $DAS = 2NONE<;
+     ref $TAPELOG_OBS = JM;
+     ref $CLOCK = JM;
+enddef;
+*
+def Mc;
+     ref $SITE = MEDICINA;
+     ref $ANTENNA = MEDICINA;
+     ref $DAS = 2DBBC+NONE<;
+     ref $TAPELOG_OBS = MC;
+     ref $CLOCK = MC;
+enddef;
+*------------------------------------------------------------------------------
+$PROCEDURES;
+*
+def Mode_01;
+     procedure_name_prefix =  "01";
+     tape_change =  420 sec;
+     headstack_motion =    6 sec;
+     new_source_command =    5 sec;
+     new_tape_setup =   20 sec;
+     setup_always = on :  20 sec;
+     parity_check = off : 100 sec;
+     tape_prepass = off : 600 sec;
+     preob_cal  = on :  10 sec : preob;
+     midob_cal  = on :  15 sec : midob;
+     postob_cal = on :   0 sec : postob;
+enddef;
+*------------------------------------------------------------------------------
+$SITE;
+*
+def EFLSBERG;
+     site_type = fixed;
+     site_name = EFLSBERG;
+     site_ID = Ef;
+*    elev=  416.71 long=-006:53:01. lat= 50:31:29.4
+*    site_position = 4033947.23550 m:  486990.79430 m: 4900431.00170 m;
+*    site_position = 4033947.15250 m:  486990.89610 m: 4900431.06040 m;
+     site_position = 4033947.11352 m:  486990.94173 m: 4900431.08974 m;
+*    First line below is VEX standard format.  Use only when readers are ready.
+     horizon_map_az =  0.0 deg: 10.0: 20.0: 30.0: 40.0: 50.0: 60.0: 70.0: 80.0:
+                                90.0:100.0:110.0:120.0:130.0:140.0:150.0:160.0:
+                               170.0:180.0:190.0:200.0:210.0:220.0:230.0:240.0:
+                               250.0:260.0:270.0:280.0:290.0:300.0:310.0:320.0:
+                               330.0:340.0:350.0:360.0;
+     horizon_map_el = 11.0 deg: 13.0: 16.0: 19.0: 21.0: 21.0: 21.0: 20.0: 18.0:
+                                15.0: 16.0: 16.0: 15.0: 15.0: 13.0:  8.0:  7.0:
+                                 7.0:  7.0:  7.0:  9.0: 11.0: 11.0: 11.0: 10.0:
+                                 9.0:  8.0: 12.0: 14.0: 14.0: 14.0: 14.0: 13.0:
+                                 8.0:  7.0:  8.0: 11.0;
+enddef;
+*
+def TORUN;
+     site_type = fixed;
+     site_name = TORUN;
+     site_ID = Tr;
+*    elev=  133.61 long=-018:33:50. lat= 53:05:43.7
+*    site_position = 3638558.51000 m: 1221969.72000 m: 5077036.76000 m;
+     site_position = 3638558.09819 m: 1221970.14313 m: 5077036.95343 m;
+*    First line below is VEX standard format.  Use only when readers are ready.
+     horizon_map_az =  0.0 deg:360.0;
+     horizon_map_el =  2.0 deg:  2.0;
+enddef;
+*
+def WSTRBORK;
+     site_type = fixed;
+     site_name = WSTRBORK;
+     site_ID = Wb;
+*    elev=   70.97 long=-006:35:38. lat= 52:54:55.1
+*    site_position = 3828750.69690 m:  442589.21760 m: 5064921.57000 m;
+     site_position = 3828750.34888 m:  442589.65591 m: 5064921.79456 m;
+*    First line below is VEX standard format.  Use only when readers are ready.
+enddef;
+*
+def NOTO;
+     site_type = fixed;
+     site_name = NOTO;
+     site_ID = Nt;
+*    elev=  143.21 long=-014:59:20. lat= 36:52:33.8
+*    site_position = 4934562.81750 m: 1321201.55280 m: 3806484.75550 m;
+*    site_position = 4934562.71540 m: 1321201.66010 m: 3806484.84610 m;
+     site_position = 4934562.66764 m: 1321201.70816 m: 3806484.88920 m;
+*    First line below is VEX standard format.  Use only when readers are ready.
+     horizon_map_az =  0.0 deg: 10.0: 30.0: 70.0:100.0:120.0:150.0:180.0:300.0:
+                               310.0:360.0;
+     horizon_map_el =  8.0 deg:  7.0:  6.0:  9.0:  6.5:  5.0:  6.0:  5.0:  5.0:
+                                 6.5:  7.5;
+enddef;
+*
+def ONSALA85;
+     site_type = fixed;
+     site_name = ONSALA85;
+     site_ID = O8;
+*    elev=   58.47 long=-011:55:04. lat= 57:23:35.1
+*    site_position = 3370965.87870 m:  711466.19780 m: 5349664.20060 m;
+     site_position = 3370965.75344 m:  711466.32454 m: 5349664.29236 m;
+*    First line below is VEX standard format.  Use only when readers are ready.
+enddef;
+*
+def CAMBG32M;
+     site_type = fixed;
+     site_name = CAMBG32M;
+     site_ID = Cm;
+*    elev=   83.47 long=-000:02:13. lat= 52:10:01.0
+*    site_position = 3920356.15000 m:    2542.02000 m: 5014284.42000 m;
+     site_position = 3920355.84082 m:    2542.46448 m: 5014284.66153 m;
+*    First line below is VEX standard format.  Use only when readers are ready.
+enddef;
+*
+def DARNHALL;
+     site_type = fixed;
+     site_name = DARNHALL;
+     site_ID = Da;
+*    elev=  111.88 long= 002:32:08. lat= 53:09:22.7
+*    site_position = 3829087.89900 m: -169568.95500 m: 5081082.34600 m;
+     site_position = 3829087.59985 m: -169568.51618 m: 5081082.58625 m;
+*    First line below is VEX standard format.  Use only when readers are ready.
+enddef;
+*
+def DARN_HI; 
+     site_type = fixed;
+     site_name = DARN_HI; 
+     site_ID = Du;
+*    elev=  111.88 long= 002:32:08. lat= 53:09:22.7
+*    site_position = 3829087.89900 m: -169568.95500 m: 5081082.34600 m;
+     site_position = 3829087.59985 m: -169568.51618 m: 5081082.58625 m;
+*    First line below is VEX standard format.  Use only when readers are ready.
+enddef;
+*
+def KNOCKIN;
+     site_type = fixed;
+     site_name = KNOCKIN;
+     site_ID = Kn;
+*    elev=  131.44 long= 002:59:49. lat= 52:47:25.0
+*    site_position = 3860084.89800 m: -202105.03900 m: 5056568.84800 m;
+     site_position = 3860084.60297 m: -202104.59838 m: 5056569.09082 m;
+*    First line below is VEX standard format.  Use only when readers are ready.
+enddef;
+*
+def PICKMERE;
+     site_type = fixed;
+     site_name = PICKMERE;
+     site_ID = Pi;
+*    elev=  100.41 long= 002:26:43. lat= 53:17:19.4
+*    site_position = 3817549.95600 m: -163031.14100 m: 5089896.65400 m;
+     site_position = 3817549.65556 m: -163030.70295 m: 5089896.89322 m;
+*    First line below is VEX standard format.  Use only when readers are ready.
+enddef;
+*
+def DEFFORD;
+     site_type = fixed;
+     site_name = DEFFORD;
+     site_ID = De;
+*    elev=   89.63 long= 002:08:40. lat= 52:06:02.0
+*    site_position = 3923442.56600 m: -146914.33000 m: 5009755.12500 m;
+     site_position = 3923442.26917 m: -146913.88526 m: 5009755.37039 m;
+*    First line below is VEX standard format.  Use only when readers are ready.
+enddef;
+*
+def JB2_MERL;
+     site_type = fixed;
+     site_name = JB2_MERL;
+     site_ID = Jm;
+*    elev=  143.77 long= 002:18:14. lat= 53:14:02.3
+*    site_position = 3822846.76000 m: -153802.28000 m: 5086285.90000 m;
+     site_position = 3822846.45905 m: -153801.84169 m: 5086286.13947 m;
+*    First line below is VEX standard format.  Use only when readers are ready.
+enddef;
+*
+def MEDICINA;
+     site_type = fixed;
+     site_name = MEDICINA;
+     site_ID = Mc;
+*    elev=   67.15 long=-011:38:49. lat= 44:31:13.8
+*    site_position = 4461369.67180 m:  919597.13490 m: 4449559.39950 m;
+*    site_position = 4461369.56820 m:  919597.24890 m: 4449559.47020 m;
+     site_position = 4461369.51873 m:  919597.29998 m: 4449559.50289 m;
+*    First line below is VEX standard format.  Use only when readers are ready.
+enddef;
+*------------------------------------------------------------------------------
+$ANTENNA;
+*
+def EFLSBERG;
+     axis_type = az : el;
+     antenna_motion = el :  15.0 deg/min : 16 sec;  *    0.018 deg/sec/sec
+     antenna_motion = az :  25.0 deg/min : 16 sec;  *    0.018 deg/sec/sec
+     pointing_sector = &ccw  : az :  34.00 deg: 120.00 deg: el :  9.00 deg: 89.00 deg; * cable wrap zone 1
+     pointing_sector = &n    : az : 120.00 deg: 394.00 deg: el :  9.00 deg: 89.00 deg; * cable wrap zone 2
+     pointing_sector = &cw   : az : 394.00 deg: 480.00 deg: el :  9.00 deg: 89.00 deg; * cable wrap zone 3
+     axis_offset = 0.01310 m;
+enddef;
+*
+def TORUN;
+     axis_type = az : el;
+     antenna_motion = el :  16.0 deg/min :  5 sec;  *    0.030 deg/sec/sec
+     antenna_motion = az :  30.0 deg/min :  5 sec;  *    0.050 deg/sec/sec
+     pointing_sector = &ccw  : az : -80.00 deg:  80.00 deg: el :  3.00 deg: 90.00 deg; * cable wrap zone 1
+     pointing_sector = &n    : az :  80.00 deg: 280.00 deg: el :  3.00 deg: 90.00 deg; * cable wrap zone 2
+     pointing_sector = &cw   : az : 280.00 deg: 440.00 deg: el :  3.00 deg: 90.00 deg; * cable wrap zone 3
+     pointing_sector = &ccwp : az : -80.00 deg:  80.00 deg: el : 90.00 deg: 93.00 deg; * cable wrap zone 4
+     pointing_sector = &np   : az :  80.00 deg: 280.00 deg: el : 90.00 deg: 93.00 deg; * cable wrap zone 5
+     pointing_sector = &cwp  : az : 280.00 deg: 440.00 deg: el : 90.00 deg: 93.00 deg; * cable wrap zone 6
+     axis_offset = 0.00000 m;
+enddef;
+*
+def WSTRBORK;
+     axis_type = ha : dec;
+     antenna_motion = dec :  18.0 deg/min : 10 sec;  *    0.100 deg/sec/sec
+     antenna_motion = ha :  18.0 deg/min : 10 sec;  *    0.100 deg/sec/sec
+     axis_offset = 4.95000 m;
+enddef;
+*
+def NOTO;
+     axis_type = az : el;
+     antenna_motion = el :  30.0 deg/min :  2 sec;  * 1000.000 deg/sec/sec
+     antenna_motion = az :  43.0 deg/min :  2 sec;  * 1000.000 deg/sec/sec
+     pointing_sector = &ccw  : az : -87.00 deg:  90.00 deg: el :  5.00 deg: 85.00 deg; * cable wrap zone 1
+     pointing_sector = &n    : az :  90.00 deg: 273.00 deg: el :  5.00 deg: 85.00 deg; * cable wrap zone 2
+     pointing_sector = &cw   : az : 273.00 deg: 450.00 deg: el :  5.00 deg: 85.00 deg; * cable wrap zone 3
+     axis_offset = 1.82960 m;
+enddef;
+*
+def ONSALA85;
+     axis_type = ha : dec;
+     antenna_motion = dec :  14.7 deg/min :  5 sec;  *    0.052 deg/sec/sec
+     antenna_motion = ha :  17.6 deg/min :  5 sec;  *    0.070 deg/sec/sec
+     axis_offset = 2.15000 m;
+enddef;
+*
+def CAMBG32M;
+     axis_type = az : el;
+     antenna_motion = el :  20.0 deg/min :  2 sec;  *    0.023 deg/sec/sec
+     antenna_motion = az :  40.0 deg/min :  2 sec;  *    0.026 deg/sec/sec
+     pointing_sector = &ccw  : az : 270.00 deg: 325.00 deg: el :  2.00 deg: 89.00 deg; * cable wrap zone 1
+     pointing_sector = &n    : az : 325.00 deg: 630.00 deg: el :  2.00 deg: 89.00 deg; * cable wrap zone 2
+     pointing_sector = &cw   : az : 630.00 deg: 685.00 deg: el :  2.00 deg: 89.00 deg; * cable wrap zone 3
+     axis_offset = 1.50300 m;
+enddef;
+*
+def DARNHALL;
+     axis_type = az : el;
+     antenna_motion = el :  20.0 deg/min :  2 sec;  *    0.016 deg/sec/sec
+     antenna_motion = az :  20.0 deg/min :  2 sec;  *    0.016 deg/sec/sec
+     pointing_sector = &ccw  : az : -85.00 deg: -35.00 deg: el :  2.50 deg: 90.00 deg; * cable wrap zone 1
+     pointing_sector = &n    : az : -35.00 deg: 275.00 deg: el :  2.50 deg: 90.00 deg; * cable wrap zone 2
+     pointing_sector = &cw   : az : 275.00 deg: 325.00 deg: el :  2.50 deg: 90.00 deg; * cable wrap zone 3
+     axis_offset = 0.00000 m;
+enddef;
+*
+def DARN_HI; 
+     axis_type = az : el;
+     antenna_motion = el :  20.0 deg/min :  2 sec;  *    0.016 deg/sec/sec
+     antenna_motion = az :  20.0 deg/min :  2 sec;  *    0.016 deg/sec/sec
+     pointing_sector = &ccw  : az : -85.00 deg: -35.00 deg: el :  2.50 deg: 90.00 deg; * cable wrap zone 1
+     pointing_sector = &n    : az : -35.00 deg: 275.00 deg: el :  2.50 deg: 90.00 deg; * cable wrap zone 2
+     pointing_sector = &cw   : az : 275.00 deg: 325.00 deg: el :  2.50 deg: 90.00 deg; * cable wrap zone 3
+     axis_offset = 0.00000 m;
+enddef;
+*
+def KNOCKIN;
+     axis_type = az : el;
+     antenna_motion = el :  20.0 deg/min :  2 sec;  *    0.016 deg/sec/sec
+     antenna_motion = az :  20.0 deg/min :  2 sec;  *    0.016 deg/sec/sec
+     pointing_sector = &ccw  : az : -85.00 deg: -35.00 deg: el :  2.50 deg: 90.00 deg; * cable wrap zone 1
+     pointing_sector = &n    : az : -35.00 deg: 275.00 deg: el :  2.50 deg: 90.00 deg; * cable wrap zone 2
+     pointing_sector = &cw   : az : 275.00 deg: 325.00 deg: el :  2.50 deg: 90.00 deg; * cable wrap zone 3
+     axis_offset = 0.00000 m;
+enddef;
+*
+def PICKMERE;
+     axis_type = az : el;
+     antenna_motion = el :  20.0 deg/min :  2 sec;  *    0.016 deg/sec/sec
+     antenna_motion = az :  20.0 deg/min :  2 sec;  *    0.016 deg/sec/sec
+     pointing_sector = &ccw  : az : -85.00 deg: -35.00 deg: el :  2.50 deg: 90.00 deg; * cable wrap zone 1
+     pointing_sector = &n    : az : -35.00 deg: 275.00 deg: el :  2.50 deg: 90.00 deg; * cable wrap zone 2
+     pointing_sector = &cw   : az : 275.00 deg: 325.00 deg: el :  2.50 deg: 90.00 deg; * cable wrap zone 3
+     axis_offset = 0.00000 m;
+enddef;
+*
+def DEFFORD;
+     axis_type = az : el;
+     antenna_motion = el :  20.0 deg/min :  2 sec;  *    0.016 deg/sec/sec
+     antenna_motion = az :  20.0 deg/min :  2 sec;  *    0.016 deg/sec/sec
+     pointing_sector = &ccw  : az : -85.00 deg: -35.00 deg: el :  2.50 deg: 90.00 deg; * cable wrap zone 1
+     pointing_sector = &n    : az : -35.00 deg: 275.00 deg: el :  2.50 deg: 90.00 deg; * cable wrap zone 2
+     pointing_sector = &cw   : az : 275.00 deg: 325.00 deg: el :  2.50 deg: 90.00 deg; * cable wrap zone 3
+     axis_offset = 1.90100 m;
+enddef;
+*
+def JB2_MERL;
+     axis_type = az : el;
+     antenna_motion = el :  20.0 deg/min :  2 sec;  *    0.022 deg/sec/sec
+     antenna_motion = az :  20.0 deg/min :  2 sec;  *    0.016 deg/sec/sec
+     pointing_sector = &ccw  : az : -90.00 deg: -30.00 deg: el :  1.00 deg: 90.00 deg; * cable wrap zone 1
+     pointing_sector = &n    : az : -30.00 deg: 270.00 deg: el :  1.00 deg: 90.00 deg; * cable wrap zone 2
+     pointing_sector = &cw   : az : 270.00 deg: 330.00 deg: el :  1.00 deg: 90.00 deg; * cable wrap zone 3
+     axis_offset = 0.45800 m;
+enddef;
+*
+def MEDICINA;
+     axis_type = az : el;
+     antenna_motion = el :  30.0 deg/min :  3 sec;  *    0.310 deg/sec/sec
+     antenna_motion = az :  45.0 deg/min :  3 sec;  *    0.820 deg/sec/sec
+     pointing_sector = &ccw  : az : 270.00 deg: 450.00 deg: el :  5.00 deg: 88.50 deg; * cable wrap zone 1
+     pointing_sector = &n    : az : 450.00 deg: 630.00 deg: el :  5.00 deg: 88.50 deg; * cable wrap zone 2
+     pointing_sector = &cw   : az : 630.00 deg: 810.00 deg: el :  5.00 deg: 88.50 deg; * cable wrap zone 3
+     axis_offset = 1.82780 m;
+enddef;
+*------------------------------------------------------------------------------
+$DAS;
+*
+def 2DBBC+NONE<;
+     record_transport_type = Mark5C;
+     electronics_rack_type = DBBC;
+     number_drives = 2;
+     headstack = 1 :            : 0 ;
+     headstack = 2 :            : 1 ;
+     tape_motion = adaptive : 0 min: 0 min: 10 sec;
+enddef;
+*
+def 2NONE<;
+     record_transport_type = Mark5C;
+     electronics_rack_type = WIDAR;
+     number_drives = 2;
+     headstack = 1 :            : 0 ;
+     headstack = 2 :            : 1 ;
+     tape_motion = adaptive : 0 min: 0 min: 10 sec;
+enddef;
+*------------------------------------------------------------------------------
+$SOURCE;
+*
+*def B0540+23_D;
+*     source_name = B0540+23_D;
+**    this source had calibrator code:  
+*     ra = 05h43m09.6000000s; dec =  23d29'05.000000"; ref_coord_frame = J2000;
+**    ra = 05h40m06.9389120s; dec =  23d27'44.804568"; ref_coord_frame = B1950;
+**    ra = 05h44m31.8295661s; dec =  23d29'43.694494"; ref_coord_frame = Date;
+*enddef;
+**
+*def DUMMY;
+*     source_name = DUMMY;
+**    this source had calibrator code:  
+*     ra = 02h12m59.3680000s; dec =  13d34'43.570000"; ref_coord_frame = J2000;
+**    ra = 02h10m16.9224743s; dec =  13d20'42.290193"; ref_coord_frame = B1950;
+**    ra = 02h14m13.4865377s; dec =  13d41'09.028781"; ref_coord_frame = Date;
+*enddef;
+**
+*def B1933+16_D;
+*     source_name = B1933+16_D;
+**    this source had calibrator code:  
+*     ra = 19h35m47.8000000s; dec =  16d16'39.900000"; ref_coord_frame = J2000;
+**    ra = 19h33m31.8143304s; dec =  16d09'57.634265"; ref_coord_frame = B1950;
+**    ra = 19h36m49.3977661s; dec =  16d19'49.937705"; ref_coord_frame = Date;
+*enddef;
+*
+*def R12_D;
+*     source_name = R12_D;
+**    this source had calibrator code:  
+*     ra = 18h54m09.4320000s; dec =  46d55'34.680000"; ref_coord_frame = J2000;
+**    ra = 18h52m45.0796265s; dec =  46d51'43.045742"; ref_coord_frame = B1950;
+**    ra = 18h54m47.6486778s; dec =  46d57'32.810492"; ref_coord_frame = Date;
+*enddef;
+*
+def R1_D;
+     source_name = R1_D;
+*    this source had calibrator code:  
+     ra = 05h31m58.7000000s; dec =  33d08'52.570000"; ref_coord_frame = J2000;
+*    ra = 05h28m41.7231330s; dec =  33d06'43.260664"; ref_coord_frame = B1950;
+*    ra = 05h33m27.4506849s; dec =  33d09'49.632829"; ref_coord_frame = Date;
+enddef;
+*
+def J0529+3209;
+     source_name = J0529+3209;
+*    this source had calibrator code: V
+*    alternate source name: 0526+321
+*    rfc_2018a Petrov and Kovalev, in preparation  36 observations
+     ra = 05h29m28.2110970s; dec =  32d09'46.947870"; ref_coord_frame = J2000;
+*    ra = 05h26m12.9037263s; dec =  32d07'26.831252"; ref_coord_frame = B1950;
+*    ra = 05h30m56.2254671s; dec =  32d10'49.263445"; ref_coord_frame = Date;
+enddef;
+*
+def J0541+3301;
+     source_name = J0541+3301;
+*    this source had calibrator code: V
+*    alternate source name: 0538+330
+*    rfc_2018a Petrov and Kovalev, in preparation  114 observations
+     ra = 05h41m49.4348660s; dec =  33d01'31.903960"; ref_coord_frame = J2000;
+*    ra = 05h38m32.4491891s; dec =  33d00'05.383705"; ref_coord_frame = B1950;
+*    ra = 05h43m18.1236619s; dec =  33d02'09.736909"; ref_coord_frame = Date;
+enddef;
+*
+def J0558+3418;
+     source_name = J0558+3418;
+*    this source had calibrator code: V
+*    alternate source name: 0554+343
+*    rfc_2018a Petrov and Kovalev, in preparation  127 observations
+     ra = 05h58m00.0886150s; dec =  34d18'48.386690"; ref_coord_frame = J2000;
+*    ra = 05h54m40.7629353s; dec =  34d18'32.401525"; ref_coord_frame = B1950;
+*    ra = 05h59m29.7214208s; dec =  34d18'53.975986"; ref_coord_frame = Date;
+enddef;
+*
+def J1829+4844;
+     source_name = J1829+4844;
+*    this source had calibrator code: V
+*    alternate source name: 1828+487
+*    rfc_2018a Petrov and Kovalev, in preparation  177 observations
+     ra = 18h29m31.7809070s; dec =  48d44'46.160880"; ref_coord_frame = J2000;
+*    ra = 18h28m13.5015167s; dec =  48d42'40.186446"; ref_coord_frame = B1950;
+*    ra = 18h30m07.1358437s; dec =  48d45'57.009616"; ref_coord_frame = Date;
+enddef;
+**
+*def J1850+4959;
+*     source_name = J1850+4959;
+**    this source had calibrator code: V
+**    alternate source name: 1849+499
+**    rfc_2018a Petrov and Kovalev, in preparation  110 observations
+*     ra = 18h50m22.2402480s; dec =  49d59'21.449480"; ref_coord_frame = J2000;
+**    ra = 18h49m06.0798781s; dec =  49d55'45.660574"; ref_coord_frame = B1950;
+**    ra = 18h50m56.7591024s; dec =  50d01'12.619460"; ref_coord_frame = Date;
+*enddef;
+*
+*def J1852+4855;
+*     source_name = J1852+4855;
+**    this source had calibrator code: V
+**    alternate source name: 1851+488
+**    rfc_2018a Petrov and Kovalev, in preparation  271 observations
+*     ra = 18h52m28.5478060s; dec =  48d55'47.481410"; ref_coord_frame = J2000;
+**    ra = 18h51m09.3798498s; dec =  48d52'02.821389"; ref_coord_frame = B1950;
+**    ra = 18h53m04.4283833s; dec =  48d57'42.586522"; ref_coord_frame = Date;
+*enddef;
+def EK051E00;
+    source_name = EK051E00;
+    ra = 05h30m43.8757176s; dec =  33d12'28.449864"; ref_coord_frame = J2000;
+enddef;
+def EK051E01;
+    source_name = EK051E01;
+    ra = 05h30m47.7776532s; dec =  33d12'04.031352"; ref_coord_frame = J2000;
+enddef;
+def EK051E02;
+    source_name = EK051E02;
+    ra = 05h30m50.0621664s; dec =  33d14'53.463732"; ref_coord_frame = J2000;
+enddef;
+def EK051E03;
+    source_name = EK051E03;
+    ra = 05h30m50.2614156s; dec =  33d11'41.4618"; ref_coord_frame = J2000;
+enddef;
+def EK051E04;
+    source_name = EK051E04;
+    ra = 05h30m54.9825664s; dec =  33d00'45.524964"; ref_coord_frame = J2000;
+enddef;
+def EK051E05;
+    source_name = EK051E05;
+    ra = 05h31m05.2853304s; dec =  32d54'51.317712"; ref_coord_frame = J2000;
+enddef;
+def EK051E06;
+    source_name = EK051E06;
+    ra = 05h31m10.860468s; dec =  33d13'43.471452"; ref_coord_frame = J2000;
+enddef;
+def EK051E07;
+    source_name = EK051E07;
+    ra = 05h31m41.6672592s; dec =  33d14'47.393124"; ref_coord_frame = J2000;
+enddef;
+def EK051E08;
+    source_name = EK051E08;
+    ra = 05h31m44.1286872s; dec =  33d21'42.335892"; ref_coord_frame = J2000;
+enddef;
+def EK051E09;
+    source_name = EK051E09;
+    ra = 05h31m51.6021072s; dec =  32d52'21.523368"; ref_coord_frame = J2000;
+enddef;
+def EK051E10;
+    source_name = EK051E10;
+    ra = 05h31m53.9167152s; dec =  33d10'20.063352"; ref_coord_frame = J2000;
+enddef;
+def EK051E11;
+    source_name = EK051E11;
+    ra = 05h31m59.8516944s; dec =  33d17'14.508384"; ref_coord_frame = J2000;
+enddef;
+def EK051E12;
+    source_name = EK051E12;
+    ra = 05h32m01.0758744s; dec =  33d16'43.514832"; ref_coord_frame = J2000;
+enddef;
+def EK051E13;
+    source_name = EK051E13;
+    ra = 05h32m02.0416392s; dec =  33d16'06.975444"; ref_coord_frame = J2000;
+enddef;
+def EK051E14;
+    source_name = EK051E14;
+    ra = 05h32m02.9280984s; dec =  33d12'58.30578"; ref_coord_frame = J2000;
+enddef;
+def EK051E15;
+    source_name = EK051E15;
+    ra = 05h32m11.36862s; dec =  33d16'38.947332"; ref_coord_frame = J2000;
+enddef;
+def EK051E16;
+    source_name = EK051E16;
+    ra = 05h32m11.6222616s; dec =  33d18'37.973412"; ref_coord_frame = J2000;
+enddef;
+def EK051E17;
+    source_name = EK051E17;
+    ra = 05h32m15.6126768s; dec =  32d56'49.760124"; ref_coord_frame = J2000;
+enddef;
+def EK051E18;
+    source_name = EK051E18;
+    ra = 05h32m18.138948s; dec =  32d56'39.369984"; ref_coord_frame = J2000;
+enddef;
+def EK051E19;
+    source_name = EK051E19;
+    ra = 05h32m40.4849256s; dec =  32d53'14.614656"; ref_coord_frame = J2000;
+enddef;
+def EK051E20;
+    source_name = EK051E20;
+    ra = 05h32m44.9609496s; dec =  33d25'37.772904"; ref_coord_frame = J2000;
+enddef;
+def EK051E21;
+    source_name = EK051E21;
+    ra = 05h32m49.4795304s; dec =  33d06'05.104764"; ref_coord_frame = J2000;
+enddef;
+def EK051E22;
+    source_name = EK051E22;
+    ra = 05h33m08.6000328s; dec =  33d15'16.903476"; ref_coord_frame = J2000;
+enddef;
+def EK051E23;
+    source_name = EK051E23;
+    ra = 05h33m11.9236824s; dec =  33d07'14.290464"; ref_coord_frame = J2000;
+enddef;
+*------------------------------------------------------------------------------
+$FREQ;
+*
+def 1382.00MHz8x32MHz;
+* mode =  1    stations =Mc
+     sample_rate =    64.000 Ms/sec;  * (2bits/sample)
+     chan_def = :  1382.00 MHz : L :  32.00 MHz : &CH01 : &BBC01 : &NoCal; *Rcp
+     chan_def = :  1382.00 MHz : L :  32.00 MHz : &CH02 : &BBC09 : &NoCal; *Lcp
+     chan_def = :  1382.00 MHz : U :  32.00 MHz : &CH03 : &BBC01 : &NoCal; *Rcp
+     chan_def = :  1382.00 MHz : U :  32.00 MHz : &CH04 : &BBC09 : &NoCal; *Lcp
+     chan_def = :  1446.00 MHz : L :  32.00 MHz : &CH05 : &BBC02 : &NoCal; *Rcp
+     chan_def = :  1446.00 MHz : L :  32.00 MHz : &CH06 : &BBC10 : &NoCal; *Lcp
+     chan_def = :  1446.00 MHz : U :  32.00 MHz : &CH07 : &BBC02 : &NoCal; *Rcp
+     chan_def = :  1446.00 MHz : U :  32.00 MHz : &CH08 : &BBC10 : &NoCal; *Lcp
+enddef;
+*
+def 1350.00MHz8x32MHz;
+* mode =  1    stations =Wb
+     sample_rate =    64.000 Ms/sec;  * (2bits/sample)
+     chan_def = :  1350.00 MHz : L :  32.00 MHz : &CH01 : &BBC01 : &NoCal; *Rcp
+     chan_def = :  1350.00 MHz : L :  32.00 MHz : &CH02 : &BBC09 : &NoCal; *Lcp
+     chan_def = :  1350.00 MHz : U :  32.00 MHz : &CH03 : &BBC01 : &NoCal; *Rcp
+     chan_def = :  1350.00 MHz : U :  32.00 MHz : &CH04 : &BBC09 : &NoCal; *Lcp
+     chan_def = :  1414.00 MHz : L :  32.00 MHz : &CH05 : &BBC02 : &NoCal; *Rcp
+     chan_def = :  1414.00 MHz : L :  32.00 MHz : &CH06 : &BBC10 : &NoCal; *Lcp
+     chan_def = :  1414.00 MHz : U :  32.00 MHz : &CH07 : &BBC02 : &NoCal; *Rcp
+     chan_def = :  1414.00 MHz : U :  32.00 MHz : &CH08 : &BBC10 : &NoCal; *Lcp
+enddef;
+*
+def 1286.00MHz16x32MHz;
+* mode =  1    stations =Ef:Tr:O8
+     sample_rate =    64.000 Ms/sec;  * (2bits/sample)
+     chan_def = :  1286.00 MHz : L :  32.00 MHz : &CH01 : &BBC01 : &NoCal; *Rcp
+     chan_def = :  1286.00 MHz : L :  32.00 MHz : &CH02 : &BBC09 : &NoCal; *Lcp
+     chan_def = :  1286.00 MHz : U :  32.00 MHz : &CH03 : &BBC01 : &NoCal; *Rcp
+     chan_def = :  1286.00 MHz : U :  32.00 MHz : &CH04 : &BBC09 : &NoCal; *Lcp
+     chan_def = :  1350.00 MHz : L :  32.00 MHz : &CH05 : &BBC02 : &NoCal; *Rcp
+     chan_def = :  1350.00 MHz : L :  32.00 MHz : &CH06 : &BBC10 : &NoCal; *Lcp
+     chan_def = :  1350.00 MHz : U :  32.00 MHz : &CH07 : &BBC02 : &NoCal; *Rcp
+     chan_def = :  1350.00 MHz : U :  32.00 MHz : &CH08 : &BBC10 : &NoCal; *Lcp
+     chan_def = :  1414.00 MHz : L :  32.00 MHz : &CH09 : &BBC03 : &NoCal; *Rcp
+     chan_def = :  1414.00 MHz : L :  32.00 MHz : &CH10 : &BBC11 : &NoCal; *Lcp
+     chan_def = :  1414.00 MHz : U :  32.00 MHz : &CH11 : &BBC03 : &NoCal; *Rcp
+     chan_def = :  1414.00 MHz : U :  32.00 MHz : &CH12 : &BBC11 : &NoCal; *Lcp
+     chan_def = :  1478.00 MHz : L :  32.00 MHz : &CH13 : &BBC04 : &NoCal; *Rcp
+     chan_def = :  1478.00 MHz : L :  32.00 MHz : &CH14 : &BBC12 : &NoCal; *Lcp
+     chan_def = :  1478.00 MHz : U :  32.00 MHz : &CH15 : &BBC04 : &NoCal; *Rcp
+     chan_def = :  1478.00 MHz : U :  32.00 MHz : &CH16 : &BBC12 : &NoCal; *Lcp
+enddef;
+*
+def 1350.00MHz16x32MHz;
+* mode =  1    stations =Nt
+     sample_rate =    64.000 Ms/sec;  * (2bits/sample)
+     chan_def = :  1350.00 MHz : L :  32.00 MHz : &CH01 : &BBC01 : &NoCal; *Rcp
+     chan_def = :  1350.00 MHz : L :  32.00 MHz : &CH02 : &BBC09 : &NoCal; *Lcp
+     chan_def = :  1350.00 MHz : U :  32.00 MHz : &CH03 : &BBC01 : &NoCal; *Rcp
+     chan_def = :  1350.00 MHz : U :  32.00 MHz : &CH04 : &BBC09 : &NoCal; *Lcp
+     chan_def = :  1414.00 MHz : L :  32.00 MHz : &CH05 : &BBC02 : &NoCal; *Rcp
+     chan_def = :  1414.00 MHz : L :  32.00 MHz : &CH06 : &BBC10 : &NoCal; *Lcp
+     chan_def = :  1414.00 MHz : U :  32.00 MHz : &CH07 : &BBC02 : &NoCal; *Rcp
+     chan_def = :  1414.00 MHz : U :  32.00 MHz : &CH08 : &BBC10 : &NoCal; *Lcp
+     chan_def = :  1478.00 MHz : L :  32.00 MHz : &CH09 : &BBC03 : &NoCal; *Rcp
+     chan_def = :  1478.00 MHz : L :  32.00 MHz : &CH10 : &BBC11 : &NoCal; *Lcp
+     chan_def = :  1478.00 MHz : U :  32.00 MHz : &CH11 : &BBC03 : &NoCal; *Rcp
+     chan_def = :  1478.00 MHz : U :  32.00 MHz : &CH12 : &BBC11 : &NoCal; *Lcp
+     chan_def = :  1542.00 MHz : L :  32.00 MHz : &CH13 : &BBC04 : &NoCal; *Rcp
+     chan_def = :  1542.00 MHz : L :  32.00 MHz : &CH14 : &BBC12 : &NoCal; *Lcp
+     chan_def = :  1542.00 MHz : U :  32.00 MHz : &CH15 : &BBC04 : &NoCal; *Rcp
+     chan_def = :  1542.00 MHz : U :  32.00 MHz : &CH16 : &BBC12 : &NoCal; *Lcp
+enddef;
+*
+def 1350.00MHz2x64MHz;
+* mode =  1    stations =Cm:Da:Kn:De
+     sample_rate =   128.000 Ms/sec;  * (2bits/sample)
+     chan_def = :  1350.00 MHz : U :  64.00 MHz : &CH01 : &BBC01 : &NoCal; *Rcp
+     chan_def = :  1350.00 MHz : U :  64.00 MHz : &CH02 : &BBC09 : &NoCal; *Lcp
+enddef;
+*
+def 1286.00MHz2x64MHz;
+* mode =  1    stations =Pi:Jm
+     sample_rate =   128.000 Ms/sec;  * (2bits/sample)
+     chan_def = :  1286.00 MHz : U :  64.00 MHz : &CH01 : &BBC01 : &NoCal; *Rcp
+     chan_def = :  1286.00 MHz : U :  64.00 MHz : &CH02 : &BBC09 : &NoCal; *Lcp
+enddef;
+*------------------------------------------------------------------------------
+$IF;
+*
+def LO@1036MHzDPolNoTone;
+* mode =  1    stations =Mc
+     if_def = &IF_A1 : A1 : R :  1036.00 MHz : U ; * PCall off!   0.0   0.0  NA     0 NA
+     if_def = &IF_C1 : C1 : L :  1036.00 MHz : U ; * PCall off!   0.0   0.0  NA     0 NA
+enddef;
+*
+def LO@979MHzDPolNoTone;
+* mode =  1    stations =Wb
+     if_def = &IF_A1 : A1 : R :   979.00 MHz : U ; * PCall off!   0.0   0.0  NA     0 NA
+     if_def = &IF_B1 : B1 : L :   979.00 MHz : U ; * PCall off!   0.0   0.0  NA     0 NA
+enddef;
+*
+def LO@1232MHzDPolNoTone;
+* mode =  1    stations =Ef
+     if_def = &IF_A4 : A4 : R :  1232.00 MHz : U ; * PCall off!   0.0   0.0  NA     0 NA
+     if_def = &IF_C2 : C2 : L :  1232.00 MHz : U ; * PCall off!   0.0   0.0  NA     0 NA
+enddef;
+*
+def LO@708MHzDPolNoTone;
+* mode =  1    stations =O8
+     if_def = &IF_A1 : A1 : R :   708.00 MHz : U ; * PCall off!   0.0   0.0  NA     0 NA
+     if_def = &IF_C1 : C1 : L :   708.00 MHz : U ; * PCall off!   0.0   0.0  NA     0 NA
+enddef;
+*
+def LO@2130MHzDPolNoTone;
+* mode =  1    stations =Tr
+     if_def = &IF_A1 : A1 : R :  2130.00 MHz : L ; * PCall off!   0.0   0.0  NA     0 NA
+     if_def = &IF_B1 : B1 : L :  2130.00 MHz : L ; * PCall off!   0.0   0.0  NA     0 NA
+enddef;
+*
+def LO@1279MHzDPolNoTone;
+* mode =  1    stations =Nt
+     if_def = &IF_A1 : A1 : R :  1279.00 MHz : U ; * PCall off!   0.0   0.0  NA     0 NA
+     if_def = &IF_C2 : C2 : L :  1279.00 MHz : U ; * PCall off!   0.0   0.0  NA     0 NA
+enddef;
+*
+def LO@2272MHzDPolNoTone;
+* mode =  1    stations =Cm:Da:Kn:Pi:De:Jm
+     if_def = &IF_A1 : A1 : R :  2272.00 MHz : L ; * PCall off!   0.0   0.0  NA     0 NA
+     if_def = &IF_B1 : B1 : L :  2272.00 MHz : L ; * PCall off!   0.0   0.0  NA     0 NA
+enddef;
+*------------------------------------------------------------------------------
+$BBC;
+*
+def 8BBCs;
+* mode =  1    stations =Mc
+     BBC_assign = &BBC01 :  1 : &IF_A1;
+     BBC_assign = &BBC09 :  9 : &IF_C1;
+     BBC_assign = &BBC02 :  2 : &IF_A1;
+     BBC_assign = &BBC10 : 10 : &IF_C1;
+enddef;
+*
+def 8BBCs#02;
+* mode =  1    stations =Wb
+     BBC_assign = &BBC01 :  1 : &IF_A1;
+     BBC_assign = &BBC09 :  9 : &IF_B1;
+     BBC_assign = &BBC02 :  2 : &IF_A1;
+     BBC_assign = &BBC10 : 10 : &IF_B1;
+enddef;
+*
+def 16BBCs;
+* mode =  1    stations =Ef
+     BBC_assign = &BBC01 :  1 : &IF_A4;
+     BBC_assign = &BBC09 :  9 : &IF_C2;
+     BBC_assign = &BBC02 :  2 : &IF_A4;
+     BBC_assign = &BBC10 : 10 : &IF_C2;
+     BBC_assign = &BBC03 :  3 : &IF_A4;
+     BBC_assign = &BBC11 : 11 : &IF_C2;
+     BBC_assign = &BBC04 :  4 : &IF_A4;
+     BBC_assign = &BBC12 : 12 : &IF_C2;
+enddef;
+*
+def 16BBCs#02;
+* mode =  1    stations =O8
+     BBC_assign = &BBC01 :  1 : &IF_A1;
+     BBC_assign = &BBC09 :  9 : &IF_C1;
+     BBC_assign = &BBC02 :  2 : &IF_A1;
+     BBC_assign = &BBC10 : 10 : &IF_C1;
+     BBC_assign = &BBC03 :  3 : &IF_A1;
+     BBC_assign = &BBC11 : 11 : &IF_C1;
+     BBC_assign = &BBC04 :  4 : &IF_A1;
+     BBC_assign = &BBC12 : 12 : &IF_C1;
+enddef;
+*
+def 16BBCs#03;
+* mode =  1    stations =Tr
+     BBC_assign = &BBC01 :  1 : &IF_A1;
+     BBC_assign = &BBC09 :  9 : &IF_B1;
+     BBC_assign = &BBC02 :  2 : &IF_A1;
+     BBC_assign = &BBC10 : 10 : &IF_B1;
+     BBC_assign = &BBC03 :  3 : &IF_A1;
+     BBC_assign = &BBC11 : 11 : &IF_B1;
+     BBC_assign = &BBC04 :  4 : &IF_A1;
+     BBC_assign = &BBC12 : 12 : &IF_B1;
+enddef;
+*
+def 16BBCs#04;
+* mode =  1    stations =Nt
+     BBC_assign = &BBC01 :  1 : &IF_A1;
+     BBC_assign = &BBC09 :  9 : &IF_C2;
+     BBC_assign = &BBC02 :  2 : &IF_A1;
+     BBC_assign = &BBC10 : 10 : &IF_C2;
+     BBC_assign = &BBC03 :  3 : &IF_A1;
+     BBC_assign = &BBC11 : 11 : &IF_C2;
+     BBC_assign = &BBC04 :  4 : &IF_A1;
+     BBC_assign = &BBC12 : 12 : &IF_C2;
+enddef;
+*
+def 2BBCs;
+* mode =  1    stations =Cm:Da:Kn:Pi:De:Jm
+     BBC_assign = &BBC01 :  1 : &IF_A1;
+     BBC_assign = &BBC09 :  9 : &IF_B1;
+enddef;
+*------------------------------------------------------------------------------
+$PHASE_CAL_DETECT;
+*
+def NoDetect;
+* mode =  1    stations =Mc
+     phase_cal_detect = &NoCal;
+enddef;
+*
+def NoDetect#02;
+* mode =  1    stations =Wb
+     phase_cal_detect = &NoCal;
+enddef;
+*
+def NoDetect#03;
+* mode =  1    stations =Ef:Tr:O8
+     phase_cal_detect = &NoCal;
+enddef;
+*
+def NoDetect#04;
+* mode =  1    stations =Nt
+     phase_cal_detect = &NoCal;
+enddef;
+*
+def NoDetect#05;
+* mode =  1    stations =Cm:Da:Kn:De
+     phase_cal_detect = &NoCal;
+enddef;
+*
+def NoDetect#06;
+* mode =  1    stations =Pi:Jm
+     phase_cal_detect = &NoCal;
+enddef;
+*------------------------------------------------------------------------------
+$TRACKS;
+*
+def VDIF.8Ch2bit1to1;
+* mode =  1    stations =Wb:Mc
+*    firmware_type = DBBC_DDC;
+*    format = VDIF, and fan-out = 1
+*    mode requires  64.00Mb/s/tr; stations using disks
+     track_frame_format = VDIF5032;
+     fanout_def =   : &CH01 : sign : 1:  1;
+     fanout_def =   : &CH01 :  mag : 1:  1;
+     fanout_def =   : &CH02 : sign : 1:  2;
+     fanout_def =   : &CH02 :  mag : 1:  2;
+     fanout_def =   : &CH03 : sign : 1:  3;
+     fanout_def =   : &CH03 :  mag : 1:  3;
+     fanout_def =   : &CH04 : sign : 1:  4;
+     fanout_def =   : &CH04 :  mag : 1:  4;
+     fanout_def =   : &CH05 : sign : 1:  5;
+     fanout_def =   : &CH05 :  mag : 1:  5;
+     fanout_def =   : &CH06 : sign : 1:  6;
+     fanout_def =   : &CH06 :  mag : 1:  6;
+     fanout_def =   : &CH07 : sign : 1:  7;
+     fanout_def =   : &CH07 :  mag : 1:  7;
+     fanout_def =   : &CH08 : sign : 1:  8;
+     fanout_def =   : &CH08 :  mag : 1:  8;
+enddef;
+*
+def VDIF.16Ch2bit1to1;
+* mode =  1    stations =Ef:Tr:Nt:O8
+*    firmware_type = DBBC_DDC;
+*    format = VDIF, and fan-out = 1
+*    mode requires  64.00Mb/s/tr; stations using disks
+     track_frame_format = VDIF5032;
+     fanout_def =   : &CH01 : sign : 1:  1;
+     fanout_def =   : &CH01 :  mag : 1:  1;
+     fanout_def =   : &CH02 : sign : 1:  2;
+     fanout_def =   : &CH02 :  mag : 1:  2;
+     fanout_def =   : &CH03 : sign : 1:  3;
+     fanout_def =   : &CH03 :  mag : 1:  3;
+     fanout_def =   : &CH04 : sign : 1:  4;
+     fanout_def =   : &CH04 :  mag : 1:  4;
+     fanout_def =   : &CH05 : sign : 1:  5;
+     fanout_def =   : &CH05 :  mag : 1:  5;
+     fanout_def =   : &CH06 : sign : 1:  6;
+     fanout_def =   : &CH06 :  mag : 1:  6;
+     fanout_def =   : &CH07 : sign : 1:  7;
+     fanout_def =   : &CH07 :  mag : 1:  7;
+     fanout_def =   : &CH08 : sign : 1:  8;
+     fanout_def =   : &CH08 :  mag : 1:  8;
+     fanout_def =   : &CH09 : sign : 1:  9;
+     fanout_def =   : &CH09 :  mag : 1:  9;
+     fanout_def =   : &CH10 : sign : 1: 10;
+     fanout_def =   : &CH10 :  mag : 1: 10;
+     fanout_def =   : &CH11 : sign : 1: 11;
+     fanout_def =   : &CH11 :  mag : 1: 11;
+     fanout_def =   : &CH12 : sign : 1: 12;
+     fanout_def =   : &CH12 :  mag : 1: 12;
+     fanout_def =   : &CH13 : sign : 1: 13;
+     fanout_def =   : &CH13 :  mag : 1: 13;
+     fanout_def =   : &CH14 : sign : 1: 14;
+     fanout_def =   : &CH14 :  mag : 1: 14;
+     fanout_def =   : &CH15 : sign : 1: 15;
+     fanout_def =   : &CH15 :  mag : 1: 15;
+     fanout_def =   : &CH16 : sign : 1: 16;
+     fanout_def =   : &CH16 :  mag : 1: 16;
+enddef;
+*
+def VDIF.2Ch2bit1to1;
+* mode =  1    stations =Cm:Da:Kn:Pi:De:Jm
+*    format = VDIF, and fan-out = 1
+*    mode requires 128.00Mb/s/tr; stations using disks
+     track_frame_format = VDIF5032;
+     fanout_def =   : &CH01 : sign : 1:  1;
+     fanout_def =   : &CH01 :  mag : 1:  1;
+     fanout_def =   : &CH02 : sign : 1:  2;
+     fanout_def =   : &CH02 :  mag : 1:  2;
+enddef;
+*------------------------------------------------------------------------------
+*$BITSTREAMS;
+*
+*------------------------------------------------------------------------------
+$THREADS;
+*
+def EfThreads;
+*   Stations = Ef:Nt:O8
+*   Modes = EFF_BAND_32
+  format = VDIF : : 2048;
+  thread = 0 : 1 : 1 : 2048 : 16 : 2 : : : 8000;
+  channel = &CH01 : 0 : 8;
+  channel = &CH02 : 0 : 12;
+  channel = &CH03 : 0 : 0;
+  channel = &CH04 : 0 : 4;
+  channel = &CH05 : 0 : 9;
+  channel = &CH06 : 0 : 13;
+  channel = &CH07 : 0 : 1;
+  channel = &CH08 : 0 : 5;
+  channel = &CH09 : 0 : 10;
+  channel = &CH10 : 0 : 14;
+  channel = &CH11 : 0 : 2;
+  channel = &CH12 : 0 : 6;
+  channel = &CH13 : 0 : 11;
+  channel = &CH14 : 0 : 15;
+  channel = &CH15 : 0 : 3;
+  channel = &CH16 : 0 : 7;
+enddef;
+*
+def TrThreads;
+*   Stations = Tr
+*   Modes = EFF_BAND_32
+  format = VDIF : : 2048;
+  thread = 0 : 1 : 1 : 2048 : 16 : 2 : : : 8000;
+  channel = &CH01 : 0 : 0;
+  channel = &CH02 : 0 : 4;
+  channel = &CH03 : 0 : 8;
+  channel = &CH04 : 0 : 12;
+  channel = &CH05 : 0 : 1;
+  channel = &CH06 : 0 : 5;
+  channel = &CH07 : 0 : 9;
+  channel = &CH08 : 0 : 13;
+  channel = &CH09 : 0 : 2;
+  channel = &CH10 : 0 : 6;
+  channel = &CH11 : 0 : 10;
+  channel = &CH12 : 0 : 14;
+  channel = &CH13 : 0 : 3;
+  channel = &CH14 : 0 : 7;
+  channel = &CH15 : 0 : 11;
+  channel = &CH16 : 0 : 15;
+enddef;
+*
+def McThreads;
+*   Stations = Mc:Wb
+*   Modes = EFF_BAND_32
+  format = VDIF : : 1024;
+  thread = 0 : 1 : 1 : 1024 : 8 : 2 : : : 8000;
+  channel = &CH01 : 0 : 4;
+  channel = &CH02 : 0 : 6;
+  channel = &CH03 : 0 : 0;
+  channel = &CH04 : 0 : 2;
+  channel = &CH05 : 0 : 5;
+  channel = &CH06 : 0 : 7;
+  channel = &CH07 : 0 : 1;
+  channel = &CH08 : 0 : 3;
+enddef;
+*
+def CmThreads;
+*   Stations = Cm:Da:De:Jm:Kn:Pi
+*   Modes = EFF_BAND_32
+  format = VDIF : : 512;
+  thread = 0 : 1 : 1 : 256 : 1 : 2 : : : 8000;
+  thread = 1 : 1 : 1 : 256 : 1 : 2 : : : 8000;
+  channel = &CH01 : 1 : 0;
+  channel = &CH02 : 0 : 0;
+enddef;
+*------------------------------------------------------------------------------
+$HEAD_POS;
+def DiskVoid;
+* mode =  1    stations =Ef:Tr:Wb:Nt:O8:Cm:Da:Kn:Pi:De:Jm:Mc
+*     Head positions irrelevant for Disk: empty def
+enddef;
+*------------------------------------------------------------------------------
+$PASS_ORDER;
+*
+def DiskVoid;
+* mode =  1    stations =Ef:Tr:Wb:Nt:O8:Cm:Da:Kn:Pi:De:Jm:Mc
+*     Pass orders irrelevant for Disk: empty def
+enddef;
+*------------------------------------------------------------------------------
+$ROLL;
+*
+def NoRoll;
+* mode =  1    stations =Ef:Tr:Wb:Nt:O8:Cm:Da:Kn:Pi:De:Jm:Mc
+*    barrel-roll set to 'roll_off', so reverse-roll by  0 (1 head)
+     roll = off;
+enddef;
+*------------------------------------------------------------------------------
+$SCHED;
+* schedule section for experiment EK051E  
+* No description given.                                                   
+scan No0002;
+*     Note a COMMENT was inserted during scheduling: 
+*       Fringe finder 1/2
+     start=2022y264d20h04m38s; mode=EFF_BAND_32; source=J1829+4844;
+     station=Ef:    0 sec:  240 sec:      0.000000000 GB:   : &n    : 1;
+     station=Tr:    0 sec:  240 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  240 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  240 sec:      0.000000000 GB:   : &cw   : 1;
+     station=O8:    0 sec:  240 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  240 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  240 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  240 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  240 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  240 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  240 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  240 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  240 sec:      0.000000000 GB:   : &ccw  : 1;
+endscan;
+scan No0065;
+*     Note a COMMENT was inserted during scheduling: 
+*       Going to R1
+     start=2022y265d00h06m56s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:   90 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:   90 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=O8:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:   90 sec:      0.000000000 GB:   : &ccw  : 1;
+endscan;
+scan No0066;
+*     Note a COMMENT was inserted during scheduling: 
+*       Loop 3 - part 1
+     start=2022y265d00h08m26s; mode=EFF_BAND_32; source=R1_D;
+     source=EK051E01;
+     source=EK051E02;
+     source=EK051E03;
+     source=EK051E04;
+     source=EK051E05;
+     source=EK051E06;source=EK051E07;source=EK051E08;source=EK051E09;source=EK051E10;source=EK051E11;source=EK051E12;source=EK051E13;source=EK051E14;source=EK051E15;source=EK051E16;source=EK051E17;source=EK051E18;source=EK051E19;source=EK051E20;source=EK051E21;source=EK051E22;source=EK051E23;
+     station=Ef:    0 sec:  340 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  340 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=O8:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  340 sec:      0.000000000 GB:   : &ccw  : 1;
+endscan;
+scan No0067;
+     start=2022y265d00h14m06s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:  123 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  123 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  123 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=O8:    0 sec:  123 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  123 sec:      0.000000000 GB:   : &ccw  : 1;
+endscan;
+scan No0068;
+     start=2022y265d00h16m09s; mode=EFF_BAND_32; source=R1_D;source=EK051E01;source=EK051E02;source=EK051E03;source=EK051E04;source=EK051E05;source=EK051E06;source=EK051E07;source=EK051E08;source=EK051E09;source=EK051E10;source=EK051E11;source=EK051E12;source=EK051E13;source=EK051E14;source=EK051E15;source=EK051E16;source=EK051E17;source=EK051E18;source=EK051E19;source=EK051E20;source=EK051E21;source=EK051E22;source=EK051E23;source=EK051E01;source=EK051E02;source=EK051E03;source=EK051E04;source=EK051E05;source=EK051E06;source=EK051E07;source=EK051E08;source=EK051E09;source=EK051E10;source=EK051E11;source=EK051E12;source=EK051E13;source=EK051E14;source=EK051E15;source=EK051E16;source=EK051E17;source=EK051E18;source=EK051E19;source=EK051E20;source=EK051E21;source=EK051E22;source=EK051E23;
+*              :data_good:data_stop:goto_foot: pass:  wrap :driv:tape at
+     station=Ef:    0 sec:  340 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  340 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=O8:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  340 sec:      0.000000000 GB:   : &ccw  : 1;
+endscan;
+scan No0069;
+     start=2022y265d00h22m32s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:   90 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:   90 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=O8:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:   90 sec:      0.000000000 GB:   : &ccw  : 1;
+endscan;
+scan No0070;
+     start=2022y265d00h24m02s; mode=EFF_BAND_32; source=R1_D;source=EK051E01;source=EK051E02;source=EK051E03;source=EK051E04;source=EK051E05;source=EK051E06;source=EK051E07;source=EK051E08;source=EK051E09;source=EK051E10;source=EK051E11;source=EK051E12;source=EK051E13;source=EK051E14;source=EK051E15;source=EK051E16;source=EK051E17;source=EK051E18;source=EK051E19;source=EK051E20;source=EK051E21;source=EK051E22;source=EK051E23;
+     station=Ef:    0 sec:  340 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  340 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=O8:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  340 sec:      0.000000000 GB:   : &ccw  : 1;
+endscan;
+scan No0071;
+     start=2022y265d00h29m42s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:  123 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  123 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  123 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=O8:    0 sec:  123 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  123 sec:      0.000000000 GB:   : &ccw  : 1;
+endscan;
+scan No0072;
+     start=2022y265d00h31m45s; mode=EFF_BAND_32; source=R1_D;source=EK051E01;source=EK051E02;source=EK051E03;source=EK051E04;source=EK051E05;source=EK051E06;source=EK051E07;source=EK051E08;source=EK051E09;source=EK051E10;source=EK051E11;source=EK051E12;source=EK051E13;source=EK051E14;source=EK051E15;source=EK051E16;source=EK051E17;source=EK051E18;source=EK051E19;source=EK051E20;source=EK051E21;source=EK051E22;source=EK051E23;
+     station=Ef:    0 sec:  340 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  340 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=O8:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  340 sec:      0.000000000 GB:   : &ccw  : 1;
+endscan;
+scan No0073;
+     start=2022y265d00h38m08s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:   90 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:   90 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=O8:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:   90 sec:      0.000000000 GB:   : &ccw  : 1;
+endscan;
+scan No0074;
+     start=2022y265d00h39m38s; mode=EFF_BAND_32; source=J0541+3301;
+*              :data_good:data_stop:goto_foot: pass:  wrap :driv:tape at
+     station=Ef:    0 sec:  233 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  233 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  233 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=O8:    0 sec:  233 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  233 sec:      0.000000000 GB:   : &ccw  : 1;
+endscan;
+scan No0075;
+     start=2022y265d00h43m31s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:  112 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  112 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  112 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=O8:    0 sec:  112 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  112 sec:      0.000000000 GB:   : &ccw  : 1;
+endscan;
+scan No0076;
+*     Note a COMMENT was inserted during scheduling: 
+*       Loop 3 - part 2
+     start=2022y265d00h45m23s; mode=EFF_BAND_32; source=R1_D;source=EK051E01;source=EK051E02;source=EK051E03;source=EK051E04;source=EK051E05;source=EK051E06;source=EK051E07;source=EK051E08;source=EK051E09;source=EK051E10;source=EK051E11;source=EK051E12;source=EK051E13;source=EK051E14;source=EK051E15;source=EK051E16;source=EK051E17;source=EK051E18;source=EK051E19;source=EK051E20;source=EK051E21;source=EK051E22;source=EK051E23;
+     station=Ef:    0 sec:  340 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  340 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=O8:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  340 sec:      0.000000000 GB:   : &ccw  : 1;
+endscan;
+scan No0077;
+     start=2022y265d00h51m46s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:   90 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:   90 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=O8:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:   90 sec:      0.000000000 GB:   : &ccw  : 1;
+endscan;
+scan No0078;
+     start=2022y265d00h53m16s; mode=EFF_BAND_32; source=R1_D;source=EK051E01;source=EK051E02;source=EK051E03;source=EK051E04;source=EK051E05;source=EK051E06;source=EK051E07;source=EK051E08;source=EK051E09;source=EK051E10;source=EK051E11;source=EK051E12;source=EK051E13;source=EK051E14;source=EK051E15;source=EK051E16;source=EK051E17;source=EK051E18;source=EK051E19;source=EK051E20;source=EK051E21;source=EK051E22;source=EK051E23;
+     station=Ef:    0 sec:  340 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  340 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=O8:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  340 sec:      0.000000000 GB:   : &ccw  : 1;
+endscan;
+scan No0079;
+     start=2022y265d00h58m56s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:  123 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  123 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  123 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=O8:    0 sec:  123 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  123 sec:      0.000000000 GB:   : &ccw  : 1;
+endscan;
+scan No0080;
+     start=2022y265d01h00m59s; mode=EFF_BAND_32; source=R1_D;source=EK051E01;source=EK051E02;source=EK051E03;source=EK051E04;source=EK051E05;source=EK051E06;source=EK051E07;source=EK051E08;source=EK051E09;source=EK051E10;source=EK051E11;source=EK051E12;source=EK051E13;source=EK051E14;source=EK051E15;source=EK051E16;source=EK051E17;source=EK051E18;source=EK051E19;source=EK051E20;source=EK051E21;source=EK051E22;source=EK051E23;
+*              :data_good:data_stop:goto_foot: pass:  wrap :driv:tape at
+     station=Ef:    0 sec:  340 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  340 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=O8:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  340 sec:      0.000000000 GB:   : &ccw  : 1;
+endscan;
+scan No0081;
+     start=2022y265d01h07m23s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:   90 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:   90 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=O8:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:   90 sec:      0.000000000 GB:   : &ccw  : 1;
+endscan;
+scan No0082;
+     start=2022y265d01h08m53s; mode=EFF_BAND_32; source=R1_D;source=EK051E01;source=EK051E02;source=EK051E03;source=EK051E04;source=EK051E05;source=EK051E06;source=EK051E07;source=EK051E08;source=EK051E09;source=EK051E10;source=EK051E11;source=EK051E12;source=EK051E13;source=EK051E14;source=EK051E15;source=EK051E16;source=EK051E17;source=EK051E18;source=EK051E19;source=EK051E20;source=EK051E21;source=EK051E22;source=EK051E23;
+     station=Ef:    0 sec:  340 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  340 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=O8:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  340 sec:      0.000000000 GB:   : &ccw  : 1;
+endscan;
+scan No0083;
+     start=2022y265d01h14m33s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:  123 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  123 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  123 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=O8:    0 sec:  123 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  123 sec:      0.000000000 GB:   : &ccw  : 1;
+endscan;
+scan No0084;
+     start=2022y265d01h16m36s; mode=EFF_BAND_32; source=J0541+3301;
+     station=Ef:    0 sec:  210 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:  210 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  210 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  210 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=O8:    0 sec:  210 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  210 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  210 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  210 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  210 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  210 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  210 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  210 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  210 sec:      0.000000000 GB:   : &ccw  : 1;
+endscan;
+scan No0085;
+     start=2022y265d01h20m59s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:   90 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:   90 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=O8:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0086;
+*     Note a COMMENT was inserted during scheduling: 
+*       Loop 3 - part 1
+     start=2022y265d01h22m29s; mode=EFF_BAND_32; source=R1_D;source=EK051E01;source=EK051E02;source=EK051E03;source=EK051E04;source=EK051E05;source=EK051E06;source=EK051E07;source=EK051E08;source=EK051E09;source=EK051E10;source=EK051E11;source=EK051E12;source=EK051E13;source=EK051E14;source=EK051E15;source=EK051E16;source=EK051E17;source=EK051E18;source=EK051E19;source=EK051E20;source=EK051E21;source=EK051E22;source=EK051E23;
+*              :data_good:data_stop:goto_foot: pass:  wrap :driv:tape at
+     station=Ef:    0 sec:  340 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  340 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=O8:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  340 sec:      0.000000000 GB:   : &ccw  : 1;
+endscan;
+scan No0087;
+     start=2022y265d01h28m09s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:  123 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  123 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  123 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=O8:    0 sec:  123 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0088;
+     start=2022y265d01h30m12s; mode=EFF_BAND_32; source=R1_D;source=EK051E01;source=EK051E02;source=EK051E03;source=EK051E04;source=EK051E05;source=EK051E06;source=EK051E07;source=EK051E08;source=EK051E09;source=EK051E10;source=EK051E11;source=EK051E12;source=EK051E13;source=EK051E14;source=EK051E15;source=EK051E16;source=EK051E17;source=EK051E18;source=EK051E19;source=EK051E20;source=EK051E21;source=EK051E22;source=EK051E23;
+     station=Ef:    0 sec:  340 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  340 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=O8:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0089;
+     start=2022y265d01h36m37s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:   90 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:   90 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=O8:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0090;
+     start=2022y265d01h38m07s; mode=EFF_BAND_32; source=R1_D;source=EK051E01;source=EK051E02;source=EK051E03;source=EK051E04;source=EK051E05;source=EK051E06;source=EK051E07;source=EK051E08;source=EK051E09;source=EK051E10;source=EK051E11;source=EK051E12;source=EK051E13;source=EK051E14;source=EK051E15;source=EK051E16;source=EK051E17;source=EK051E18;source=EK051E19;source=EK051E20;source=EK051E21;source=EK051E22;source=EK051E23;
+     station=Ef:    0 sec:  340 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  340 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=O8:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0091;
+     start=2022y265d01h43m47s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:  123 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  123 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  123 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=O8:    0 sec:  123 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0092;
+     start=2022y265d01h45m50s; mode=EFF_BAND_32; source=R1_D;source=EK051E01;source=EK051E02;source=EK051E03;source=EK051E04;source=EK051E05;source=EK051E06;source=EK051E07;source=EK051E08;source=EK051E09;source=EK051E10;source=EK051E11;source=EK051E12;source=EK051E13;source=EK051E14;source=EK051E15;source=EK051E16;source=EK051E17;source=EK051E18;source=EK051E19;source=EK051E20;source=EK051E21;source=EK051E22;source=EK051E23;
+*              :data_good:data_stop:goto_foot: pass:  wrap :driv:tape at
+     station=Ef:    0 sec:  340 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  340 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=O8:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0093;
+     start=2022y265d01h52m15s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:   90 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:   90 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=O8:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0094;
+     start=2022y265d01h53m45s; mode=EFF_BAND_32; source=J0541+3301;
+     station=Ef:    0 sec:  233 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  233 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  233 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=O8:    0 sec:  233 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0095;
+     start=2022y265d01h57m38s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:  112 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  112 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  112 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=O8:    0 sec:  112 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0096;
+*     Note a COMMENT was inserted during scheduling: 
+*       Loop 3 - part 2
+     start=2022y265d01h59m30s; mode=EFF_BAND_32; source=R1_D;source=EK051E01;source=EK051E02;source=EK051E03;source=EK051E04;source=EK051E05;source=EK051E06;source=EK051E07;source=EK051E08;source=EK051E09;source=EK051E10;source=EK051E11;source=EK051E12;source=EK051E13;source=EK051E14;source=EK051E15;source=EK051E16;source=EK051E17;source=EK051E18;source=EK051E19;source=EK051E20;source=EK051E21;source=EK051E22;source=EK051E23;
+     station=Ef:    0 sec:  340 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  340 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=O8:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0097;
+     start=2022y265d02h05m56s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:   90 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:   90 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=O8:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0098;
+     start=2022y265d02h07m26s; mode=EFF_BAND_32; source=R1_D;source=EK051E01;source=EK051E02;source=EK051E03;source=EK051E04;source=EK051E05;source=EK051E06;source=EK051E07;source=EK051E08;source=EK051E09;source=EK051E10;source=EK051E11;source=EK051E12;source=EK051E13;source=EK051E14;source=EK051E15;source=EK051E16;source=EK051E17;source=EK051E18;source=EK051E19;source=EK051E20;source=EK051E21;source=EK051E22;source=EK051E23;
+*              :data_good:data_stop:goto_foot: pass:  wrap :driv:tape at
+     station=Ef:    0 sec:  340 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  340 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=O8:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0099;
+     start=2022y265d02h13m06s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:  123 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  123 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  123 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=O8:    0 sec:  123 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0100;
+     start=2022y265d02h15m09s; mode=EFF_BAND_32; source=R1_D;source=EK051E01;source=EK051E02;source=EK051E03;source=EK051E04;source=EK051E05;source=EK051E06;source=EK051E07;source=EK051E08;source=EK051E09;source=EK051E10;source=EK051E11;source=EK051E12;source=EK051E13;source=EK051E14;source=EK051E15;source=EK051E16;source=EK051E17;source=EK051E18;source=EK051E19;source=EK051E20;source=EK051E21;source=EK051E22;source=EK051E23;
+     station=Ef:    0 sec:  340 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  340 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=O8:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0101;
+     start=2022y265d02h21m35s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:   90 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0102;
+     start=2022y265d02h23m05s; mode=EFF_BAND_32; source=R1_D;source=EK051E01;source=EK051E02;source=EK051E03;source=EK051E04;source=EK051E05;source=EK051E06;source=EK051E07;source=EK051E08;source=EK051E09;source=EK051E10;source=EK051E11;source=EK051E12;source=EK051E13;source=EK051E14;source=EK051E15;source=EK051E16;source=EK051E17;source=EK051E18;source=EK051E19;source=EK051E20;source=EK051E21;source=EK051E22;source=EK051E23;
+     station=Ef:    0 sec:  340 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  340 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=O8:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0103;
+     start=2022y265d02h28m45s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:  123 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  123 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:  123 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0104;
+     start=2022y265d02h30m48s; mode=EFF_BAND_32; source=J0541+3301;
+*              :data_good:data_stop:goto_foot: pass:  wrap :driv:tape at
+     station=Ef:    0 sec:  210 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:  210 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  210 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  210 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=O8:    0 sec:  210 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  210 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  210 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  210 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  210 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  210 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  210 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  210 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  210 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0105;
+     start=2022y265d02h35m15s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:   90 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0106;
+*     Note a COMMENT was inserted during scheduling: 
+*       Loop 3 - part 1
+     start=2022y265d02h36m45s; mode=EFF_BAND_32; source=R1_D;source=EK051E01;source=EK051E02;source=EK051E03;source=EK051E04;source=EK051E05;source=EK051E06;source=EK051E07;source=EK051E08;source=EK051E09;source=EK051E10;source=EK051E11;source=EK051E12;source=EK051E13;source=EK051E14;source=EK051E15;source=EK051E16;source=EK051E17;source=EK051E18;source=EK051E19;source=EK051E20;source=EK051E21;source=EK051E22;source=EK051E23;
+     station=Ef:    0 sec:  340 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0107;
+     start=2022y265d02h42m25s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:  123 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  123 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:  123 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0108;
+     start=2022y265d02h44m28s; mode=EFF_BAND_32; source=R1_D;source=EK051E01;source=EK051E02;source=EK051E03;source=EK051E04;source=EK051E05;source=EK051E06;source=EK051E07;source=EK051E08;source=EK051E09;source=EK051E10;source=EK051E11;source=EK051E12;source=EK051E13;source=EK051E14;source=EK051E15;source=EK051E16;source=EK051E17;source=EK051E18;source=EK051E19;source=EK051E20;source=EK051E21;source=EK051E22;source=EK051E23;
+     station=Ef:    0 sec:  340 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0109;
+     start=2022y265d02h50m55s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:   90 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0110;
+     start=2022y265d02h52m25s; mode=EFF_BAND_32; source=R1_D;source=EK051E01;source=EK051E02;source=EK051E03;source=EK051E04;source=EK051E05;source=EK051E06;source=EK051E07;source=EK051E08;source=EK051E09;source=EK051E10;source=EK051E11;source=EK051E12;source=EK051E13;source=EK051E14;source=EK051E15;source=EK051E16;source=EK051E17;source=EK051E18;source=EK051E19;source=EK051E20;source=EK051E21;source=EK051E22;source=EK051E23;
+*              :data_good:data_stop:goto_foot: pass:  wrap :driv:tape at
+     station=Ef:    0 sec:  340 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0111;
+     start=2022y265d02h58m05s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:  123 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  123 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:  123 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0112;
+     start=2022y265d03h00m08s; mode=EFF_BAND_32; source=R1_D;source=EK051E01;source=EK051E02;source=EK051E03;source=EK051E04;source=EK051E05;source=EK051E06;source=EK051E07;source=EK051E08;source=EK051E09;source=EK051E10;source=EK051E11;source=EK051E12;source=EK051E13;source=EK051E14;source=EK051E15;source=EK051E16;source=EK051E17;source=EK051E18;source=EK051E19;source=EK051E20;source=EK051E21;source=EK051E22;source=EK051E23;
+     station=Ef:    0 sec:  340 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0113;
+     start=2022y265d03h06m36s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Tr:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0114;
+     start=2022y265d03h08m06s; mode=EFF_BAND_32; source=J0541+3301;
+     station=Ef:    0 sec:  233 sec:      0.000000000 GB:   : &ccw  : 1;
+     station=Tr:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  233 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:  233 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0115;
+     start=2022y265d03h11m59s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+     station=Tr:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  112 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:  112 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0116;
+*     Note a COMMENT was inserted during scheduling: 
+*       Loop 3 - part 2
+     start=2022y265d03h13m51s; mode=EFF_BAND_32; source=R1_D;source=EK051E01;source=EK051E02;source=EK051E03;source=EK051E04;source=EK051E05;source=EK051E06;source=EK051E07;source=EK051E08;source=EK051E09;source=EK051E10;source=EK051E11;source=EK051E12;source=EK051E13;source=EK051E14;source=EK051E15;source=EK051E16;source=EK051E17;source=EK051E18;source=EK051E19;source=EK051E20;source=EK051E21;source=EK051E22;source=EK051E23;
+*              :data_good:data_stop:goto_foot: pass:  wrap :driv:tape at
+     station=Ef:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Tr:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0117;
+     start=2022y265d03h20m20s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Tr:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0118;
+     start=2022y265d03h21m50s; mode=EFF_BAND_32; source=R1_D;source=EK051E01;source=EK051E02;source=EK051E03;source=EK051E04;source=EK051E05;source=EK051E06;source=EK051E07;source=EK051E08;source=EK051E09;source=EK051E10;source=EK051E11;source=EK051E12;source=EK051E13;source=EK051E14;source=EK051E15;source=EK051E16;source=EK051E17;source=EK051E18;source=EK051E19;source=EK051E20;source=EK051E21;source=EK051E22;source=EK051E23;
+     station=Ef:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Tr:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0119;
+     start=2022y265d03h27m30s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Tr:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  123 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:  123 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0120;
+     start=2022y265d03h29m33s; mode=EFF_BAND_32; source=R1_D;source=EK051E01;source=EK051E02;source=EK051E03;source=EK051E04;source=EK051E05;source=EK051E06;source=EK051E07;source=EK051E08;source=EK051E09;source=EK051E10;source=EK051E11;source=EK051E12;source=EK051E13;source=EK051E14;source=EK051E15;source=EK051E16;source=EK051E17;source=EK051E18;source=EK051E19;source=EK051E20;source=EK051E21;source=EK051E22;source=EK051E23;
+     station=Ef:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Tr:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0121;
+     start=2022y265d03h36m02s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Tr:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0122;
+     start=2022y265d03h37m32s; mode=EFF_BAND_32; source=R1_D;source=EK051E01;source=EK051E02;source=EK051E03;source=EK051E04;source=EK051E05;source=EK051E06;source=EK051E07;source=EK051E08;source=EK051E09;source=EK051E10;source=EK051E11;source=EK051E12;source=EK051E13;source=EK051E14;source=EK051E15;source=EK051E16;source=EK051E17;source=EK051E18;source=EK051E19;source=EK051E20;source=EK051E21;source=EK051E22;source=EK051E23;
+*              :data_good:data_stop:goto_foot: pass:  wrap :driv:tape at
+     station=Ef:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Tr:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0123;
+     start=2022y265d03h43m12s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Tr:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  123 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:  123 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0124;
+     start=2022y265d03h45m15s; mode=EFF_BAND_32; source=J0541+3301;
+     station=Ef:    0 sec:  210 sec:      0.000000000 GB:   : &n    : 1;
+     station=Tr:    0 sec:  210 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  210 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  210 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:  210 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  210 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  210 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  210 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  210 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  210 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  210 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  210 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  210 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0125;
+     start=2022y265d03h49m50s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Tr:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0126;
+*     Note a COMMENT was inserted during scheduling: 
+*       Loop 3 - part 1
+     start=2022y265d03h51m20s; mode=EFF_BAND_32; source=R1_D;source=EK051E01;source=EK051E02;source=EK051E03;source=EK051E04;source=EK051E05;source=EK051E06;source=EK051E07;source=EK051E08;source=EK051E09;source=EK051E10;source=EK051E11;source=EK051E12;source=EK051E13;source=EK051E14;source=EK051E15;source=EK051E16;source=EK051E17;source=EK051E18;source=EK051E19;source=EK051E20;source=EK051E21;source=EK051E22;source=EK051E23;
+     station=Ef:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Tr:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0127;
+     start=2022y265d03h57m00s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Tr:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  123 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:  123 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0128;
+     start=2022y265d03h59m03s; mode=EFF_BAND_32; source=R1_D;source=EK051E01;source=EK051E02;source=EK051E03;source=EK051E04;source=EK051E05;source=EK051E06;source=EK051E07;source=EK051E08;source=EK051E09;source=EK051E10;source=EK051E11;source=EK051E12;source=EK051E13;source=EK051E14;source=EK051E15;source=EK051E16;source=EK051E17;source=EK051E18;source=EK051E19;source=EK051E20;source=EK051E21;source=EK051E22;source=EK051E23;
+*              :data_good:data_stop:goto_foot: pass:  wrap :driv:tape at
+     station=Ef:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Tr:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0129;
+     start=2022y265d04h05m33s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Tr:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0130;
+     start=2022y265d04h07m03s; mode=EFF_BAND_32; source=R1_D;source=EK051E01;source=EK051E02;source=EK051E03;source=EK051E04;source=EK051E05;source=EK051E06;source=EK051E07;source=EK051E08;source=EK051E09;source=EK051E10;source=EK051E11;source=EK051E12;source=EK051E13;source=EK051E14;source=EK051E15;source=EK051E16;source=EK051E17;source=EK051E18;source=EK051E19;source=EK051E20;source=EK051E21;source=EK051E22;source=EK051E23;
+     station=Ef:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Tr:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0131;
+     start=2022y265d04h12m43s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Tr:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  123 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:  123 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0132;
+     start=2022y265d04h14m46s; mode=EFF_BAND_32; source=R1_D;source=EK051E01;source=EK051E02;source=EK051E03;source=EK051E04;source=EK051E05;source=EK051E06;source=EK051E07;source=EK051E08;source=EK051E09;source=EK051E10;source=EK051E11;source=EK051E12;source=EK051E13;source=EK051E14;source=EK051E15;source=EK051E16;source=EK051E17;source=EK051E18;source=EK051E19;source=EK051E20;source=EK051E21;source=EK051E22;source=EK051E23;
+     station=Ef:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Tr:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=O8:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0133;
+     start=2022y265d04h21m16s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Tr:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=O8:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0134;
+     start=2022y265d04h22m46s; mode=EFF_BAND_32; source=J0541+3301;
+*              :data_good:data_stop:goto_foot: pass:  wrap :driv:tape at
+     station=Ef:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+     station=Tr:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  233 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:  233 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0135;
+     start=2022y265d04h26m39s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+     station=Tr:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  112 sec:      0.000000000 GB:   :       : 1;
+     station=O8:    0 sec:  112 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0136;
+*     Note a COMMENT was inserted during scheduling: 
+*       Loop 3 - part 2
+     start=2022y265d04h28m31s; mode=EFF_BAND_32; source=R1_D;source=EK051E01;source=EK051E02;source=EK051E03;source=EK051E04;source=EK051E05;source=EK051E06;source=EK051E07;source=EK051E08;source=EK051E09;source=EK051E10;source=EK051E11;source=EK051E12;source=EK051E13;source=EK051E14;source=EK051E15;source=EK051E16;source=EK051E17;source=EK051E18;source=EK051E19;source=EK051E20;source=EK051E21;source=EK051E22;source=EK051E23;
+     station=Ef:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Tr:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=O8:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0137;
+     start=2022y265d04h35m00s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Tr:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0138;
+     start=2022y265d04h36m30s; mode=EFF_BAND_32; source=R1_D;source=EK051E01;source=EK051E02;source=EK051E03;source=EK051E04;source=EK051E05;source=EK051E06;source=EK051E07;source=EK051E08;source=EK051E09;source=EK051E10;source=EK051E11;source=EK051E12;source=EK051E13;source=EK051E14;source=EK051E15;source=EK051E16;source=EK051E17;source=EK051E18;source=EK051E19;source=EK051E20;source=EK051E21;source=EK051E22;source=EK051E23;
+     station=Ef:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Tr:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=O8:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0139;
+     start=2022y265d04h42m10s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Tr:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  123 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:  123 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0140;
+     start=2022y265d04h44m13s; mode=EFF_BAND_32; source=R1_D;source=EK051E01;source=EK051E02;source=EK051E03;source=EK051E04;source=EK051E05;source=EK051E06;source=EK051E07;source=EK051E08;source=EK051E09;source=EK051E10;source=EK051E11;source=EK051E12;source=EK051E13;source=EK051E14;source=EK051E15;source=EK051E16;source=EK051E17;source=EK051E18;source=EK051E19;source=EK051E20;source=EK051E21;source=EK051E22;source=EK051E23;
+*              :data_good:data_stop:goto_foot: pass:  wrap :driv:tape at
+     station=Ef:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Tr:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0141;
+     start=2022y265d04h50m42s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Tr:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0142;
+     start=2022y265d04h52m12s; mode=EFF_BAND_32; source=R1_D;source=EK051E01;source=EK051E02;source=EK051E03;source=EK051E04;source=EK051E05;source=EK051E06;source=EK051E07;source=EK051E08;source=EK051E09;source=EK051E10;source=EK051E11;source=EK051E12;source=EK051E13;source=EK051E14;source=EK051E15;source=EK051E16;source=EK051E17;source=EK051E18;source=EK051E19;source=EK051E20;source=EK051E21;source=EK051E22;source=EK051E23;
+     station=Ef:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Tr:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0143;
+     start=2022y265d04h57m52s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Tr:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  123 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:  123 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0144;
+     start=2022y265d04h59m55s; mode=EFF_BAND_32; source=J0541+3301;
+     station=Ef:    0 sec:  210 sec:      0.000000000 GB:   : &n    : 1;
+     station=Tr:    0 sec:  210 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  210 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  210 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:  210 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  210 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  210 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  210 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  210 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  210 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  210 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  210 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  210 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0145;
+     start=2022y265d05h04m35s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Tr:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0146;
+*     Note a COMMENT was inserted during scheduling: 
+*       Loop 3 - part 1
+     start=2022y265d05h06m05s; mode=EFF_BAND_32; source=R1_D;source=EK051E01;source=EK051E02;source=EK051E03;source=EK051E04;source=EK051E05;source=EK051E06;source=EK051E07;source=EK051E08;source=EK051E09;source=EK051E10;source=EK051E11;source=EK051E12;source=EK051E13;source=EK051E14;source=EK051E15;source=EK051E16;source=EK051E17;source=EK051E18;source=EK051E19;source=EK051E20;source=EK051E21;source=EK051E22;source=EK051E23;
+*              :data_good:data_stop:goto_foot: pass:  wrap :driv:tape at
+     station=Ef:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Tr:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0147;
+     start=2022y265d05h11m45s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Tr:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  123 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:  123 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0148;
+     start=2022y265d05h13m48s; mode=EFF_BAND_32; source=R1_D;source=EK051E01;source=EK051E02;source=EK051E03;source=EK051E04;source=EK051E05;source=EK051E06;source=EK051E07;source=EK051E08;source=EK051E09;source=EK051E10;source=EK051E11;source=EK051E12;source=EK051E13;source=EK051E14;source=EK051E15;source=EK051E16;source=EK051E17;source=EK051E18;source=EK051E19;source=EK051E20;source=EK051E21;source=EK051E22;source=EK051E23;
+     station=Ef:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Tr:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0149;
+     start=2022y265d05h20m10s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Tr:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0150;
+     start=2022y265d05h21m40s; mode=EFF_BAND_32; source=R1_D;source=EK051E01;source=EK051E02;source=EK051E03;source=EK051E04;source=EK051E05;source=EK051E06;source=EK051E07;source=EK051E08;source=EK051E09;source=EK051E10;source=EK051E11;source=EK051E12;source=EK051E13;source=EK051E14;source=EK051E15;source=EK051E16;source=EK051E17;source=EK051E18;source=EK051E19;source=EK051E20;source=EK051E21;source=EK051E22;source=EK051E23;
+     station=Ef:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Tr:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0151;
+     start=2022y265d05h27m20s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Tr:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  123 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:  123 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  123 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0152;
+     start=2022y265d05h29m23s; mode=EFF_BAND_32; source=R1_D;source=EK051E01;source=EK051E02;source=EK051E03;source=EK051E04;source=EK051E05;source=EK051E06;source=EK051E07;source=EK051E08;source=EK051E09;source=EK051E10;source=EK051E11;source=EK051E12;source=EK051E13;source=EK051E14;source=EK051E15;source=EK051E16;source=EK051E17;source=EK051E18;source=EK051E19;source=EK051E20;source=EK051E21;source=EK051E22;source=EK051E23;
+*              :data_good:data_stop:goto_foot: pass:  wrap :driv:tape at
+     station=Ef:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Tr:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0153;
+     start=2022y265d05h35m44s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Tr:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0154;
+     start=2022y265d05h37m14s; mode=EFF_BAND_32; source=J0541+3301;
+     station=Ef:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+     station=Tr:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  233 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:  233 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  233 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0155;
+     start=2022y265d05h41m07s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+     station=Tr:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  112 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:  112 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  112 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0156;
+*     Note a COMMENT was inserted during scheduling: 
+*       Loop 3 - part 2
+     start=2022y265d05h42m59s; mode=EFF_BAND_32; source=R1_D;source=EK051E01;source=EK051E02;source=EK051E03;source=EK051E04;source=EK051E05;source=EK051E06;source=EK051E07;source=EK051E08;source=EK051E09;source=EK051E10;source=EK051E11;source=EK051E12;source=EK051E13;source=EK051E14;source=EK051E15;source=EK051E16;source=EK051E17;source=EK051E18;source=EK051E19;source=EK051E20;source=EK051E21;source=EK051E22;source=EK051E23;
+     station=Ef:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Tr:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:  340 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  340 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0157;
+     start=2022y265d05h49m20s; mode=EFF_BAND_32; source=J0529+3209;
+     station=Ef:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Tr:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:   90 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:   90 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+scan No0158;
+*     Note a COMMENT was inserted during scheduling: 
+*       Fringe finder 2/2
+     start=2022y265d05h52m06s; mode=EFF_BAND_32; source=J0558+3418;
+*              :data_good:data_stop:goto_foot: pass:  wrap :driv:tape at
+     station=Ef:    0 sec:  240 sec:      0.000000000 GB:   : &n    : 1;
+     station=Tr:    0 sec:  240 sec:      0.000000000 GB:   : &n    : 1;
+     station=Wb:    0 sec:  240 sec:      0.000000000 GB:   :       : 1;
+     station=Nt:    0 sec:  240 sec:      0.000000000 GB:   : &n    : 1;
+     station=O8:    0 sec:  240 sec:      0.000000000 GB:   :       : 1;
+     station=Cm:    0 sec:  240 sec:      0.000000000 GB:   : &n    : 1;
+     station=Du:    0 sec:  240 sec:      0.000000000 GB:   : &n    : 1;
+     station=Da:    0 sec:  240 sec:      0.000000000 GB:   : &n    : 1;
+     station=Kn:    0 sec:  240 sec:      0.000000000 GB:   : &n    : 1;
+     station=Pi:    0 sec:  240 sec:      0.000000000 GB:   : &n    : 1;
+     station=De:    0 sec:  240 sec:      0.000000000 GB:   : &n    : 1;
+     station=Jm:    0 sec:  240 sec:      0.000000000 GB:   : &n    : 1;
+     station=Mc:    0 sec:  240 sec:      0.000000000 GB:   : &n    : 1;
+endscan;
+*-------------------------------------------------------------------------------
+$TAPELOG_OBS;       * Experiment: EK051E
+*-------------------------------------------------------------------------------
+*
+*       drive#    VSN             start time          end time
+  def CM;
+    VSN = 1     : FLXBFFCm : 2022y264d20h04m38s : 2022y265d05h56m06s;
+  enddef;
+*
+  def DA;
+    VSN = 1     : FLXBFFDa : 2022y264d20h04m38s : 2022y265d05h56m06s;
+  enddef;
+*
+  def DU;
+    VSN = 1     : FLXBFFDu : 2022y264d20h04m38s : 2022y265d05h56m06s;
+  enddef;
+*
+  def DE;
+    VSN = 1     : FLXBFFDe : 2022y264d20h04m38s : 2022y265d05h56m06s;
+  enddef;
+*
+  def EF;
+    VSN = 1     : FLXBFFEf : 2022y264d20h04m38s : 2022y265d05h56m06s;
+  enddef;
+*
+  def JM;
+    VSN = 1     : FLXBFFJm : 2022y264d20h04m38s : 2022y265d05h56m06s;
+  enddef;
+*
+  def KN;
+    VSN = 1     : FLXBFFKn : 2022y264d20h04m38s : 2022y265d05h56m06s;
+  enddef;
+*
+  def MC;
+    VSN = 1     : FLXBFFMc : 2022y264d20h04m38s : 2022y265d05h56m06s;
+  enddef;
+*
+  def NT;
+    VSN = 1     : FLXBFFNt : 2022y264d20h04m38s : 2022y265d05h56m06s;
+  enddef;
+*
+  def O8;
+    VSN = 1     : FLXBFFO8 : 2022y264d20h04m38s : 2022y265d05h56m06s;
+  enddef;
+*
+  def PI;
+    VSN = 1     : FLXBFFPi : 2022y264d20h04m38s : 2022y265d05h56m06s;
+  enddef;
+*
+  def TR;
+    VSN = 1     : FLXBFFTr : 2022y264d20h04m38s : 2022y265d05h56m06s;
+  enddef;
+*
+  def WB;
+    VSN = 1     : FLXBFFWb : 2022y264d20h04m38s : 2022y265d05h56m06s;
+  enddef;
+*-------------------------------------------------------------------------------
+$CLOCK;             * Experiment: EK051E
+*-------------------------------------------------------------------------------
+*
+*                  valid from           clock_early    clock_early_epoch        rate
+def CM;
+   clock_early = 2022y264d20h00m00s : -12.2037 usec : 2022y265d01h00m25s : 4.3800000e-8 usec/sec;
+enddef;
+def DA;
+   clock_early = 2022y264d20h00m00s : -12.2635 usec : 2022y265d01h00m25s : 4.3800000e-8 usec/sec;
+enddef;
+def DE;
+   clock_early = 2022y264d20h00m00s : -12.2301 usec : 2022y265d01h00m25s : 4.3800000e-8 usec/sec;
+enddef;
+def DU;
+   clock_early = 2022y264d20h00m00s : -12.2594 usec : 2022y265d01h00m25s : 4.3800000e-8 usec/sec;
+enddef;
+def EF;
+   clock_early = 2022y264d20h00m00s : 28.8720 usec : 2022y265d01h00m25s : -1.1600000e-7 usec/sec;
+enddef;
+def JM;
+   clock_early = 2022y264d20h00m00s : -12.2466 usec : 2022y265d01h00m25s : 4.3800000e-8 usec/sec;
+enddef;
+def KN;
+   clock_early = 2022y264d20h00m00s : -12.2322 usec : 2022y265d01h00m25s : 4.3800000e-8 usec/sec;
+enddef;
+def MC;
+   clock_early = 2022y264d20h00m00s : -8.9484 usec : 2022y265d01h00m25s : 5.0400000e-8 usec/sec;
+enddef;
+def NT;
+   clock_early = 2022y264d20h00m00s : 0.1587 usec : 2022y265d01h00m25s : 1.2600000e-7 usec/sec;
+enddef;
+def O8;
+   clock_early = 2022y264d20h00m00s : -77.2333 usec : 2022y265d01h00m25s : -6.0600000e-7 usec/sec;
+enddef;
+def PI;
+   clock_early = 2022y264d20h00m00s : -12.2276 usec : 2022y265d01h00m25s : 4.3800000e-8 usec/sec;
+enddef;
+def TR;
+   clock_early = 2022y264d20h00m00s : -17.5990 usec : 2022y265d01h00m25s : 0.0000000e+0 usec/sec;
+enddef;
+def WB;
+   clock_early = 2022y264d20h00m00s : -14.6511 usec : 2022y265d01h00m25s : 1.0600000e-7 usec/sec;
+enddef;
+*-------------------------------------------------------------------------------
+$EOP; *                                Experiment: EK051E
+*-------------------------------------------------------------------------------
+*
+ def EOP263;
+   TAI-UTC = 37 sec;
+   eop_ref_epoch = 2022y263d00h00m00s;
+   num_eop_points= 4;
+   eop_interval  = 24 hr;
+   ut1-utc   = -0.0075704 sec:-0.0066697 sec:-0.0059719 sec:-0.0054458 sec;
+   x_wobble  =  0.291353 asec: 0.290617 asec: 0.289753 asec: 0.288612 asec;
+   y_wobble  =  0.283522 asec: 0.281049 asec: 0.278378 asec: 0.275565 asec;
+   num_nut_points= 4;
+   delta_psi = -0.118319 asec:-0.118014 asec:-0.117821 asec:-0.117735 asec;
+   delta_eps = -0.008763 asec:-0.008904 asec:-0.009025 asec:-0.008975 asec;
+ enddef;
+*-------------------------------------------------------------------------------
