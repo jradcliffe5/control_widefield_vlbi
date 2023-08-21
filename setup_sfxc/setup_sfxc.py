@@ -99,28 +99,27 @@ if ast.literal_eval(inputs['parallelise_scans']) == True:
 		rmfiles(["%s/%s/%s.%s.ctrl"%(o_dir,scan_c,ctrl_file["exper_name"],scan_c)])
 		with open("%s/%s/%s.%s.ctrl"%(o_dir,scan_c,ctrl_file["exper_name"],scan_c), "w") as outfile:
 			json.dump(sub_ctrl, outfile, indent=4)
-		commands.append('%s %s/%s/%s.%s.ctrl %s'%(sfxc_exec,o_dir,scan_c,ctrl_file["exper_name"],scan_c,ast.literal_eval(inputs["vex_file"])))
+		commands.append('%s %s/%s/%s.%s.ctrl %s > %s/sfxc_run.stdout 2> %s/sfxc_run.err'%(sfxc_exec,o_dir,scan_c,ctrl_file["exper_name"],scan_c,ast.literal_eval(inputs["vex_file"]),o_dir,o_dir))
 		for j in vexfile['SCHED'][scan_c]['source']:
-			print(corr_files)
-			if len(vexfile['SCHED'][scan_c]['source']) == 1:
+			if j == ast.literal_eval(inputs["calibrator_target"]):
 				if ctrl_file["exper_name"] in list(corr_files.keys()):
-					corr_files[ctrl_file["exper_name"]] = corr_files[ctrl_file["exper_name"]].append("%s/%s/%s.%s.cor"%(o_dir,scan_c,ctrl_file["exper_name"],scan_c))
+					corr_files[ctrl_file["exper_name"]] = corr_files[ctrl_file["exper_name"]]+["%s/%s/%s.%s.cor_%s"%(o_dir,scan_c,ctrl_file["exper_name"],scan_c,j)]
 				else:
-					corr_files[ctrl_file["exper_name"]] = list("%s/%s/%s.%s.cor"%(o_dir,scan_c,ctrl_file["exper_name"],scan_c))
-			elif j == inputs["calibrator_target"]:
+					corr_files[ctrl_file["exper_name"]] = ["%s/%s/%s.%s.cor_%s"%(o_dir,scan_c,ctrl_file["exper_name"],scan_c,j)]
+			elif len(vexfile['SCHED'][scan_c]['source']) == 1:
 				if ctrl_file["exper_name"] in list(corr_files.keys()):
-					corr_files[ctrl_file["exper_name"]] = corr_files[ctrl_file["exper_name"]].append("%s/%s/%s.%s.cor_%s"%(o_dir,scan_c,ctrl_file["exper_name"],scan_c,j))
+					corr_files[ctrl_file["exper_name"]] = corr_files[ctrl_file["exper_name"]] + ["%s/%s/%s.%s.cor"%(o_dir,scan_c,ctrl_file["exper_name"],scan_c)]
 				else:
-					corr_files[ctrl_file["exper_name"]] = list("%s/%s/%s.%s.cor_%s"%(o_dir,scan_c,ctrl_file["exper_name"],scan_c,j))
+					corr_files[ctrl_file["exper_name"]] = ["%s/%s/%s.%s.cor"%(o_dir,scan_c,ctrl_file["exper_name"],scan_c)]
 			else:
 				if j in list(corr_files.keys()):
-					corr_files[j] = corr_files[j].append("%s/%s/%s.%s.cor_%s"%(o_dir,scan_c,ctrl_file["exper_name"],scan_c,j))
+					corr_files[j] = corr_files[j] + ["%s/%s/%s.%s.cor_%s"%(o_dir,scan_c,ctrl_file["exper_name"],scan_c,j)]
 				else:
-					corr_files[j] = list("%s/%s/%s.%s.cor_%s"%(o_dir,scan_c,ctrl_file["exper_name"],scan_c,j))
+					corr_files[j] = ["%s/%s/%s.%s.cor_%s"%(o_dir,scan_c,ctrl_file["exper_name"],scan_c,j)]
 	write_job(step='run_sfxc',commands=commands,job_manager='bash')
 	commands = []
 	for i in list(corr_files.keys()):
-		commands.append('%s %s -o %s.ms'%(ast.literal_eval(inputs["j2ms2_exec"])," ".join(corr_files[i]),i))
+		commands.append('%s %s -o %s/%s.ms'%(ast.literal_eval(inputs["j2ms2_exec"])," ".join(corr_files[i]),o_dir,i))
 	write_job(step='run_j2ms2',commands=commands,job_manager='bash')
 
 				
