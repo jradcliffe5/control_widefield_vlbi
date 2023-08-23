@@ -4,8 +4,8 @@
 
 #### PATHS AND FILES ####
 exper_name="EK051E"
-baseband_location="/home/Jack/DATA/EK051E/baseband"
-output_dir="/DATA/radcliffe/EK051E"
+baseband_location="/home/Jack/DATA/ek051e/baseband"
+output_dir="/DATA/radcliffe/ek051e"
 vex_file="ek051e.vix"
 sfxc_exec="mpirun -n 32 /EXEC/IPP_SFXC/bin/sfxc"
 j2ms2_exec="singularity run --app j2ms2 /SOFTWARE/jive-casa/jive-casa.img" 

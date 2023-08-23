@@ -24,6 +24,7 @@ This module provides a simple VEX parser.
 
 import ply.lex as lex
 import ply.yacc as yacc
+import json
 
 states = (
     ('literal', 'exclusive'),
@@ -175,9 +176,14 @@ def p_scan_block_lines(t):
                 t[0]['source'] = t[0]['source']+list(t[2].values())
             else:
                 t[0]['source'] = list(t[2].values())
+        elif list(t[2].keys())==['station']:
+            if 'station' in list(t[0].keys()):
+                t[0]['station'] = t[0]['station']+list(t[2].values())
+            else:
+                t[0]['station'] = list(t[2].values())
         else:
             t[0].update(t[2])
-        pass
+            pass
     return
 
 def p_block_line(t):
@@ -246,3 +252,10 @@ def Vex(file):
 if __name__ == "__main__":
     import sys
     print(Vex(sys.argv[1]))
+    try:
+        if sys.argv[2] == 'save':
+            with open("%s.json"%sys.argv[1], "w") as outfile:
+                json.dump(Vex(sys.argv[1]), outfile, indent=4)
+    except:
+        pass
+            

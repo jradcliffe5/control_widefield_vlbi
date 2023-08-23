@@ -33,17 +33,29 @@ ctrl_file["channels"] = corr_chans
 ########################
 
 ss={}
-ss_s={}
-for i in os.listdir('%s'%bb_loc):
-	spl=i.split('_')
-	scan=spl[2].split('.')[0]
-	station=spl[1].capitalize()
-	if scan in ss:
-		ss[scan]= ss[scan] + [station]
-		ss_s[scan] = ss_s[scan] + [i]
-	else:
-		ss[scan]=[station]
-		ss_s[scan] = [i]
+### NEW VIX FILE READING
+for i in vexfile['SCHED'].keys():
+	#print(i)
+	scan=i
+	station = []
+	for j in vexfile['SCHED'][i]['station']:
+		station.append(j[0])
+	ss[scan] = station
+
+
+ss_s = {}
+data_s = {}
+for i in ss.keys(): ## i is scans
+	ds = []
+	for j in ss[i]:
+		if os.path.exists('%s/%s_%s_%s.m5a'%(bb_loc,ctrl_file['exper_name'].lower(),j.lower(),i.lower())):
+			ds.append('%s_%s_%s.m5a'%(ctrl_file['exper_name'].lower(),j.lower(),i.lower()))
+			data_s[j] = '%s_%s_%s.m5a'%(ctrl_file['exper_name'].lower(),j.lower(),i.lower())
+		else:
+			#print(j)
+			ds.append(data_s[j])
+	ss_s[i] = ds
+
 
 del_k = []
 for i in ss.keys():
@@ -79,7 +91,7 @@ if ast.literal_eval(inputs['parallelise_scans']) == True:
 		sub_ctrl['output_file'] = "file://%s/%s/%s.%s.cor"%(o_dir,scan_c,ctrl_file["exper_name"],scan_c)
 		sub_ctrl['scans']=[scan_c]
 		sub_ctrl['start']=vexfile['SCHED'][scan_c]['start']
-		scan_length = int(vexfile['SCHED'][scan_c]["station"][2].split(" sec")[0])
+		scan_length = int(vexfile['SCHED'][scan_c]["station"][0][2].split(" sec")[0])
 		sub_ctrl['stop']=find_stop(vexfile['SCHED'][scan_c]['start'],scan_length)
 		sub_ctrl['stations'] = ss[i]
 		if ctrl_file['multi_phase_center'] == 'auto':
@@ -122,7 +134,6 @@ if ast.literal_eval(inputs['parallelise_scans']) == True:
 		commands.append('%s %s -o %s/%s.ms'%(ast.literal_eval(inputs["j2ms2_exec"])," ".join(corr_files[i]),o_dir,i))
 	write_job(step='run_j2ms2',commands=commands,job_manager='bash')
 
-				
 
 else:
 	data_sources = {}
