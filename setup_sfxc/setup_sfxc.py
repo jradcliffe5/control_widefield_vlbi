@@ -128,11 +128,11 @@ if ast.literal_eval(inputs['parallelise_scans']) == True:
 					corr_files[j] = corr_files[j] + ["%s/%s/%s.%s.cor_%s"%(o_dir,scan_c,ctrl_file["exper_name"],scan_c,j)]
 				else:
 					corr_files[j] = ["%s/%s/%s.%s.cor_%s"%(o_dir,scan_c,ctrl_file["exper_name"],scan_c,j)]
-	write_job(step='run_sfxc',commands=commands,job_manager='bash')
+	write_job(step='run_sfxc',commands=commands,job_manager='bash',write='w')
 	commands = []
 	for i in list(corr_files.keys()):
 		commands.append('%s %s -o %s/%s.ms'%(ast.literal_eval(inputs["j2ms2_exec"])," ".join(corr_files[i]),o_dir,i))
-	write_job(step='run_j2ms2',commands=commands,job_manager='bash')
+	write_job(step='run_j2ms2',commands=commands,job_manager='bash',write='w')
 
 
 else:

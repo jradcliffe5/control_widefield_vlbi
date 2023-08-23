@@ -6,8 +6,8 @@ def flatten_extend(matrix):
         flat_list.extend(row)
     return flat_list
 
-def write_job(step,commands,job_manager):
-	with open('./job_%s.%s'%(step,job_manager), 'a') as filehandle:
+def write_job(step,commands,job_manager,write):
+	with open('./job_%s.%s'%(step,job_manager), write) as filehandle:
 			for listitem in commands:
 				filehandle.write('%s\n' % listitem)
 
