@@ -133,6 +133,8 @@ if ast.literal_eval(inputs['parallelise_scans']) == True:
 	for i in list(corr_files.keys()):
 		commands.append('%s %s -o %s/%s.ms'%(ast.literal_eval(inputs["j2ms2_exec"])," ".join(corr_files[i]),o_dir,i))
 	write_job(step='run_j2ms2',commands=commands,job_manager='bash',write='w')
+	commands = ['parallel -eta -j 10 flag_correlator_weights.py {} %.3f ::: %s*.ms'%(ast.literal_eval(inputs['flag_threshold']),ctrl_file["exper_name"])]
+	write_job(step='run_flag_data',commands=commands,job_manager='bash',write='w')
 
 
 else:

@@ -10,6 +10,7 @@ vex_file="ek051e.vix"
 sfxc_exec="mpirun -n 32 /EXEC/IPP_SFXC/bin/sfxc"
 j2ms2_exec="singularity run --app j2ms2 /SOFTWARE/jive-casa/jive-casa.img" 
 tconvert_exec="singularity run --app tConvert /SOFTWARE/jive-casa/jive-casa.img" 
+casa_exec="singularity exec /SOFTWARE/CASA/casa-6.5.5-modular.sif python"
 #########################
 
 #### CORRELATOR CONFIGURATION ####
@@ -41,3 +42,6 @@ calibrator_target="R1_D"
 sub_integr_time=13056
 fft_size_correlation=16384
 ############################
+
+#### POST PROCESSING ####
+flag_threshold=0.7
