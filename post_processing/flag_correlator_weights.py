@@ -1,5 +1,5 @@
 from casatasks import *
-
+import inspect, os, sys
 
 filename = inspect.getframeinfo(inspect.currentframe()).filename
 sys.path.append(os.path.dirname(os.path.realpath(filename)))
