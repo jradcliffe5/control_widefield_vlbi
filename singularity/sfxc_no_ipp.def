@@ -1,0 +1,30 @@
+Bootstrap: library
+From: ubuntu
+%environment
+    export OMPI_DIR=/opt/ompi
+    export SINGULARITY_OMPI_DIR=$OMPI_DIR
+    export SINGULARITYENV_APPEND_PATH=$OMPI_DIR/bin
+    export SINGULAIRTYENV_APPEND_LD_LIBRARY_PATH=$OMPI_DIR/lib
+
+%post
+
+apt-get update && apt-get install -y wget gnupg
+cd /tmp
+# now get the key:
+wget https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS-2019.PUB
+# now install that key
+apt-key add GPG-PUB-KEY-INTEL-SW-PRODUCTS-2019.PUB
+# now remove the public key file exit the root shell
+rm GPG-PUB-KEY-INTEL-SW-PRODUCTS-2019.PUB
+cd ..
+sh -c 'echo deb https://apt.repos.intel.com/ipp all main > /etc/apt/sources.list.d/intel-ipp.list'
+apt -y update && apt-get -y upgrade
+apt -y install make openmpi-bin openmpi-common libopenmpi-dev libgtk2.0-dev openmpi-doc subversion autoconf libtool bison flex libgsl0-dev libfftw3-dev libopenmpi-dev gfortran g++-multilib gfortran-multilib g++ fftw-dev intel-ipp-2020.3-912
+#. /opt/intel/oneapi/compiler/latest/env/vars.sh intel64
+#. /opt/intel/oneapi/setvars.sh intel64
+svn checkout https://svn.astron.nl/sfxc/trunk
+cd trunk/sfxc
+./compile.sh
+./configure --disable-dependency-tracking CXX=mpicxx 
+make
+make install
