@@ -20,11 +20,11 @@ cd ..
 sh -c 'echo deb https://apt.repos.intel.com/ipp all main > /etc/apt/sources.list.d/intel-ipp.list'
 apt -y update && apt-get -y upgrade
 apt -y install make openmpi-bin openmpi-common libopenmpi-dev libgtk2.0-dev openmpi-doc subversion autoconf libtool bison flex libgsl0-dev libfftw3-dev libopenmpi-dev gfortran g++-multilib gfortran-multilib g++ fftw-dev intel-ipp-2020.3-912
-#. /opt/intel/oneapi/compiler/latest/env/vars.sh intel64
-#. /opt/intel/oneapi/setvars.sh intel64
+. /opt/intel/compilers_and_libraries/linux/bin/compilervars.sh intel64
+. /opt/intel/ipp/bin/ippvars.sh intel64
 svn checkout https://svn.astron.nl/sfxc/trunk
 cd trunk/sfxc
 ./compile.sh
-./configure --disable-dependency-tracking CXX=mpicxx 
+./configure --disable-dependency-tracking CXX=mpicxx --enable-ipp
 make
 make install

@@ -2,7 +2,7 @@
 ### Inputs to setup VLBI correlator ###
 #######################################
 
-#### PATHS AND FILES ####
+#### PATHS AND FILES ON LOCALHOST ####
 exper_name="EK051E"
 baseband_location="/home/Jack/DATA/ek051e/baseband"
 output_dir="/DATA/radcliffe/ek051e"
@@ -16,6 +16,8 @@ casa_exec="singularity exec /SOFTWARE/CASA/casa-6.5.5-modular.sif python"
 #### CORRELATOR CONFIGURATION ####
 correlator="sfxc"
 parallelise_scans=True
+multi_cluster=True
+cluster_config=./cluster_config.json
 ##################################
 
 #### OUTPUTS ####
