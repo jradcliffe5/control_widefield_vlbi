@@ -1,0 +1,22 @@
+FROM debian:latest
+
+MAINTAINER Jack Radcliffe <jack.radcliffe@up.ac.za>
+
+SHELL ["/bin/bash", "-c"]
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update
+RUN apt-get update && apt-get install -y wget gnupg procps
+RUN apt -y install make openmpi-bin openmpi-common libopenmpi-dev libgtk2.0-dev openmpi-doc subversion autoconf libtool bison flex libgsl0-dev libfftw3-dev libopenmpi-dev gfortran g++-multilib gfortran-multilib g++ fftw-dev 
+RUN dpkg-reconfigure -f noninteractive tzdata
+RUN apt-get clean all
+RUN wget https://registrationcenter-download.intel.com/akdlm/IRC_NAS/992857b9-624c-45de-9701-f6445d845359/l_BaseKit_p_2023.2.0.49397_offline.sh
+RUN chmod 777 l_BaseKit_p_2023.2.0.49397_offline.sh
+RUN ./l_BaseKit_p_2023.2.0.49397_offline.sh -a -s --eula accept
+RUN source /opt/intel/oneapi/compiler/latest/env/vars.sh && source /opt/intel/oneapi/setvars.sh \
+&& svn checkout https://svn.astron.nl/sfxc/trunk \
+&& cd trunk/sfxc \
+&& ./compile.sh \
+&& ./configure CXX=mpicxx --enable-ipp\
+&& make \
+&& make install\
