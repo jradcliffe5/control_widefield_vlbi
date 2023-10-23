@@ -1,15 +1,48 @@
 Bootstrap: library
-From: ubuntu
+From: debian
+
+%labels
+
+	APPLICATION_NAME_BASE Ubuntu LTS + Anaconda3 + pyloser + martini 
+	OS_VERSION 18.04 
+
+	SYSTEM_NAME iLifu
+	SYSTEM_SINGULARITY_VERSION 2.6
+	SYSTEM_URL http://www.ilifu.ac.za
+
+	AUTHOR_NAME Jeremy Smith
+	AUTHOR_EMAIL jeremy@idia.ac.za
 %environment
     export OMPI_DIR=/opt/ompi
     export SINGULARITY_OMPI_DIR=$OMPI_DIR
     export SINGULARITYENV_APPEND_PATH=$OMPI_DIR/bin
     export SINGULAIRTYENV_APPEND_LD_LIBRARY_PATH=$OMPI_DIR/lib
-
+    SHELL=/bin/bash
 %post
-apt-get update && apt-get install -y wget gnupg
+export SHELL=/bin/bash
+#rm /bin/sh
+#ln -s /bin/bash /bin/sh
+#/bin/sh 
+#source
+apt-get update && apt-get install -y wget gnupg procps
+#wget -O- https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB \ | gpg --dearmor | tee /usr/share/keyrings/oneapi-archive-keyring.gpg > /dev/null
+#echo "deb [signed-by=/usr/share/keyrings/oneapi-archive-keyring.gpg] https://apt.repos.intel.com/oneapi all main" | tee /etc/apt/sources.list.d/oneAPI.list
+#apt update
+#apt -y install intel-basekit
 apt -y update && apt-get -y upgrade
-apt -y install make openmpi-bin openmpi-common libopenmpi-dev libgtk2.0-dev openmpi-doc subversion autoconf libtool bison flex libgsl0-dev libfftw3-dev libopenmpi-dev gfortran g++-multilib gfortran-multilib g++ fftw-dev 
+apt -y install make openmpi-bin openmpi-common libopenmpi-dev libgtk2.0-dev openmpi-doc subversion autoconf libtool bison flex libgsl0-dev libfftw3-dev libopenmpi-dev gfortran g++-multilib gfortran-multilib g++ fftw-dev
+wget https://registrationcenter-download.intel.com/akdlm/IRC_NAS/992857b9-624c-45de-9701-f6445d845359/l_BaseKit_p_2023.2.0.49397_offline.sh
+sh ./l_BaseKit_p_2023.2.0.49397_offline.sh -a -s --eula accept
+IPP="/opt/intel/oneapi/ipp"
+export PATH=${IPP}/latest:${PATH}
+export CPLUS_INCLUDE_PATH=${IPP}/latest/include:${CPLUS_INCLUDE_PATH}
+export LD_LIBRARY_PATH=${IPP}/latest/lib:${LD_LIBRARY_PATH}
+
+#---------Activate INTEL Compiler environment -----------
+#. /opt/intel/oneapi/compiler/latest/env/vars.sh 
+#. /opt/intel/oneapi/setvars.sh
+
+#source /opt/intel/oneapi/ipp/2021.9.0/env/vars.sh intel64
 svn checkout https://svn.astron.nl/sfxc/trunk
 cd trunk/sfxc
 ./compile.sh
