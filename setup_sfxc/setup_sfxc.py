@@ -84,20 +84,24 @@ ctrl_file['scans']=scans
 
 if ast.literal_eval(inputs['do_clock_search']) == True:
 	ss = ss_temp
-
+	cs = "CLOCKSEARCH/"
+	rmdirs(["%s/%s"%(o_dir,cs)])
+	os.mkdir("%s/%s"%(o_dir,cs))
+else:
+	cs = ""
 commands = []
 corr_files = {}
 if ast.literal_eval(inputs['parallelise_scans']) == True:
-	rmdirs(["%s/%s_delays"%(o_dir,ctrl_file["exper_name"])])
-	os.mkdir("%s/%s_delays"%(o_dir,ctrl_file["exper_name"]))
+	rmdirs(["%s/%s%s_delays"%(o_dir,cs,ctrl_file["exper_name"])])
+	os.mkdir("%s/%s%s_delays"%(o_dir,cs,ctrl_file["exper_name"]))
 	for i in ss.keys():
 		scan_c = i.capitalize()
 		sub_ctrl = ctrl_file.copy()
-		rmdirs(["%s/%s"%(o_dir,scan_c)])
-		os.mkdir("%s/%s"%(o_dir,scan_c))
-		sub_ctrl["delay_directory"] = "file://%s/%s_delays"%(o_dir,ctrl_file["exper_name"])
-		sub_ctrl["tsys_file"] = "file://%s/%s/%s.tsys"%(o_dir,scan_c,ctrl_file["exper_name"])
-		sub_ctrl['output_file'] = "file://%s/%s/%s.%s.cor"%(o_dir,scan_c,ctrl_file["exper_name"],scan_c)
+		rmdirs(["%s/%s%s"%(o_dir,cs,scan_c)])
+		os.mkdir("%s/%s%s"%(o_dir,cs,scan_c))
+		sub_ctrl["delay_directory"] = "file://%s/%s%s_delays"%(o_dir,cs,ctrl_file["exper_name"])
+		sub_ctrl["tsys_file"] = "file://%s/%s%s/%s.tsys"%(o_dir,cs,scan_c,ctrl_file["exper_name"])
+		sub_ctrl['output_file'] = "file://%s/%s%s/%s.%s.cor"%(o_dir,cs,scan_c,ctrl_file["exper_name"],scan_c)
 		sub_ctrl['scans']=[scan_c]
 		sub_ctrl['start']=vexfile['SCHED'][scan_c]['start']
 		scan_length = int(vexfile['SCHED'][scan_c]["station"][0][2].split(" sec")[0])
@@ -117,10 +121,10 @@ if ast.literal_eval(inputs['parallelise_scans']) == True:
 			else:
 				data_sources[j] = ['file://%s/%s'%(bb_loc,ss_s[i][k])]
 		sub_ctrl['data_sources'] = data_sources
-		rmfiles(["%s/%s/%s.%s.ctrl"%(o_dir,scan_c,ctrl_file["exper_name"],scan_c)])
-		with open("%s/%s/%s.%s.ctrl"%(o_dir,scan_c,ctrl_file["exper_name"],scan_c), "w") as outfile:
+		rmfiles(["%s/%s%s/%s.%s.ctrl"%(o_dir,cs,scan_c,ctrl_file["exper_name"],scan_c)])
+		with open("%s/%s%s/%s.%s.ctrl"%(o_dir,cs,scan_c,ctrl_file["exper_name"],scan_c), "w") as outfile:
 			json.dump(sub_ctrl, outfile, indent=4)
-		commands.append('%s %s/%s/%s.%s.ctrl %s > %s/sfxc_run.stdout 2> %s/sfxc_run.stderr'%(sfxc_exec,o_dir,scan_c,ctrl_file["exper_name"],scan_c,ast.literal_eval(inputs["vex_file"]),o_dir,o_dir))
+		commands.append('%s %s/%s%s/%s.%s.ctrl %s > %s/sfxc_run.stdout 2> %s/sfxc_run.stderr'%(sfxc_exec,o_dir,cs,scan_c,ctrl_file["exper_name"],scan_c,ast.literal_eval(inputs["vex_file"]),o_dir,o_dir))
 		for j in vexfile['SCHED'][scan_c]['source']:
 			if j == ast.literal_eval(inputs["calibrator_target"]):
 				if ctrl_file["exper_name"] in list(corr_files.keys()):
@@ -137,13 +141,16 @@ if ast.literal_eval(inputs['parallelise_scans']) == True:
 					corr_files[j] = corr_files[j] + ["%s/%s.%s.cor_%s"%(scan_c,ctrl_file["exper_name"],scan_c,j)]
 				else:
 					corr_files[j] = ["%s/%s.%s.cor_%s"%(scan_c,ctrl_file["exper_name"],scan_c,j)]
-	write_job(step='run_sfxc',commands=commands,job_manager='bash',write='w')
-	commands = []
-	for i in list(corr_files.keys()):
-		commands.append('%s %s -o %s/%s.ms'%(ast.literal_eval(inputs["j2ms2_exec"])," ".join(corr_files[i]),o_dir,i))
-	write_job(step='run_j2ms2',commands=commands,job_manager='bash',write='w')
-	commands = ['parallel -eta -j 10 %s sfxc_helperscripts/post_processing/flag_correlator_weights.py {} %.3f ::: %s*.ms'%(inputs['casa_exec'],ast.literal_eval(inputs['flag_threshold']),ctrl_file["exper_name"])]
-	write_job(step='run_flag_data',commands=commands,job_manager='bash',write='w')
+	if ast.literal_eval(inputs['do_clock_search']) == True:
+		write_job(step='run_clocksearch_sfxc',commands=commands,job_manager='bash',write='w')
+	else:
+		write_job(step='run_sfxc',commands=commands,job_manager='bash',write='w')
+		commands = []
+		for i in list(corr_files.keys()):
+			commands.append('%s %s -o %s/%s.ms'%(ast.literal_eval(inputs["j2ms2_exec"])," ".join(corr_files[i]),o_dir,i))
+		write_job(step='run_j2ms2',commands=commands,job_manager='bash',write='w')
+		commands = ['parallel -eta -j 10 %s sfxc_helperscripts/post_processing/flag_correlator_weights.py {} %.3f ::: %s*.ms'%(inputs['casa_exec'],ast.literal_eval(inputs['flag_threshold']),ctrl_file["exper_name"])]
+		write_job(step='run_flag_data',commands=commands,job_manager='bash',write='w')
 
 
 else:
