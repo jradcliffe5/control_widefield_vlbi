@@ -73,8 +73,14 @@ ctrl_file['stations']=np.unique(stations).tolist()
 
 scans = []
 for i in list(ss.keys()):
-    scans.append(i.capitalize())
+	if ast.literal_eval(inputs['do_clock_search']) == True:
+		print(i)
+	else:
+		scans.append(i.capitalize())
 ctrl_file['scans']=scans
+
+
+
 
 commands = []
 corr_files = {}

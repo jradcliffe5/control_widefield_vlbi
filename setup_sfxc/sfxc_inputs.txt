@@ -20,6 +20,11 @@ multi_cluster=True
 cluster_config=./cluster_config.json
 ##################################
 
+#### CLOCK SEARCH ####
+do_clock_search=True
+fringe_finder_scans=[]
+#######################
+
 #### OUTPUTS ####
 delay_directory=""
 tsys_file=""
@@ -45,5 +50,5 @@ sub_integr_time=13056
 fft_size_correlation=16384
 ############################
 
-#### POST PROCESSING ####
+#### POST-PROCESSING ####
 flag_threshold=0.7
