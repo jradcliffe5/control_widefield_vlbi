@@ -74,7 +74,8 @@ ctrl_file['stations']=np.unique(stations).tolist()
 scans = []
 for i in list(ss.keys()):
 	if ast.literal_eval(inputs['do_clock_search']) == True:
-		print(i)
+		if i.capitalize() in ast.literal_eval(inputs['fringe_finder_scans']):
+			scans.append(i.capitalize())
 	else:
 		scans.append(i.capitalize())
 ctrl_file['scans']=scans
