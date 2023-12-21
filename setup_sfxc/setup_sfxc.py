@@ -183,7 +183,7 @@ else:
 				ctrl_file['start']=vexfile['SCHED'][i.capitalize()]['start']
 	if ctrl_file['multi_phase_center'] == "auto":
 		ctrl_file['multi_phase_center'] = False
-	scan_length = int(vexfile['SCHED'][i.capitalize()]["station"][2].split(" sec")[0])
+	scan_length = int(vexfile['SCHED'][i.capitalize()]["station"][0][2].split(" sec")[0])
 	ctrl_file['stop']=find_stop(vexfile['SCHED'][i.capitalize()]['start'],scan_length)
 	ctrl_file['data_sources'] = data_sources
 
