@@ -88,7 +88,7 @@ if ast.literal_eval(inputs['do_clock_search']) == True:
 	rmdirs(["%s/%s"%(o_dir,cs)])
 	os.mkdir("%s/%s"%(o_dir,cs))
 else:
-	cs = "correlation"
+	cs = "correlation/"
 commands = []
 corr_files = {}
 if ast.literal_eval(inputs['parallelise_scans']) == True:
