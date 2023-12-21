@@ -72,16 +72,18 @@ stations = flatten_extend(stations)
 ctrl_file['stations']=np.unique(stations).tolist()
 
 scans = []
+ss_temp = {}
 for i in list(ss.keys()):
 	if ast.literal_eval(inputs['do_clock_search']) == True:
 		if i.capitalize() in ast.literal_eval(inputs['fringe_finder_scans']):
 			scans.append(i.capitalize())
+			ss_temp[i] = ss[i]
 	else:
 		scans.append(i.capitalize())
 ctrl_file['scans']=scans
 
-
-
+if ast.literal_eval(inputs['do_clock_search']) == True:
+	ss = ss_temp
 
 commands = []
 corr_files = {}
