@@ -84,11 +84,11 @@ ctrl_file['scans']=scans
 
 if ast.literal_eval(inputs['do_clock_search']) == True:
 	ss = ss_temp
-	cs = "CLOCKSEARCH/"
+	cs = "clock_search/"
 	rmdirs(["%s/%s"%(o_dir,cs)])
 	os.mkdir("%s/%s"%(o_dir,cs))
 else:
-	cs = ""
+	cs = "correlation"
 commands = []
 corr_files = {}
 if ast.literal_eval(inputs['parallelise_scans']) == True:
@@ -156,19 +156,19 @@ if ast.literal_eval(inputs['parallelise_scans']) == True:
 else:
 	data_sources = {}
 	if ast.literal_eval(inputs['delay_directory']) == "":
-		rmdirs(["%s/%s_delays"%(o_dir,ctrl_file["exper_name"])])
-		os.mkdir("%s/%s_delays"%(o_dir,ctrl_file["exper_name"]))
-		ctrl_file["delay_directory"] = "file://%s/%s_delays"%(o_dir,ctrl_file["exper_name"])
+		rmdirs(["%s/%s%s_delays"%(o_dir,cs,ctrl_file["exper_name"])])
+		os.mkdir("%s/%s%s_delays"%(o_dir,cs,ctrl_file["exper_name"]))
+		ctrl_file["delay_directory"] = "file://%s/%s%s_delays"%(o_dir,cs,ctrl_file["exper_name"])
 	else:
-		ctrl_file["delay_directory"] = "file://%s/%s"%(o_dir,ctrl_file["exper_name"])
+		ctrl_file["delay_directory"] = "file://%s/%s%s"%(o_dir,cs,ctrl_file["exper_name"])
 	if ast.literal_eval(inputs['tsys_file']) == "":
-		ctrl_file["tsys_file"] = "file://%s/%s.tsys"%(o_dir,ctrl_file["exper_name"])
+		ctrl_file["tsys_file"] = "file://%s/%s%s.tsys"%(o_dir,cs,ctrl_file["exper_name"])
 	else:
-		ctrl_file["tsys_file"] = "file://%s/%s"%(o_dir,ctrl_file["exper_name"])
+		ctrl_file["tsys_file"] = "file://%s/%s%s"%(o_dir,cs,ctrl_file["exper_name"])
 	if ast.literal_eval(inputs['output_file']) == "":
-		ctrl_file["output_file"] = "file://%s/%s.cor"%(o_dir,ast.literal_eval(inputs["exper_name"]))
+		ctrl_file["output_file"] = "file://%s/%s%s.cor"%(o_dir,cs,ast.literal_eval(inputs["exper_name"]))
 	else:
-		ctrl_file["output_file"] = "file://%s/%s"%(o_dir,ast.literal_eval(inputs["output_file"]))
+		ctrl_file["output_file"] = "file://%s/%s%s"%(o_dir,cs,ast.literal_eval(inputs["output_file"]))
 	for i in ss.keys():
 		if ctrl_file['multi_phase_center'] == "auto":
 			if len(vexfile['SCHED'][i.capitalize()]['source']) > 1:
@@ -187,6 +187,6 @@ else:
 	ctrl_file['stop']=find_stop(vexfile['SCHED'][i.capitalize()]['start'],scan_length)
 	ctrl_file['data_sources'] = data_sources
 
-	rmfiles(["%s.ctrl"%ast.literal_eval(inputs['exper_name'])])
-	with open("%s.ctrl"%ast.literal_eval(inputs['exper_name']), "w") as outfile:
+	rmfiles(["%s/%s%s.ctrl"%(o_dir,cs,ast.literal_eval(inputs['exper_name']))])
+	with open("%s/%s%s.ctrl"%(o_dir,cs,ast.literal_eval(inputs['exper_name'])), "w") as outfile:
 		json.dump(ctrl_file, outfile, indent=4)
