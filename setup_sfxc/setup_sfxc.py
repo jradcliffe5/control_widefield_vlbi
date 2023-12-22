@@ -109,7 +109,7 @@ if ast.literal_eval(inputs['parallelise_scans']) == True:
 		if ast.literal_eval(inputs['do_clock_search']) == True:
 			os.mkdir("%s/%s%s/plots"%(o_dir,cs,scan_c))
 			sub_ctrl['start']=find_stop(vexfile['SCHED'][scan_c]['start'],ast.literal_eval(inputs['begin_delay']))
-			sub_ctrl['stop']=find_stop(vexfile['SCHED'][scan_c]['start'],ast.literal_eval(inputs['time_on']))
+			sub_ctrl['stop']=find_stop(sub_ctrl['start'],ast.literal_eval(inputs['time_on']))
 		else:
 			scan_length = int(vexfile['SCHED'][scan_c]["station"][0][2].split(" sec")[0])
 			sub_ctrl['stop']=find_stop(vexfile['SCHED'][scan_c]['start'],scan_length)
