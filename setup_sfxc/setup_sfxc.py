@@ -96,12 +96,12 @@ else:
 commands = []
 corr_files = {}
 if ast.literal_eval(inputs['parallelise_scans']) == True:
-	rmdirs(["%s/%s%s_delays"%(o_dir,cs,ctrl_file["exper_name"])])
+	#rmdirs(["%s/%s%s_delays"%(o_dir,cs,ctrl_file["exper_name"])])
 	os.mkdir("%s/%s%s_delays"%(o_dir,cs,ctrl_file["exper_name"]))
 	for i in ss.keys():
 		scan_c = i.capitalize()
 		sub_ctrl = ctrl_file.copy()
-		rmdirs(["%s/%s%s"%(o_dir,cs,scan_c)])
+		#rmdirs(["%s/%s%s"%(o_dir,cs,scan_c)])
 		os.mkdir("%s/%s%s"%(o_dir,cs,scan_c))
 		sub_ctrl["delay_directory"] = "file://%s/%s%s_delays"%(o_dir,cs,ctrl_file["exper_name"])
 		sub_ctrl["tsys_file"] = "file://%s/%s%s/%s.tsys"%(o_dir,cs,scan_c,ctrl_file["exper_name"])
@@ -130,7 +130,7 @@ if ast.literal_eval(inputs['parallelise_scans']) == True:
 			else:
 				data_sources[j] = ['file://%s/%s'%(bb_loc,ss_s[i][k])]
 		sub_ctrl['data_sources'] = data_sources
-		rmfiles(["%s/%s%s/%s.%s.ctrl"%(o_dir,cs,scan_c,ctrl_file["exper_name"],scan_c)])
+		#rmfiles(["%s/%s%s/%s.%s.ctrl"%(o_dir,cs,scan_c,ctrl_file["exper_name"],scan_c)])
 		with open("%s/%s%s/%s.%s.ctrl"%(o_dir,cs,scan_c,ctrl_file["exper_name"],scan_c), "w") as outfile:
 			json.dump(sub_ctrl, outfile, indent=4)
 		commands.append('%s %s/%s%s/%s.%s.ctrl %s > %s/sfxc_run.stdout 2> %s/sfxc_run.stderr'%(sfxc_exec,o_dir,cs,scan_c,ctrl_file["exper_name"],scan_c,ast.literal_eval(inputs["vex_file"]),o_dir,o_dir))
