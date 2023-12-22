@@ -139,19 +139,19 @@ if ast.literal_eval(inputs['parallelise_scans']) == True:
 		for j in vexfile['SCHED'][scan_c]['source']:
 			if j == ast.literal_eval(inputs["calibrator_target"]):
 				if ctrl_file["exper_name"] in list(corr_files.keys()):
-					corr_files[ctrl_file["exper_name"]] = corr_files[ctrl_file["exper_name"]]+["%s/%s.%s.cor_%s"%(scan_c,ctrl_file["exper_name"],scan_c,j)]
+					corr_files[ctrl_file["exper_name"]] = corr_files[ctrl_file["exper_name"]]+["%s/%s%s/%s.%s.cor_%s"%(o_dir,cs,scan_c,ctrl_file["exper_name"],scan_c,j)]
 				else:
-					corr_files[ctrl_file["exper_name"]] = ["%s/%s.%s.cor_%s"%(scan_c,ctrl_file["exper_name"],scan_c,j)]
+					corr_files[ctrl_file["exper_name"]] = ["%s/%s%s/%s.%s.cor_%s"%(o_dir,cs,scan_c,ctrl_file["exper_name"],scan_c,j)]
 			elif len(vexfile['SCHED'][scan_c]['source']) == 1:
 				if ctrl_file["exper_name"] in list(corr_files.keys()):
-					corr_files[ctrl_file["exper_name"]] = corr_files[ctrl_file["exper_name"]] + ["%s/%s.%s.cor"%(scan_c,ctrl_file["exper_name"],scan_c)]
+					corr_files[ctrl_file["exper_name"]] = corr_files[ctrl_file["exper_name"]] + ["%s/%s%s/%s.%s.cor"%(o_dir,cs,scan_c,ctrl_file["exper_name"],scan_c)]
 				else:
-					corr_files[ctrl_file["exper_name"]] = ["%s/%s.%s.cor"%(scan_c,ctrl_file["exper_name"],scan_c)]
+					corr_files[ctrl_file["exper_name"]] = ["%s/%s%s/%s.%s.cor"%(o_dir,cs,scan_c,ctrl_file["exper_name"],scan_c)]
 			else:
 				if j in list(corr_files.keys()):
-					corr_files[j] = corr_files[j] + ["%s/%s.%s.cor_%s"%(scan_c,ctrl_file["exper_name"],scan_c,j)]
+					corr_files[j] = corr_files[j] + ["%s/%s%s/%s.%s.cor_%s"%(o_dir,cs,scan_c,ctrl_file["exper_name"],scan_c,j)]
 				else:
-					corr_files[j] = ["%s/%s.%s.cor_%s"%(scan_c,ctrl_file["exper_name"],scan_c,j)]
+					corr_files[j] = ["%s/%s%s/%s.%s.cor_%s"%(o_dir,cs,scan_c,ctrl_file["exper_name"],scan_c,j)]
 	if ast.literal_eval(inputs['do_clock_search']) == True:
 		write_job(step='run_clocksearch_sfxc',commands=commands,job_manager='bash',write='w')
 	else:
