@@ -1,5 +1,5 @@
 Bootstrap: docker
-Registry: localhost:5000
+Registry:  localhost:5000
 From: sfxc_ipp:latest
 
 %environment
@@ -57,7 +57,6 @@ From: sfxc_ipp:latest
     export MORE="-sl"
     export NLSPATH="/opt/intel/oneapi/mkl/2023.2.0/lib/intel64/locale/%l_%t/%N:/opt/intel/oneapi/compiler/2023.2.0/linux/compiler/lib/intel64_lin/locale/%l_%t/%N"
     export OCL_ICD_FILENAMES="libintelocl_emu.so:libalteracl.so:/opt/intel/oneapi/compiler/2023.2.0/linux/lib/x64/libintelocl.so"
-    export OLDPWD="/DATA/radcliffe/ek051e/sfxc_helperscripts"
     export ONEAPI_ROOT="/opt/intel/oneapi"
     export OSTYPE="linux"
     export PAGER="less"
@@ -65,8 +64,15 @@ From: sfxc_ipp:latest
     export PKG_CONFIG_PATH="/opt/intel/oneapi/vtune/2023.2.0/include/pkgconfig/lib64:/opt/intel/oneapi/tbb/2021.10.0/env/../lib/pkgconfig:/opt/intel/oneapi/mpi/2021.10.0/lib/pkgconfig:/opt/intel/oneapi/mkl/2023.2.0/lib/pkgconfig:/opt/intel/oneapi/ippcp/2021.8.0/lib/pkgconfig:/opt/intel/oneapi/dpl/2022.2.0/lib/pkgconfig:/opt/intel/oneapi/dnnl/2023.2.0/cpu_dpcpp_gpu_dpcpp/../lib/pkgconfig:/opt/intel/oneapi/dal/2023.2.0/lib/pkgconfig:/opt/intel/oneapi/compiler/2023.2.0/lib/pkgconfig:/opt/intel/oneapi/ccl/2021.10.0/lib/pkgconfig:/opt/intel/oneapi/advisor/2023.2.0/include/pkgconfig/lib64:"
     export PROFILEREAD="true"
     export PS1="Singularity> "
-    export PWD="/DATA/radcliffe/ek051e/sfxc_helperscripts/singularity"
     export PYTHONPATH="/opt/intel/oneapi/advisor/2023.2.0/pythonapi"
     export PYTHONSTARTUP="/etc/pythonstart"
+    export CALC_DIR="/data"
+%post 
+svn checkout https://svn.astron.nl/sfxc/branches/stable-5.1/sfxc/lib/calc10/data/
+apt-get update && apt-get install -y gnuplot make build-essential libssl-dev zlib1g-dev \
+libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm \
+git libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
+
+
 %apprun sfxc
 exec /usr/local/bin/sfxc "$@"
