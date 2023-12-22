@@ -18,10 +18,11 @@ bb_loc = ast.literal_eval(inputs['baseband_location'])
 o_dir = ast.literal_eval(inputs["output_dir"])
 vexfile = vex.Vex(ast.literal_eval(inputs["vex_file"]))
 sfxc_exec = ast.literal_eval(inputs['sfxc_exec'])
+produce_html_plot_exec = ast.literal_eval(inputs['produce_html_plot_exec'])
 ctrl_file = {}
 
 ### READ INPUT FILE ###
-for i in ["exper_name","cross_polarize","number_channels","slices_per_integration","setup_station","integr_time","message_level","slices_per_integration","LO_offset","multi_phase_center","sub_integr_time","fft_size_correlation"]:
+for i in ["exper_name","cross_polarize","number_channels","normalize","slices_per_integration","setup_station","integr_time","message_level","slices_per_integration","LO_offset","multi_phase_center","sub_integr_time","fft_size_correlation"]:
     ctrl_file[i] = ast.literal_eval(inputs[i])
 ########################
 
@@ -87,6 +88,7 @@ if ast.literal_eval(inputs['do_clock_search']) == True:
 	cs = "clock_search/"
 	rmdirs(["%s/%s"%(o_dir,cs)])
 	os.mkdir("%s/%s"%(o_dir,cs))
+	ctrl_file["number_channels"] = ast.literal_eval(inputs['clock_nchannels'])
 else:
 	cs = "correlation/"
 commands = []
@@ -104,8 +106,13 @@ if ast.literal_eval(inputs['parallelise_scans']) == True:
 		sub_ctrl['output_file'] = "file://%s/%s%s/%s.%s.cor"%(o_dir,cs,scan_c,ctrl_file["exper_name"],scan_c)
 		sub_ctrl['scans']=[scan_c]
 		sub_ctrl['start']=vexfile['SCHED'][scan_c]['start']
-		scan_length = int(vexfile['SCHED'][scan_c]["station"][0][2].split(" sec")[0])
-		sub_ctrl['stop']=find_stop(vexfile['SCHED'][scan_c]['start'],scan_length)
+		if ast.literal_eval(inputs['do_clock_search']) == True:
+			os.mkdir("%s/%s%s/plots"%(o_dir,cs,scan_c))
+			sub_ctrl['start']=find_stop(vexfile['SCHED'][scan_c]['start'],ast.literal_eval(inputs['begin_delay']))
+			sub_ctrl['stop']=find_stop(vexfile['SCHED'][scan_c]['start'],ast.literal_eval(inputs['time_on']))
+		else:
+			scan_length = int(vexfile['SCHED'][scan_c]["station"][0][2].split(" sec")[0])
+			sub_ctrl['stop']=find_stop(vexfile['SCHED'][scan_c]['start'],scan_length)
 		sub_ctrl['stations'] = ss[i]
 		if ctrl_file['multi_phase_center'] == 'auto':
 			if len(vexfile['SCHED'][scan_c]['source']) > 1:
@@ -125,6 +132,8 @@ if ast.literal_eval(inputs['parallelise_scans']) == True:
 		with open("%s/%s%s/%s.%s.ctrl"%(o_dir,cs,scan_c,ctrl_file["exper_name"],scan_c), "w") as outfile:
 			json.dump(sub_ctrl, outfile, indent=4)
 		commands.append('%s %s/%s%s/%s.%s.ctrl %s > %s/sfxc_run.stdout 2> %s/sfxc_run.stderr'%(sfxc_exec,o_dir,cs,scan_c,ctrl_file["exper_name"],scan_c,ast.literal_eval(inputs["vex_file"]),o_dir,o_dir))
+		if ast.literal_eval(inputs['do_clock_search']) == True:
+			commands.append('%s %s %s/%s%s/ %s/%s%s/plots'%(produce_html_plot_exec,ast.literal_eval(inputs["vex_file"]),o_dir,cs,scan_c,o_dir,cs,scan_c))
 		for j in vexfile['SCHED'][scan_c]['source']:
 			if j == ast.literal_eval(inputs["calibrator_target"]):
 				if ctrl_file["exper_name"] in list(corr_files.keys()):

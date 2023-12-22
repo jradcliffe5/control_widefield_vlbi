@@ -8,6 +8,7 @@ baseband_location="/home/Jack/DATA/ek051e/baseband"
 output_dir="/DATA/radcliffe/ek051e"
 vex_file="ek051e.vix"
 sfxc_exec="mpirun -n 32 /EXEC/IPP_SFXC/bin/sfxc"
+produce_html_plot_exec="singularity exec sfxc_ipp.sif produce_html_plotpage"
 j2ms2_exec="singularity run --app j2ms2 /SOFTWARE/jive-casa/jive-casa.img" 
 tconvert_exec="singularity run --app tConvert /SOFTWARE/jive-casa/jive-casa.img" 
 casa_exec="singularity exec /SOFTWARE/CASA/casa-6.5.5-modular.sif python"
@@ -23,6 +24,9 @@ cluster_config=./cluster_config.json
 #### CLOCK SEARCH ####
 do_clock_search=True
 fringe_finder_scans=[]
+begin_delay = 40
+time_on = 4
+clock_nchannels = 512
 #######################
 
 #### OUTPUTS ####
@@ -34,6 +38,7 @@ output_file=""
 #### CORRELATOR INPUTS ####
 min_stations_per_scan=4
 cross_polarize=True
+normalize=False
 number_channels=64
 integr_time=2.0
 slices_per_integration=8
