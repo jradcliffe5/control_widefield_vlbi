@@ -81,7 +81,7 @@ flagged_nonzero, flagged_nonzero_before, flagged_nonzero_after = (0, 0, 0)
 # flags[weight < threshold] = True
 weightcol = 'WEIGHT_SPECTRUM' if 'WEIGHT_SPECTRUM' in tb.colnames() else 'WEIGHT'
 transpose = (lambda x:x) if weightcol == 'WEIGHT_SPECTRUM' else (lambda x: x.transpose((1, 0, 2)))
-for (start, nrow) in chunkert(0, len(ms), 100):
+for (start, nrow) in chunkert(0, tb.nrows(), 100):
     # shape: (nrow, npol, nfreq)
     flags = transpose(tb.getcol("FLAG", startrow=start, nrow=nrow))
     total_number += np.product(flags.shape)
