@@ -50,6 +50,7 @@ message_level=1
 
 #### MULTI PHASE CENTRE ####
 multi_phase_center="auto"
+recorrelate_targets=True
 calibrator_target="R1_D"
 sub_integr_time=13056
 fft_size_correlation=16384

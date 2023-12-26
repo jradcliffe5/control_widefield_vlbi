@@ -19,6 +19,7 @@ o_dir = ast.literal_eval(inputs["output_dir"])
 vexfile = vex.Vex(ast.literal_eval(inputs["vex_file"]))
 sfxc_exec = ast.literal_eval(inputs['sfxc_exec'])
 produce_html_plot_exec = ast.literal_eval(inputs['produce_html_plot_exec'])
+recorrelate = ast.literal_eval(inputs['recorrelate_targets'])
 ctrl_file = {}
 
 ### READ INPUT FILE ###
@@ -91,8 +92,12 @@ if ast.literal_eval(inputs['do_clock_search']) == True:
 	ctrl_file["number_channels"] = ast.literal_eval(inputs['clock_nchannels'])
 else:
 	cs = "correlation/"
-	rmdirs(["%s/%s"%(o_dir,cs)])
-	os.mkdir("%s/%s"%(o_dir,cs))
+	if recorrelate == True:
+		rc = 1
+	else:
+		rc = 0
+		rmdirs(["%s/%s"%(o_dir,cs)])
+		os.mkdir("%s/%s"%(o_dir,cs))
 commands = []
 corr_files = {}
 if ast.literal_eval(inputs['parallelise_scans']) == True:
@@ -100,58 +105,61 @@ if ast.literal_eval(inputs['parallelise_scans']) == True:
 	os.mkdir("%s/%s%s_delays"%(o_dir,cs,ctrl_file["exper_name"]))
 	for i in ss.keys():
 		scan_c = i.capitalize()
-		sub_ctrl = ctrl_file.copy()
-		#rmdirs(["%s/%s%s"%(o_dir,cs,scan_c)])
-		os.mkdir("%s/%s%s"%(o_dir,cs,scan_c))
-		sub_ctrl["delay_directory"] = "file://%s/%s%s_delays"%(o_dir,cs,ctrl_file["exper_name"])
-		sub_ctrl["tsys_file"] = "file://%s/%s%s/%s.tsys"%(o_dir,cs,scan_c,ctrl_file["exper_name"])
-		sub_ctrl['output_file'] = "file://%s/%s%s/%s.%s.cor"%(o_dir,cs,scan_c,ctrl_file["exper_name"],scan_c)
-		sub_ctrl['scans']=[scan_c]
-		sub_ctrl['start']=vexfile['SCHED'][scan_c]['start']
-		if ast.literal_eval(inputs['do_clock_search']) == True:
-			os.mkdir("%s/%s%s/plots"%(o_dir,cs,scan_c))
-			sub_ctrl['start']=find_stop(vexfile['SCHED'][scan_c]['start'],ast.literal_eval(inputs['begin_delay']))
-			sub_ctrl['stop']=find_stop(sub_ctrl['start'],ast.literal_eval(inputs['time_on']))
+		if len(vexfile['SCHED'][scan_c]['source']) > rc:
+			sub_ctrl = ctrl_file.copy()
+			#rmdirs(["%s/%s%s"%(o_dir,cs,scan_c)])
+			os.mkdir("%s/%s%s"%(o_dir,cs,scan_c))
+			sub_ctrl["delay_directory"] = "file://%s/%s%s_delays"%(o_dir,cs,ctrl_file["exper_name"])
+			sub_ctrl["tsys_file"] = "file://%s/%s%s/%s.tsys"%(o_dir,cs,scan_c,ctrl_file["exper_name"])
+			sub_ctrl['output_file'] = "file://%s/%s%s/%s.%s.cor"%(o_dir,cs,scan_c,ctrl_file["exper_name"],scan_c)
+			sub_ctrl['scans']=[scan_c]
+			sub_ctrl['start']=vexfile['SCHED'][scan_c]['start']
+			if ast.literal_eval(inputs['do_clock_search']) == True:
+				os.mkdir("%s/%s%s/plots"%(o_dir,cs,scan_c))
+				sub_ctrl['start']=find_stop(vexfile['SCHED'][scan_c]['start'],ast.literal_eval(inputs['begin_delay']))
+				sub_ctrl['stop']=find_stop(sub_ctrl['start'],ast.literal_eval(inputs['time_on']))
+			else:
+				scan_length = int(vexfile['SCHED'][scan_c]["station"][0][2].split(" sec")[0])
+				sub_ctrl['stop']=find_stop(vexfile['SCHED'][scan_c]['start'],scan_length)
+			sub_ctrl['stations'] = ss[i]
+			if ctrl_file['multi_phase_center'] == 'auto':
+				if len(vexfile['SCHED'][scan_c]['source']) > 1:
+					sub_ctrl['multi_phase_center'] = True
+				else:
+					sub_ctrl['multi_phase_center'] = False
+			else:
+				sub_ctrl['multi_phase_center'] = ctrl_file['multi_phase_center']
+			data_sources = {}
+			for k,j in enumerate(ss[i]):
+				if j in data_sources:
+					data_sources[j] = data_sources[j]+['file://%s/%s'%(bb_loc,ss_s[i][k])]
+				else:
+					data_sources[j] = ['file://%s/%s'%(bb_loc,ss_s[i][k])]
+			sub_ctrl['data_sources'] = data_sources
+			#rmfiles(["%s/%s%s/%s.%s.ctrl"%(o_dir,cs,scan_c,ctrl_file["exper_name"],scan_c)])
+			with open("%s/%s%s/%s.%s.ctrl"%(o_dir,cs,scan_c,ctrl_file["exper_name"],scan_c), "w") as outfile:
+				json.dump(sub_ctrl, outfile, indent=4)
+			commands.append('%s %s/%s%s/%s.%s.ctrl %s > %s/sfxc_run.stdout 2> %s/sfxc_run.stderr'%(sfxc_exec,o_dir,cs,scan_c,ctrl_file["exper_name"],scan_c,ast.literal_eval(inputs["vex_file"]),o_dir,o_dir))
+			if ast.literal_eval(inputs['do_clock_search']) == True:
+				commands.append('%s %s %s/%s%s/%s.%s.cor %s/%s%s/plots'%(produce_html_plot_exec,ast.literal_eval(inputs["vex_file"]),o_dir,cs,scan_c,ctrl_file["exper_name"],scan_c,o_dir,cs,scan_c))
+			for j in vexfile['SCHED'][scan_c]['source']:
+				if j == ast.literal_eval(inputs["calibrator_target"]):
+					if ctrl_file["exper_name"] in list(corr_files.keys()):
+						corr_files[ctrl_file["exper_name"]] = corr_files[ctrl_file["exper_name"]]+["%s%s/%s.%s.cor_%s"%(cs,scan_c,ctrl_file["exper_name"],scan_c,j)]
+					else:
+						corr_files[ctrl_file["exper_name"]] = ["%s%s/%s.%s.cor_%s"%(cs,scan_c,ctrl_file["exper_name"],scan_c,j)]
+				elif len(vexfile['SCHED'][scan_c]['source']) == 1:
+					if ctrl_file["exper_name"] in list(corr_files.keys()):
+						corr_files[ctrl_file["exper_name"]] = corr_files[ctrl_file["exper_name"]] + ["%s%s/%s.%s.cor"%(cs,scan_c,ctrl_file["exper_name"],scan_c)]
+					else:
+						corr_files[ctrl_file["exper_name"]] = ["%s%s/%s.%s.cor"%(cs,scan_c,ctrl_file["exper_name"],scan_c)]
+				else:
+					if j in list(corr_files.keys()):
+						corr_files[j] = corr_files[j] + ["%s%s/%s.%s.cor_%s"%(cs,scan_c,ctrl_file["exper_name"],scan_c,j)]
+					else:
+						corr_files[j] = ["%s%s/%s.%s.cor_%s"%(cs,scan_c,ctrl_file["exper_name"],scan_c,j)]
 		else:
-			scan_length = int(vexfile['SCHED'][scan_c]["station"][0][2].split(" sec")[0])
-			sub_ctrl['stop']=find_stop(vexfile['SCHED'][scan_c]['start'],scan_length)
-		sub_ctrl['stations'] = ss[i]
-		if ctrl_file['multi_phase_center'] == 'auto':
-			if len(vexfile['SCHED'][scan_c]['source']) > 1:
-				sub_ctrl['multi_phase_center'] = True
-			else:
-				sub_ctrl['multi_phase_center'] = False
-		else:
-			sub_ctrl['multi_phase_center'] = ctrl_file['multi_phase_center']
-		data_sources = {}
-		for k,j in enumerate(ss[i]):
-			if j in data_sources:
-				data_sources[j] = data_sources[j]+['file://%s/%s'%(bb_loc,ss_s[i][k])]
-			else:
-				data_sources[j] = ['file://%s/%s'%(bb_loc,ss_s[i][k])]
-		sub_ctrl['data_sources'] = data_sources
-		#rmfiles(["%s/%s%s/%s.%s.ctrl"%(o_dir,cs,scan_c,ctrl_file["exper_name"],scan_c)])
-		with open("%s/%s%s/%s.%s.ctrl"%(o_dir,cs,scan_c,ctrl_file["exper_name"],scan_c), "w") as outfile:
-			json.dump(sub_ctrl, outfile, indent=4)
-		commands.append('%s %s/%s%s/%s.%s.ctrl %s > %s/sfxc_run.stdout 2> %s/sfxc_run.stderr'%(sfxc_exec,o_dir,cs,scan_c,ctrl_file["exper_name"],scan_c,ast.literal_eval(inputs["vex_file"]),o_dir,o_dir))
-		if ast.literal_eval(inputs['do_clock_search']) == True:
-			commands.append('%s %s %s/%s%s/%s.%s.cor %s/%s%s/plots'%(produce_html_plot_exec,ast.literal_eval(inputs["vex_file"]),o_dir,cs,scan_c,ctrl_file["exper_name"],scan_c,o_dir,cs,scan_c))
-		for j in vexfile['SCHED'][scan_c]['source']:
-			if j == ast.literal_eval(inputs["calibrator_target"]):
-				if ctrl_file["exper_name"] in list(corr_files.keys()):
-					corr_files[ctrl_file["exper_name"]] = corr_files[ctrl_file["exper_name"]]+["%s%s/%s.%s.cor_%s"%(cs,scan_c,ctrl_file["exper_name"],scan_c,j)]
-				else:
-					corr_files[ctrl_file["exper_name"]] = ["%s%s/%s.%s.cor_%s"%(cs,scan_c,ctrl_file["exper_name"],scan_c,j)]
-			elif len(vexfile['SCHED'][scan_c]['source']) == 1:
-				if ctrl_file["exper_name"] in list(corr_files.keys()):
-					corr_files[ctrl_file["exper_name"]] = corr_files[ctrl_file["exper_name"]] + ["%s%s/%s.%s.cor"%(cs,scan_c,ctrl_file["exper_name"],scan_c)]
-				else:
-					corr_files[ctrl_file["exper_name"]] = ["%s%s/%s.%s.cor"%(cs,scan_c,ctrl_file["exper_name"],scan_c)]
-			else:
-				if j in list(corr_files.keys()):
-					corr_files[j] = corr_files[j] + ["%s%s/%s.%s.cor_%s"%(cs,scan_c,ctrl_file["exper_name"],scan_c,j)]
-				else:
-					corr_files[j] = ["%s%s/%s.%s.cor_%s"%(cs,scan_c,ctrl_file["exper_name"],scan_c,j)]
+			pass
 	if ast.literal_eval(inputs['do_clock_search']) == True:
 		write_job(step='run_clocksearch_sfxc',commands=commands,job_manager='bash',write='w')
 	else:
