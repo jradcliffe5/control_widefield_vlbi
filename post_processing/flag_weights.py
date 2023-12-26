@@ -53,39 +53,13 @@ help_threshold = 'Visibilities with a weight below this value will be flagged. M
 help_v = 'Only checks the visibilities to flag (do not flag the data).'
 
 try:
-    usage = "%(prog)s [-h] <measurement set> <weight threshold>"
-    description="""Flag visibilities with weights below the provided threshold.
-    """
-    import argparse
-    parser = argparse.ArgumentParser(description=description, prog='flag_weights.py', usage=usage)
-    parser.add_argument('msdata', type=str, help=help_msdata)
-    parser.add_argument('threshold', type=float, help=help_threshold)
-    parser.add_argument('--version', action='version', version='%(prog)s {}'.format(__version__))
-    parser.add_argument("-v", "--verbose", default=True, action="store_false" , help=help_v)
-    arguments = parser.parse_args()
-    #print('The arguments ', arguments)
-    verbose = arguments.verbose
-    msdata = arguments.msdata[:-1] if arguments.msdata[-1]=='/' else arguments.msdata
-    threshold = arguments.threshold
-except ImportError:
-    usage = "%prog [-h] [-v] <measurement set> <weight threshold>"
-    description="""Flag visibilities with weights below the provided threshold.
-    """
-    # Compatibility with Python 2.7 in eee
-    import optparse
-    parser = optparse.OptionParser(usage=usage, description=description, prog='flag_weights.py', version='%prog 1.3')
-    parser.add_option("-v", action="store_false", dest="verbose", default=True, help=help_v)
-    theparser = parser.parse_args()
-    verbose = theparser[0].verbose
-    arguments = theparser[1]
-    #arguments = parser.parse_args()[1]
-    if len(arguments) != 2:
-        print('Two arguments must be provided: flag_weights.py [-h] [-v] <measurement set> <weight threshold>')
-        print('Use -h to get help.')
-        sys.exit(1)
+	i = sys.argv.index("-c") + 2
+except:
+	i = 1
+	pass
 
-    msdata = arguments[0][:-1] if arguments[0][-1]=='/' else arguments[0]
-    threshold = float(arguments[1])
+msdata = sys.argv[i]
+threshold = float(sys.argv[i+1])
 
 
 assert threshold > 0.0
