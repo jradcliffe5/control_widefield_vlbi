@@ -102,7 +102,10 @@ commands = []
 corr_files = {}
 if ast.literal_eval(inputs['parallelise_scans']) == True:
 	#rmdirs(["%s/%s%s_delays"%(o_dir,cs,ctrl_file["exper_name"])])
-	os.mkdir("%s/%s%s_delays"%(o_dir,cs,ctrl_file["exper_name"]))
+	if os.path.exists("%s/%s%s_delays"%(o_dir,cs,ctrl_file["exper_name"])):
+		pass
+	else:
+		os.mkdir("%s/%s%s_delays"%(o_dir,cs,ctrl_file["exper_name"]))
 	for i in ss.keys():
 		scan_c = i.capitalize()
 		if len(vexfile['SCHED'][scan_c]['source']) > rc:
