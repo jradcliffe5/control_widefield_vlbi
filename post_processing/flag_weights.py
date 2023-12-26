@@ -41,7 +41,7 @@ version 1.1 changes
 
 """
 
-import sys
+import sys, ast
 import numpy as np
 #from rich import progress
 
@@ -58,6 +58,7 @@ except:
 
 msdata = sys.argv[i]
 threshold = float(sys.argv[i+1])
+verbose = ast.literal_eval(sys.argv[i+2])
 
 
 assert threshold > 0.0
