@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Flag visibilities with weights below the provided threshold.
 
 Usage: flag_weights.py msdata threshold
@@ -45,7 +44,6 @@ version 1.1 changes
 import sys
 import numpy as np
 #from rich import progress
-from casatools import table as tb
 
 __version__ = '3.3.1'
 help_msdata = 'Measurement set containing the data to be corrected.'
