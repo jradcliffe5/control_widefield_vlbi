@@ -70,7 +70,7 @@ def chunkert(f, l, cs, verbose=True):
         yield (f, n)
         f = f + n
 
-if usecasacore == True
+if usecasacore == True:
     percent = lambda x, y: (float(x)/float(y))*100.0
 
     print(sys.argv[i])
