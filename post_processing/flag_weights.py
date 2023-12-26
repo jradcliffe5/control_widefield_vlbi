@@ -79,7 +79,7 @@ flagged_nonzero, flagged_nonzero_before, flagged_nonzero_after = (0, 0, 0)
 # WEIGHT: (nrow, npol)
 # WEIGHT_SPECTRUM: (nrow, npol, nfreq)
 # flags[weight < threshold] = True
-weightcol = 'WEIGHT_SPECTRUM' if 'WEIGHT_SPECTRUM' in ms.colnames() else 'WEIGHT'
+weightcol = 'WEIGHT_SPECTRUM' if 'WEIGHT_SPECTRUM' in tb.colnames() else 'WEIGHT'
 transpose = (lambda x:x) if weightcol == 'WEIGHT_SPECTRUM' else (lambda x: x.transpose((1, 0, 2)))
 for (start, nrow) in chunkert(0, len(ms), 100):
     # shape: (nrow, npol, nfreq)
@@ -88,7 +88,7 @@ for (start, nrow) in chunkert(0, len(ms), 100):
     # count how much data is already flagged
     flagged_before += np.sum(flags)
     # extract weights and compute new flags based on threshold
-    weights = ms.getcol(weightcol, startrow=start, nrow=nrow)
+    weights = tb.getcol(weightcol, startrow=start, nrow=nrow)
     # how many non-zero did we flag
     flagged_nonzero_before = np.logical_and(flags, weights > 0.001)
     # join with existing flags and count again
