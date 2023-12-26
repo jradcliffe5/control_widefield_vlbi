@@ -73,8 +73,8 @@ def chunkert(f, l, cs, verbose=True):
 
 percent = lambda x, y: (float(x)/float(y))*100.0
 
-print(msdata)
-ms = tb.open(msdata, nomodify=False)
+
+tb.open(msdata,nomodify=False)
 total_number = 0
 flagged_before, flagged_after = (0, 0)
 flagged_nonzero, flagged_nonzero_before, flagged_nonzero_after = (0, 0, 0)
@@ -85,7 +85,7 @@ weightcol = 'WEIGHT_SPECTRUM' if 'WEIGHT_SPECTRUM' in ms.colnames() else 'WEIGHT
 transpose = (lambda x:x) if weightcol == 'WEIGHT_SPECTRUM' else (lambda x: x.transpose((1, 0, 2)))
 for (start, nrow) in chunkert(0, len(ms), 100):
     # shape: (nrow, npol, nfreq)
-    flags = transpose(ms.getcol("FLAG", startrow=start, nrow=nrow))
+    flags = transpose(tb.getcol("FLAG", startrow=start, nrow=nrow))
     total_number += np.product(flags.shape)
     # count how much data is already flagged
     flagged_before += np.sum(flags)
@@ -103,13 +103,13 @@ for (start, nrow) in chunkert(0, len(ms), 100):
     # one thing left to do: write the updated flags to disk
     #flags = ms.putcol("FLAG", flags.transpose((1, 0 , 2)), startrow=start, nrow=nrow)
     if verbose:
-        ms.putcol("FLAG", transpose(flags), startrow=start, nrow=nrow)
+        tb.putcol("FLAG", transpose(flags), startrow=start, nrow=nrow)
 
 print("\nGot {0:11} visibilities".format(total_number))
 print("Got {0:11} visibilities to flag using threshold {1}\n".format(flagged_after-flagged_before,
                                                                                 threshold))
 print("{0:.2f}% total vis. flagged ({2:.2f}% to flag in this execution).\n{1:.2f}% data with non-zero weights flagged.\n".format(percent(flagged_after, total_number), percent(flagged_nonzero, total_number), percent(flagged_after-flagged_before, total_number)))
-ms.close()
+tb.close()
 
 if verbose:
     print('Done.')
