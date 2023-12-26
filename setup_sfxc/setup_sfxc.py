@@ -108,6 +108,7 @@ if ast.literal_eval(inputs['parallelise_scans']) == True:
 		if len(vexfile['SCHED'][scan_c]['source']) > rc:
 			sub_ctrl = ctrl_file.copy()
 			#rmdirs(["%s/%s%s"%(o_dir,cs,scan_c)])
+			print('Making the following correlator scans: %s for sources: %s'%(scan_c,",".join(vexfile['SCHED'][scan_c]['source'])))
 			os.mkdir("%s/%s%s"%(o_dir,cs,scan_c))
 			sub_ctrl["delay_directory"] = "file://%s/%s%s_delays"%(o_dir,cs,ctrl_file["exper_name"])
 			sub_ctrl["tsys_file"] = "file://%s/%s%s/%s.tsys"%(o_dir,cs,scan_c,ctrl_file["exper_name"])
