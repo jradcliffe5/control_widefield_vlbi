@@ -60,7 +60,7 @@ msdata = sys.argv[i]
 threshold = float(sys.argv[i+1])
 verbose = ast.literal_eval(sys.argv[i+2])
 
-usecasacore = True
+usecasacore = False
 
 assert threshold > 0.0
 
