@@ -7,11 +7,13 @@ Options:
     threshold : float     Visibilities with a weight below the specified
                           value will be flagged. Must be positive.
 
-Version: 3.3.1
-Date: Jul 2023
-Written by Benito Marcote (marcote@jive.eu)
+Version: 3.4v-pretoria
+Date: 12/2023
+- Modfied by Jack Radcliffe
+- reverted to casacore
 
 version 3.3.1 changes (Jul 2023)
+- Written by Benito Marcote (marcote@jive.eu)
 - chunkert chunk value changed to 100 (optimal IO speed)
 version 3.3 changes (Jan 2023)
 - Richer progress bar
@@ -42,8 +44,8 @@ version 1.1 changes
 
 import sys
 import numpy as np
-from rich import progress
-from pyrap import tables as pt
+#from rich import progress
+from casatools import table as tb
 
 __version__ = '3.3.1'
 help_msdata = 'Measurement set containing the data to be corrected.'
@@ -98,45 +100,42 @@ def chunkert(f, l, cs, verbose=True):
 percent = lambda x, y: (float(x)/float(y))*100.0
 
 
-with pt.table(msdata, readonly=False, ack=False) as ms:
-    total_number = 0
-    flagged_before, flagged_after = (0, 0)
-    flagged_nonzero, flagged_nonzero_before, flagged_nonzero_after = (0, 0, 0)
-    # WEIGHT: (nrow, npol)
-    # WEIGHT_SPECTRUM: (nrow, npol, nfreq)
-    # flags[weight < threshold] = True
-    weightcol = 'WEIGHT_SPECTRUM' if 'WEIGHT_SPECTRUM' in ms.colnames() else 'WEIGHT'
-    transpose = (lambda x:x) if weightcol == 'WEIGHT_SPECTRUM' else (lambda x: x.transpose((1, 0, 2)))
-    with progress.Progress() as progress_bar:
-        task = progress_bar.add_task("[green]Processing...", total=len(ms))
-        for (start, nrow) in chunkert(0, len(ms), 100):
-            progress_bar.update(task, advance=nrow)
-            # shape: (nrow, npol, nfreq)
-            flags = transpose(ms.getcol("FLAG", startrow=start, nrow=nrow))
-            total_number += np.product(flags.shape)
-            # count how much data is already flagged
-            flagged_before += np.sum(flags)
-            # extract weights and compute new flags based on threshold
-            weights = ms.getcol(weightcol, startrow=start, nrow=nrow)
-            # how many non-zero did we flag
-            flagged_nonzero_before = np.logical_and(flags, weights > 0.001)
-            # join with existing flags and count again
-            flags = np.logical_or(flags, weights < threshold)
-            flagged_after += np.sum(flags)
-            flagged_nonzero_after = np.logical_and(flags, weights > 0.001)
-            # Saving the total of nonzero flags (in this and previous runs)
-            # flagged_nonzero += np.sum(np.logical_xor(flagged_nonzero_before, flagged_nonzero_after))
-            flagged_nonzero += np.sum(flagged_nonzero_after)
-            # one thing left to do: write the updated flags to disk
-            #flags = ms.putcol("FLAG", flags.transpose((1, 0 , 2)), startrow=start, nrow=nrow)
-            if verbose:
-                ms.putcol("FLAG", transpose(flags), startrow=start, nrow=nrow)
+ms = tb.open(msdata, nomodify=False)
+total_number = 0
+flagged_before, flagged_after = (0, 0)
+flagged_nonzero, flagged_nonzero_before, flagged_nonzero_after = (0, 0, 0)
+# WEIGHT: (nrow, npol)
+# WEIGHT_SPECTRUM: (nrow, npol, nfreq)
+# flags[weight < threshold] = True
+weightcol = 'WEIGHT_SPECTRUM' if 'WEIGHT_SPECTRUM' in ms.colnames() else 'WEIGHT'
+transpose = (lambda x:x) if weightcol == 'WEIGHT_SPECTRUM' else (lambda x: x.transpose((1, 0, 2)))
+for (start, nrow) in chunkert(0, len(ms), 100):
+    # shape: (nrow, npol, nfreq)
+    flags = transpose(ms.getcol("FLAG", startrow=start, nrow=nrow))
+    total_number += np.product(flags.shape)
+    # count how much data is already flagged
+    flagged_before += np.sum(flags)
+    # extract weights and compute new flags based on threshold
+    weights = ms.getcol(weightcol, startrow=start, nrow=nrow)
+    # how many non-zero did we flag
+    flagged_nonzero_before = np.logical_and(flags, weights > 0.001)
+    # join with existing flags and count again
+    flags = np.logical_or(flags, weights < threshold)
+    flagged_after += np.sum(flags)
+    flagged_nonzero_after = np.logical_and(flags, weights > 0.001)
+    # Saving the total of nonzero flags (in this and previous runs)
+    # flagged_nonzero += np.sum(np.logical_xor(flagged_nonzero_before, flagged_nonzero_after))
+    flagged_nonzero += np.sum(flagged_nonzero_after)
+    # one thing left to do: write the updated flags to disk
+    #flags = ms.putcol("FLAG", flags.transpose((1, 0 , 2)), startrow=start, nrow=nrow)
+    if verbose:
+        ms.putcol("FLAG", transpose(flags), startrow=start, nrow=nrow)
 
-    print("\nGot {0:11} visibilities".format(total_number))
-    print("Got {0:11} visibilities to flag using threshold {1}\n".format(flagged_after-flagged_before,
-                                                                                  threshold))
-    print("{0:.2f}% total vis. flagged ({2:.2f}% to flag in this execution).\n{1:.2f}% data with non-zero weights flagged.\n".format(percent(flagged_after, total_number), percent(flagged_nonzero, total_number), percent(flagged_after-flagged_before, total_number)))
-    ms.close()
+print("\nGot {0:11} visibilities".format(total_number))
+print("Got {0:11} visibilities to flag using threshold {1}\n".format(flagged_after-flagged_before,
+                                                                                threshold))
+print("{0:.2f}% total vis. flagged ({2:.2f}% to flag in this execution).\n{1:.2f}% data with non-zero weights flagged.\n".format(percent(flagged_after, total_number), percent(flagged_nonzero, total_number), percent(flagged_after-flagged_before, total_number)))
+ms.close()
 
 if verbose:
     print('Done.')
