@@ -73,7 +73,7 @@ def chunkert(f, l, cs, verbose=True):
 
 percent = lambda x, y: (float(x)/float(y))*100.0
 
-
+print(sys.argv[i])
 tb.open(msdata,nomodify=False)
 total_number = 0
 flagged_before, flagged_after = (0, 0)
