@@ -1,0 +1,35 @@
+Bootstrap: library
+From: debian
+
+%labels
+
+	APPLICATION_NAME_BASE polconvert 
+	OS_VERSION 18.04 
+
+	SYSTEM_NAME UP_correlator
+	SYSTEM_SINGULARITY_VERSION 3.3
+
+	AUTHOR_NAME Jack Radcliffe
+	AUTHOR_EMAIL jack.radcliffe@up.ac.za
+%environment
+    export OMPI_DIR=/opt/ompi
+    export SINGULARITY_OMPI_DIR=$OMPI_DIR
+    export SINGULARITYENV_APPEND_PATH=$OMPI_DIR/bin
+    export SINGULAIRTYENV_APPEND_LD_LIBRARY_PATH=$OMPI_DIR/lib
+    export SHELL=/bin/bash
+    export PYTHONPATH=/programs
+%post
+apt-get update && apt-get install -y wget python3-dev git libcfitsio-dev libfftw3-dev build-essential autoconf libtool pkg-config
+apt -y update && apt-get -y upgrade
+mkdir programs
+cd programs
+wget https://bootstrap.pypa.io/get-pip.py
+python3 get-pip.py
+python3 -m pip install setuptools==58.2.0 scipy==1.6.3 numpy==1.20.2 matplotlib==3.4.1 astropy
+#python3 -m pip install pyfits==3.5
+git clone https://github.com/marti-vidal-i/PolConvert.git
+export PYTHONPATH=$PWD
+export PYTHONPATH=${PYTHONPATH}:${PYTHONPATH}/PolConvert/EU-VGOS
+cd PolConvert 
+python3 setup.py build_ext --inplace
+
