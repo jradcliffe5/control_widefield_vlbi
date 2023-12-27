@@ -244,9 +244,9 @@ except:
 	pass
 
 msdata = sys.argv[i]
-verbose = ast.literal_eval(sys.argv[i+2])
+verbose = ast.literal_eval(sys.argv[i+1])
 
 msinfo = get_ms_info(msdata)
 if verbose == True:
-	print(json.dumps(msinfo, sort_keys=True, indent=4))
+	print(json.dumps(msinfo, sort_keys=True, indent=4, cls=NpEncoder))
 save_json("%s_msinfo.json"%(msdata.split('.ms')[0]),msinfo)
