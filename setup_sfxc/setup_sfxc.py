@@ -181,9 +181,16 @@ if ast.literal_eval(inputs['parallelise_scans']) == True:
 		write_job(step='run_sfxc',commands=commands,job_manager='bash',write='w')
 		commands = []
 		print('Building script for conversion to measurement sets')
+		ms_output = ast.literal_eval(inputs['ms_output'])
 		for i in list(corr_files.keys()):
 			print('Source %s .. done'%i)
-			commands.append('%s %s -o %s/%s.ms 2>&1 | tee %s/logs/j2ms2_%s.log &'%(ast.literal_eval(inputs["j2ms2_exec"])," ".join(corr_files[i]),o_dir,i,o_dir,i))
+			if ms_output =="":
+				commands.append('%s %s -o %s/%s.ms 2>&1 | tee %s/logs/j2ms2_%s.log &'%(ast.literal_eval(inputs["j2ms2_exec"])," ".join(corr_files[i]),o_dir,i,o_dir,i))
+			else:
+				commands.append('%s %s -o %s/%s.ms 2>&1 | tee %s/logs/j2ms2_%s.log &'%(ast.literal_eval(inputs["j2ms2_exec"])," ".join(corr_files[i]),ms_output,i,o_dir,i))
+		for i in list(corr_files.keys()):
+			if ms_output !="":
+				commands.append('cp -rv %s/%s.ms %s &'%(ms_output,i,o_dir))
 		commands[-1] = commands[-1].split(' &')[0]
 		write_job(step='run_j2ms2',commands=commands,job_manager='bash',write='w')
 		print('Building script for flagging of low correlator weights')

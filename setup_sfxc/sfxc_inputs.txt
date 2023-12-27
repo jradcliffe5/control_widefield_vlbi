@@ -57,4 +57,5 @@ fft_size_correlation=16384
 ############################
 
 #### POST-PROCESSING ####
+ms_output = ""
 flag_threshold=0.7
