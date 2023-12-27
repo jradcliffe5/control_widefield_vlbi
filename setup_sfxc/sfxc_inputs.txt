@@ -38,7 +38,7 @@ output_file=""
 #### CORRELATOR INPUTS ####
 min_stations_per_scan=4
 cross_polarize=True
-normalize=False
+normalize=True
 number_channels=64
 integr_time=2.0
 slices_per_integration=8
