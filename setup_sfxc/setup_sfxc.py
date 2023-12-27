@@ -84,6 +84,9 @@ for i in list(ss.keys()):
 		scans.append(i.capitalize())
 ctrl_file['scans']=scans
 
+if os.path.exists("%s/logs"%(o_dir)) == False:
+	os.mkdir("%s/logs"%(o_dir))
+
 if ast.literal_eval(inputs['do_clock_search']) == True:
 	ss = ss_temp
 	cs = "clock_search/"
@@ -112,7 +115,7 @@ if ast.literal_eval(inputs['parallelise_scans']) == True:
 			sub_ctrl = ctrl_file.copy()
 			#rmdirs(["%s/%s%s"%(o_dir,cs,scan_c)])
 			if len(vexfile['SCHED'][scan_c]['source']) > 10:
-				srcs = ", ".join(vexfile['SCHED'][scan_c]['source'][0:10]) + '+ ... (total: %d sources)'%len(vexfile['SCHED'][scan_c]['source'])
+				srcs = ", ".join(vexfile['SCHED'][scan_c]['source'][0:10]) + ' + ... (total: %d sources)'%len(vexfile['SCHED'][scan_c]['source'])
 			else:
 				srcs = ", ".join(vexfile['SCHED'][scan_c]['source'])
 			print('Making the following correlator scans: %s for sources: %s'%(scan_c,srcs))
@@ -150,7 +153,7 @@ if ast.literal_eval(inputs['parallelise_scans']) == True:
 			#rmfiles(["%s/%s%s/%s.%s.ctrl"%(o_dir,cs,scan_c,ctrl_file["exper_name"],scan_c)])
 			with open("%s/%s%s/%s.%s.ctrl"%(o_dir,cs,scan_c,ctrl_file["exper_name"],scan_c), "w") as outfile:
 				json.dump(sub_ctrl, outfile, indent=4)
-			commands.append('%s %s/%s%s/%s.%s.ctrl %s 2>&1 | tee %s/sfxc_run.log'%(sfxc_exec,o_dir,cs,scan_c,ctrl_file["exper_name"],scan_c,ast.literal_eval(inputs["vex_file"]),o_dir))
+			commands.append('%s %s/%s%s/%s.%s.ctrl %s 2>&1 | tee %s/logs/sfxc_run.log'%(sfxc_exec,o_dir,cs,scan_c,ctrl_file["exper_name"],scan_c,ast.literal_eval(inputs["vex_file"]),o_dir))
 			if ast.literal_eval(inputs['do_clock_search']) == True:
 				commands.append('%s %s %s/%s%s/%s.%s.cor %s/%s%s/plots'%(produce_html_plot_exec,ast.literal_eval(inputs["vex_file"]),o_dir,cs,scan_c,ctrl_file["exper_name"],scan_c,o_dir,cs,scan_c))
 		for j in vexfile['SCHED'][scan_c]['source']:
@@ -180,10 +183,11 @@ if ast.literal_eval(inputs['parallelise_scans']) == True:
 		print('Building script for conversion to measurement sets')
 		for i in list(corr_files.keys()):
 			print('Scan %s .. done'%i)
-			commands.append('%s %s -o %s/%s.ms 2>&1 | tee %s/j2ms2_%s.log &'%(ast.literal_eval(inputs["j2ms2_exec"])," ".join(corr_files[i]),o_dir,i,o_dir,i))
+			commands.append('%s %s -o %s/%s.ms 2>&1 | tee %s/logs/j2ms2_%s.log &'%(ast.literal_eval(inputs["j2ms2_exec"])," ".join(corr_files[i]),o_dir,i,o_dir,i))
+		commands[-1] = commands[-1].split('&')[0]
 		write_job(step='run_j2ms2',commands=commands,job_manager='bash',write='w')
 		print('Building script for flagging of low correlator weights')
-		commands = ['parallel -eta -j 40 %s sfxc_helperscripts/post_processing/flag_weights.py {} %.3f ::: *.ms 2>&1 | tee %s/flag_weights.log'%(inputs['casa_exec'],ast.literal_eval(inputs['flag_threshold']),o_dir)]
+		commands = ['parallel -eta -j 40 %s sfxc_helperscripts/post_processing/flag_weights.py {} %.3f ::: *.ms 2>&1 | tee %s/logs/flag_weights.log'%(inputs['casa_exec'],ast.literal_eval(inputs['flag_threshold']),o_dir)]
 		write_job(step='run_flag_data',commands=commands,job_manager='bash',write='w')
 
 
