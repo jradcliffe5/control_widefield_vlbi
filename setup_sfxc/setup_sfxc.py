@@ -111,7 +111,11 @@ if ast.literal_eval(inputs['parallelise_scans']) == True:
 		if len(vexfile['SCHED'][scan_c]['source']) > rc:
 			sub_ctrl = ctrl_file.copy()
 			#rmdirs(["%s/%s%s"%(o_dir,cs,scan_c)])
-			print('Making the following correlator scans: %s for sources: %s'%(scan_c,", ".join(vexfile['SCHED'][scan_c]['source'])))
+			if len(vexfile['SCHED'][scan_c]['source']) > 10:
+				srcs = ", ".join(vexfile['SCHED'][scan_c]['source'][0:10]) + ' (%d sources)'%len(vexfile['SCHED'][scan_c]['source'])
+			else:
+				srcs = ", ".join(vexfile['SCHED'][scan_c]['source'])
+			print('Making the following correlator scans: %s for sources: %s'%(scan_c,srcs))
 			if os.path.exists("%s/%s%s"%(o_dir,cs,scan_c)):
 				pass
 			else:
@@ -149,22 +153,22 @@ if ast.literal_eval(inputs['parallelise_scans']) == True:
 			commands.append('%s %s/%s%s/%s.%s.ctrl %s 2>&1 | tee %s/sfxc_run.log'%(sfxc_exec,o_dir,cs,scan_c,ctrl_file["exper_name"],scan_c,ast.literal_eval(inputs["vex_file"]),o_dir))
 			if ast.literal_eval(inputs['do_clock_search']) == True:
 				commands.append('%s %s %s/%s%s/%s.%s.cor %s/%s%s/plots'%(produce_html_plot_exec,ast.literal_eval(inputs["vex_file"]),o_dir,cs,scan_c,ctrl_file["exper_name"],scan_c,o_dir,cs,scan_c))
-			for j in vexfile['SCHED'][scan_c]['source']:
-				if j == ast.literal_eval(inputs["calibrator_target"]):
-					if ctrl_file["exper_name"] in list(corr_files.keys()):
-						corr_files[ctrl_file["exper_name"]] = corr_files[ctrl_file["exper_name"]]+["%s%s/%s.%s.cor_%s"%(cs,scan_c,ctrl_file["exper_name"],scan_c,j)]
-					else:
-						corr_files[ctrl_file["exper_name"]] = ["%s%s/%s.%s.cor_%s"%(cs,scan_c,ctrl_file["exper_name"],scan_c,j)]
-				elif len(vexfile['SCHED'][scan_c]['source']) == 1:
-					if ctrl_file["exper_name"] in list(corr_files.keys()):
-						corr_files[ctrl_file["exper_name"]] = corr_files[ctrl_file["exper_name"]] + ["%s%s/%s.%s.cor"%(cs,scan_c,ctrl_file["exper_name"],scan_c)]
-					else:
-						corr_files[ctrl_file["exper_name"]] = ["%s%s/%s.%s.cor"%(cs,scan_c,ctrl_file["exper_name"],scan_c)]
+		for j in vexfile['SCHED'][scan_c]['source']:
+			if j == ast.literal_eval(inputs["calibrator_target"]):
+				if ctrl_file["exper_name"] in list(corr_files.keys()):
+					corr_files[ctrl_file["exper_name"]] = corr_files[ctrl_file["exper_name"]]+["%s%s/%s.%s.cor_%s"%(cs,scan_c,ctrl_file["exper_name"],scan_c,j)]
 				else:
-					if j in list(corr_files.keys()):
-						corr_files[j] = corr_files[j] + ["%s%s/%s.%s.cor_%s"%(cs,scan_c,ctrl_file["exper_name"],scan_c,j)]
-					else:
-						corr_files[j] = ["%s%s/%s.%s.cor_%s"%(cs,scan_c,ctrl_file["exper_name"],scan_c,j)]
+					corr_files[ctrl_file["exper_name"]] = ["%s%s/%s.%s.cor_%s"%(cs,scan_c,ctrl_file["exper_name"],scan_c,j)]
+			elif len(vexfile['SCHED'][scan_c]['source']) == 1:
+				if ctrl_file["exper_name"] in list(corr_files.keys()):
+					corr_files[ctrl_file["exper_name"]] = corr_files[ctrl_file["exper_name"]] + ["%s%s/%s.%s.cor"%(cs,scan_c,ctrl_file["exper_name"],scan_c)]
+				else:
+					corr_files[ctrl_file["exper_name"]] = ["%s%s/%s.%s.cor"%(cs,scan_c,ctrl_file["exper_name"],scan_c)]
+			else:
+				if j in list(corr_files.keys()):
+					corr_files[j] = corr_files[j] + ["%s%s/%s.%s.cor_%s"%(cs,scan_c,ctrl_file["exper_name"],scan_c,j)]
+				else:
+					corr_files[j] = ["%s%s/%s.%s.cor_%s"%(cs,scan_c,ctrl_file["exper_name"],scan_c,j)]
 		else:
 			pass
 	if ast.literal_eval(inputs['do_clock_search']) == True:
