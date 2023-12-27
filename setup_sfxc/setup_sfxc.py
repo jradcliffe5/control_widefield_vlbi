@@ -182,9 +182,9 @@ if ast.literal_eval(inputs['parallelise_scans']) == True:
 		commands = []
 		print('Building script for conversion to measurement sets')
 		for i in list(corr_files.keys()):
-			print('Scan %s .. done'%i)
+			print('Source %s .. done'%i)
 			commands.append('%s %s -o %s/%s.ms 2>&1 | tee %s/logs/j2ms2_%s.log &'%(ast.literal_eval(inputs["j2ms2_exec"])," ".join(corr_files[i]),o_dir,i,o_dir,i))
-		commands[-1] = commands[-1].split('&')[0]
+		commands[-1] = commands[-1].split(' &')[0]
 		write_job(step='run_j2ms2',commands=commands,job_manager='bash',write='w')
 		print('Building script for flagging of low correlator weights')
 		commands = ['parallel -eta -j 40 %s sfxc_helperscripts/post_processing/flag_weights.py {} %.3f ::: *.ms 2>&1 | tee %s/logs/flag_weights.log'%(inputs['casa_exec'],ast.literal_eval(inputs['flag_threshold']),o_dir)]
