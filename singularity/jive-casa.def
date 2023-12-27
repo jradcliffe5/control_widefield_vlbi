@@ -1,0 +1,66 @@
+Bootstrap: docker
+From: haavee/jive-casa:containers
+
+%labels
+   AUTHOR franz.kirsten@chalmers.se
+   AUTHOR verkouter@jive.eu
+
+%environment
+   export CASACORE_TABLES=/usr/share/casacore/data
+   export LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
+
+%runscript
+exec echo "Try running with --app j2ms2/tConvert"
+
+%apprun j2ms2
+exec /usr/local/bin/j2ms2 "$@"
+
+%apprun tConvert
+exec /usr/local/bin/tConvert "$@"
+
+%help
+  This container has JIVE Sofware Correlator (SFXC) post-correlation tools
+  j2ms2 and tConvert built in.
+
+  j2ms2 and tConvert convert input data files to another format:
+	j2ms2	  converts SFXC correlator output to CASA MeasurementSet
+	tConvert  converts CASA MeasurementSet to FITS-IDI
+
+  For j2ms2 to work the binary should be run from the experiment root directory;
+  i.e. the directory where the VEX file and the SFXC subjobs are located.
+
+  Your SFXC data area should look like this:
+	/path/to/data/EXPERIMENT/
+				EXPERIMENT.vix
+				<some name>.lis
+				jobnr1/*.cor
+				jobnr2/*.cor
+        ....         /experiment2/
+				experiment2.vix
+				<some name>.lis
+				jobnrX/*.cor
+				jobnrY/*.cor
+
+  Note that the "*.vix" files must have the same name as the directory they are in.
+
+  Running j2ms2:
+	$> cd /path/to/data/EXPERIMENT
+     Using the "lis file":
+	$> singularity run --app j2ms2 /path/to/this/image -v <some name>.lis
+
+     Or creating a MS on-the-fly from a (subset) of SFXC output files:
+	$> singularity run --app j2ms2 /path/to/this/image -o <msname>.ms [other options] jobnr1/*.cor
+
+
+  tConvert is more flexible - it takes two arguments, "infile" and "outfile":
+
+	$> singularity run --app tConvert /path/to/this/image /path/to/<msname>.ms /path/to/some/OUTPUT.IDI
+
+  Alternatively use the singularity "--bind outer-path:inner-path" option one or more times to expose
+  directories from the host (outer) to a path inside the container (inner). After that
+  the inner-path(s) can be used in command line options to j2ms2/tConvert
+
+  To run j2ms2 and tConvert all you need to do is run the following:
+
+     singularity run --bind outer-path:inner-path --app j2ms2 /path/to/jive-casa.simg [options for j2ms2]
+     singularity run --bind outer-path:inner-path --app tConvert /path/to/jive-casa.simg [options for tConvert]
