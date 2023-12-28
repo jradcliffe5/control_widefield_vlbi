@@ -363,12 +363,13 @@ def build_master_ctrl_file(inputs,vexfile):
 		ctrl_file["number_channels"] = inputs['clock_nchannels']
 	return ctrl_file, ss, ss_s
 
-def build_directory_structure(o_dir="",bb_loc="",recorrelate=False,clocksearch=False,scans={},data_sources={},cluster_name="localhost",cluster_config={}):
-	rc = []
+def build_directory_structure(exper,o_dir="",bb_loc="",recorrelate=False,clocksearch=False,scans={},data_sources={},cluster_name="localhost",cluster_config={}):
+	rc_mkdir = []
+	rc_copy = []
 	if os.path.exists("%s/logs"%(o_dir)) == False:
 		os.mkdir("%s/logs"%(o_dir))
 	if cluster_name != "localhost":
-		rc.append("mkdir %s/logs"%cluster_config[cluster_name]["correlation_dir"])
+		rc_mkdir.append("mkdir %s/logs"%cluster_config[cluster_name]["correlation_dir"])
 	
 
 	if clocksearch == True:
@@ -380,8 +381,10 @@ def build_directory_structure(o_dir="",bb_loc="",recorrelate=False,clocksearch=F
 		if recorrelate == False:
 			rmdirs(["%s/%s"%(o_dir,cs)])
 			os.mkdir("%s/%s"%(o_dir,cs))
+			os.mkdir("%s/%s%s_delays"%(o_dir,cs,exper))
 		if cluster_name != "localhost":
-			rc.append("mkdir %s/%s"%(cluster_config[cluster_name]["correlation_dir"],cs))
+			rc_mkdir.append("mkdir %s/%s"%(cluster_config[cluster_name]["correlation_dir"],cs))
+			rc_mkdir.append("mkdir %s/%s%s_delays"%(cluster_config[cluster_name]["correlation_dir"],cs,exper))
 
 	for i in scans.keys():
 		scan_c = i.capitalize()
@@ -390,7 +393,7 @@ def build_directory_structure(o_dir="",bb_loc="",recorrelate=False,clocksearch=F
 		else:
 			os.mkdir("%s/%s%s"%(o_dir,cs,scan_c))
 			if cluster_name != "localhost":
-				rc.append("mkdir %s/%s%s"%(cluster_config[cluster_name]["correlation_dir"],cs,scan_c))
+				rc_mkdir.append("mkdir %s/%s%s"%(cluster_config[cluster_name]["correlation_dir"],cs,scan_c))
 	c=0
 	for i in scans.keys():
 		scan_c = i.capitalize()
@@ -406,9 +409,9 @@ def build_directory_structure(o_dir="",bb_loc="",recorrelate=False,clocksearch=F
 					skip = ''
 				else:
 					skip = ' &'
-				rc.append("%s %s/%s %s@%s:%s/%s%s%s"%(cluster_config[cluster_name]["data_transfer"]["protocol"],bb_loc,j,cluster_config[cluster_name]['username'],tn,cluster_config[cluster_name]["correlation_dir"],cs,scan_c,skip))
+				rc_copy.append("%s %s/%s %s@%s:%s/%s%s%s"%(cluster_config[cluster_name]["data_transfer"]["protocol"],bb_loc,j,cluster_config[cluster_name]['username'],tn,cluster_config[cluster_name]["correlation_dir"],cs,scan_c,skip))
 				c+=1
-	return rc, cs
+	return rc_mkdir, rc_copy, cs
 
 def remote_mkdir(dir="",remote=False,commands=[]):
 	if remote==True:
@@ -464,7 +467,6 @@ def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},
 		remote=True
 	commands = []
 	if inputs['parallelise_scans'] == True:
-		commands = remote_mkdir(dir="%s/%s%s_delays"%(o_dir,cs,exper),remote=remote,commands=commands)
 		for i in scans.keys():
 			scan_c = i.capitalize()
 			if len(vexfile['SCHED'][scan_c]['source']) > rc:
