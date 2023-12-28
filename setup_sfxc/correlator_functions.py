@@ -234,7 +234,7 @@ def build_master_ctrl_file(inputs,vexfile):
 
 	del_k = []
 	for i in ss.keys():
-		if len(ss[i]) < ast.literal_eval(inputs['min_stations_per_scan']):
+		if len(ss[i]) < inputs['min_stations_per_scan']:
 			del_k.append(i) ## Remove scans with less than min_stations in input
 	for i in del_k:
 		del ss[i]
