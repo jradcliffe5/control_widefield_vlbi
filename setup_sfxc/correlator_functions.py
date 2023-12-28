@@ -378,7 +378,7 @@ def build_directory_structure(exper,o_dir="",bb_loc="",recorrelate=False,clockse
 		os.mkdir("%s/%s"%(o_dir,cs))
 	else:
 		cs = "correlation/"
-		if recorrelate == False:
+		if ((recorrelate == False)&(cluster_name == "localhost")):
 			rmdirs(["%s/%s"%(o_dir,cs)])
 			os.mkdir("%s/%s"%(o_dir,cs))
 			os.mkdir("%s/%s%s_delays"%(o_dir,cs,exper))
