@@ -399,7 +399,7 @@ def build_directory_structure(o_dir="",bb_loc="",recorrelate=False,clocksearch=F
 					tn = cluster_config[cluster_name]["data_transfer"]["node"]
 				else:
 					tn = cluster_config[cluster_name]["head_node"]
-				rc.append("%s %s/%s %s@%s:/%s/%s%s"%(cluster_config[cluster_name]["data_transfer"]["protocol"],bb_loc,j,tn,cluster_config[cluster_name]["correlation_dir"],cs,scan_c))
+				rc.append("%s %s/%s %s@%s:%s/%s%s"%(cluster_config[cluster_name]["data_transfer"]["protocol"],bb_loc,j,cluster_config[cluster_name]['username'],tn,cluster_config[cluster_name]["correlation_dir"],cs,scan_c))
 	return rc, cs
 
 def remote_mkdir(dir="",remote=False,commands=[]):
