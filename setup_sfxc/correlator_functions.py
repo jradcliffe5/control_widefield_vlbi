@@ -488,7 +488,7 @@ def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},
 				else:
 					sub_ctrl["tsys_file"] = "file://%s/%s%s/%s.tsys"%(o_dir,cs,scan_c,exper)
 					sub_ctrl['output_file'] = "file://%s/%s%s/%s.%s.cor"%(o_dir,cs,scan_c,exper,scan_c)
-					sub_ctrl['scans']=[scan_c]
+				sub_ctrl['scans']=[scan_c]
 				sub_ctrl['start']=vexfile['SCHED'][scan_c]['start']
 				if inputs['do_clock_search'] == True:
 					os.mkdir("%s/%s%s/plots"%(o_dir,cs,scan_c))
