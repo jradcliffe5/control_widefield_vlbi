@@ -59,18 +59,25 @@ for i in c_names:
 	if i !="localhost":
 		l2r_commands.extend(l2r_mkdir)
 		l2r_commands.extend(l2r_copy)
-		l2r_commands.append('sbatch -W %s/job_run_sfxc_%s'%(cluster_params[i]["correlation_dir"],i))
-		print(l2r_commands)
-	
 
-
-	generate_correlator_environment(exper=exper,
+	l2r_copy = generate_correlator_environment(exper=exper,
 									vexfile=vexfile,
 									scans=scans[i],
 									datasources=ss_s,
 									cluster_name=i,
+									cluster_config=cluster_params,
 									inputs=inputs,
 									ctrl_file=ctrl_file)
+	if i !="localhost":
+		l2r_commands.extend(l2r_copy)
+		if cluster_params[i]["cluster_specification"]["job_manager"] == 'slurm':
+			l2r_commands.append('sbatch -W %s/job_run_sfxc_%s.%s'%(cluster_params[i]["correlation_dir"],i,cluster_params[i]["cluster_specification"]["job_manager"]))
+		elif cluster_params[i]["cluster_specification"]["job_manager"] == 'pbs':
+			l2r_commands.append('qsub -sync y %s/job_run_sfxc_%s.%s'%(cluster_params[i]["correlation_dir"],i,cluster_params[i]["cluster_specification"]["job_manager"]))
+		elif cluster_params[i]["cluster_specification"]["job_manager"] == 'bash':
+			l2r_commands.append('bash %s/job_run_sfxc_%s.%s'%(cluster_params[i]["correlation_dir"],i,cluster_params[i]["cluster_specification"]["job_manager"]))
+		else:
+			raise Exception('Job manager not recognised. Software supports only SLURM, PBS Pro and bash')
 
 corr_files = list_correlation_outputs(scans=ss,
 									exper=exper,

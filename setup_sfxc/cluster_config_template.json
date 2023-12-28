@@ -20,7 +20,7 @@
         "correlation_constraints":
         {
             "max_nodes" : 3,
-            "max_ncores_per_node": 24,
+            "max_ncores_per_node": [24],
             "max_partitions": ["Main"],
             "max_memory": ["200G"],
             "max_walltime": "2-00:00:00",

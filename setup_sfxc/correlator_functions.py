@@ -442,7 +442,7 @@ def split_scans(scan_dict,ratios=[],names=[]):
 			newdict[names[j]][i] = scan_dict[i]
 	return newdict
 
-def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},cluster_name="",inputs={},ctrl_file={}):
+def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},cluster_name="",cluster_config={},inputs={},ctrl_file={}):
 	"""
 	Function aims to generate the environment for the ctrl files
 	"""
@@ -465,7 +465,9 @@ def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},
 		remote=False
 	else:
 		remote=True
+		r_dir = cluster_config[cluster_name]["correlation_dir"]
 	commands = []
+	l2r_copy = []
 	if inputs['parallelise_scans'] == True:
 		for i in scans.keys():
 			scan_c = i.capitalize()
@@ -503,10 +505,14 @@ def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},
 					else:
 						data_sources[j] = ['file://%s/%s'%(bb_loc,datasources[i][k])]
 				sub_ctrl['data_sources'] = data_sources
-				#rmfiles(["%s/%s%s/%s.%s.ctrl"%(o_dir,cs,scan_c,exper,scan_c)])
 				with open("%s/%s%s/%s.%s.ctrl"%(o_dir,cs,scan_c,exper,scan_c), "w") as outfile:
 					json.dump(sub_ctrl, outfile, indent=4)
-				commands.append('%s %s/%s%s/%s.%s.ctrl %s 2>&1 | tee %s/logs/sfxc_run.log'%(sfxc_exec,o_dir,cs,scan_c,exper,scan_c,inputs["vex_file"],o_dir))
+				if remote == True:
+					mcpn, hpc_c = build_hpc_command(cluster_config=cluster_config[cluster_name])
+					sfxc_exec = "singularity exec %s/sfxc_ipp.sif mpirun -n %s sfxc"%(r_dir,mcpn)
+					commands.append('%s %s/%s%s/%s.%s.ctrl %s 2>&1 | tee %s/logs/sfxc_run_%s.log'%(hpc_c,sfxc_exec,r_dir,cs,scan_c,exper,scan_c,inputs["vex_file"],r_dir,scan_c))
+				else:
+					commands.append('%s %s/%s%s/%s.%s.ctrl %s 2>&1 | tee %s/logs/sfxc_run_%s.log'%(sfxc_exec,o_dir,cs,scan_c,exper,scan_c,inputs["vex_file"],o_dir,scan_c))
 				if inputs['do_clock_search'] == True:
 					commands.append('%s %s %s/%s%s/%s.%s.cor %s/%s%s/plots'%(produce_html_plot_exec,inputs["vex_file"],o_dir,cs,scan_c,exper,scan_c,o_dir,cs,scan_c))
 			else:
@@ -515,7 +521,7 @@ def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},
 			write_job(step='run_clocksearch_sfxc',commands=commands,job_manager='bash',write='w')
 		else:
 			commands.append('rm chex.*')
-			write_job(step='run_sfxc',commands=commands,job_manager='bash',write='w')
+			write_job(step='run_sfxc',commands=commands,job_manager='slurm',write='a')
 	else:
 		data_sources = {}
 		if inputs['delay_directory'] == "":
@@ -553,7 +559,27 @@ def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},
 		rmfiles(["%s/%s%s.ctrl"%(o_dir,cs,inputs['exper_name'])])
 		with open("%s/%s%s.ctrl"%(o_dir,cs,inputs['exper_name']), "w") as outfile:
 			json.dump(ctrl_file, outfile, indent=4)
-	return 
+	return l2r_copy
+
+def build_hpc_command(cluster_config):
+	jm = cluster_config["cluster_specification"]["job_manager"]
+	mnps = cluster_config["correlation_constraints"]["max_nodes_per_scan"]
+	if (cluster_config["correlation_constraints"]["max_ncores_per_node"] < 1):
+		mcpn = cluster_config["cluster_specification"]["ncore_per_node"][0]
+	else:
+		mcpn = cluster_config["correlation_constraints"]["max_ncores_per_node"]
+	if cluster_config["correlation_constraints"]["max_partitions"] == []:
+		mp = ",".join(cluster_config["cluster_specification"]["partitions"])
+	else:
+		mp = ",".join(cluster_config["correlation_constraints"]["max_partitions"])
+	if (cluster_config["correlation_constraints"]["max_memory"] == ""):
+		mm = cluster_config["cluster_specification"]["memory"][0]
+	else:
+		mm = cluster_config["correlation_constraints"]["max_memory"]
+	if jm == 'slurm':
+		return mcpn, "srun -N %d -n %d -m %s -p %s" % (mnps,mcpn,mm,mp)
+	elif jm == 'pbs':
+		return mcpn,'poo'
 
 def list_correlation_outputs(scans, exper, cs, vexfile={},calibrator=""):
 	corr_files = {}
