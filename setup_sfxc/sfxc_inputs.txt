@@ -22,7 +22,7 @@ cluster_config="./cluster_config.json"
 ##################################
 
 #### CLOCK SEARCH ####
-do_clock_search=True
+do_clock_search=False
 fringe_finder_scans=[]
 begin_delay = 40
 time_on = 4
@@ -50,7 +50,7 @@ message_level=1
 
 #### MULTI PHASE CENTRE ####
 multi_phase_center="auto"
-recorrelate_targets=True
+recorrelate_targets=False
 calibrator_target="R1_D"
 sub_integr_time=13056
 fft_size_correlation=16384
