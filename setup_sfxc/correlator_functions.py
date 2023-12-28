@@ -567,7 +567,7 @@ def build_hpc_command(cluster_config):
 	if (cluster_config["correlation_constraints"]["max_ncores_per_node"][0] < 1):
 		mcpn = cluster_config["cluster_specification"]["ncore_per_node"][0]
 	else:
-		mcpn = cluster_config["correlation_constraints"]["max_ncores_per_node"]
+		mcpn = cluster_config["correlation_constraints"]["max_ncores_per_node"][0]
 	if cluster_config["correlation_constraints"]["max_partitions"] == []:
 		mp = ",".join(cluster_config["cluster_specification"]["partitions"])
 	else:
