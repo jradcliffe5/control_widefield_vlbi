@@ -401,12 +401,13 @@ def build_directory_structure(o_dir="",bb_loc="",recorrelate=False,clocksearch=F
 				tn = cluster_config[cluster_name]["head_node"]
 			for j in data_sources[i]:
 				if cluster_config[cluster_name]["data_transfer"]['n_transfers'] < 0:
-					skip='&'
+					skip=' &'
 				elif c%(cluster_config[cluster_name]["data_transfer"]['n_transfers']+1) == 0:
 					skip = ''
 				else:
-					skip = '&'
-				rc.append("%s %s/%s %s@%s:%s/%s%s %s"%(cluster_config[cluster_name]["data_transfer"]["protocol"],bb_loc,j,cluster_config[cluster_name]['username'],tn,cluster_config[cluster_name]["correlation_dir"],cs,scan_c,skip))
+					skip = ' &'
+				rc.append("%s %s/%s %s@%s:%s/%s%s%s"%(cluster_config[cluster_name]["data_transfer"]["protocol"],bb_loc,j,cluster_config[cluster_name]['username'],tn,cluster_config[cluster_name]["correlation_dir"],cs,scan_c,skip))
+				c+=1
 	return rc, cs
 
 def remote_mkdir(dir="",remote=False,commands=[]):
