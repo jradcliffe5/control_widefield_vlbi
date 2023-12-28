@@ -564,7 +564,7 @@ def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},
 def build_hpc_command(cluster_config):
 	jm = cluster_config["cluster_specification"]["job_manager"]
 	mnps = cluster_config["correlation_constraints"]["max_nodes_per_scan"]
-	if (cluster_config["correlation_constraints"]["max_ncores_per_node"] < 1):
+	if (cluster_config["correlation_constraints"]["max_ncores_per_node"][0] < 1):
 		mcpn = cluster_config["cluster_specification"]["ncore_per_node"][0]
 	else:
 		mcpn = cluster_config["correlation_constraints"]["max_ncores_per_node"]
