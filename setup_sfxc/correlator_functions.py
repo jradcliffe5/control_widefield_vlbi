@@ -381,7 +381,7 @@ def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},
 				#rmfiles(["%s/%s%s/%s.%s.ctrl"%(o_dir,cs,scan_c,exper,scan_c)])
 				with open("%s/%s%s/%s.%s.ctrl"%(o_dir,cs,scan_c,exper,scan_c), "w") as outfile:
 					json.dump(sub_ctrl, outfile, indent=4)
-				commands.append('%s %s/%s%s/%s.%s.ctrl %s 2>&1 | tee %s/logs/sfxc_run.log'%(sfxc_exec,o_dir,cs,scan_c,exper,scan_c,ast.literal_eval(inputs["vex_file"]),o_dir))
+				commands.append('%s %s/%s%s/%s.%s.ctrl %s 2>&1 | tee %s/logs/sfxc_run.log'%(sfxc_exec,o_dir,cs,scan_c,exper,scan_c,inputs["vex_file"],o_dir))
 				if inputs['do_clock_search'] == True:
 					commands.append('%s %s %s/%s%s/%s.%s.cor %s/%s%s/plots'%(produce_html_plot_exec,inputs["vex_file"],o_dir,cs,scan_c,exper,scan_c,o_dir,cs,scan_c))
 			for j in vexfile['SCHED'][scan_c]['source']:
