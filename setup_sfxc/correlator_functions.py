@@ -407,7 +407,7 @@ def build_directory_structure(exper,o_dir="",bb_loc="",recorrelate=False,clockse
 				if cluster_config[cluster_name]["data_transfer"]['n_transfers'] < 0:
 					skip=' &'
 				elif c%(cluster_config[cluster_name]["data_transfer"]['n_transfers']+1) == 0:
-					skip = ''
+					skip = '; wait; '
 				else:
 					skip = ' &'
 				rc_copy.append("%s %s/%s %s@%s:%s/%s%s/baseband%s"%(cluster_config[cluster_name]["data_transfer"]["protocol"],bb_loc,j,cluster_config[cluster_name]['username'],tn,cluster_config[cluster_name]["correlation_dir"],cs,scan_c,skip))
@@ -518,6 +518,12 @@ def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},
 					mcpn, hpc_c = build_hpc_command(cluster_config=cluster_config[cluster_name])
 					sfxc_exec = "singularity exec %s/sfxc_ipp.sif mpirun -n %s sfxc"%(r_dir,mcpn)
 					commands.append('%s %s %s/%s%s/%s.%s.ctrl %s 2>&1 | tee %s/logs/sfxc_run_%s.log'%(hpc_c,sfxc_exec,r_dir,cs,scan_c,exper,scan_c,inputs["vex_file"],r_dir,scan_c))
+
+					if cluster_config[cluster_name]["data_transfer"]["node"] != "":
+							tn = cluster_config[cluster_name]["data_transfer"]["node"]
+					else:
+						tn = cluster_config[cluster_name]["head_node"]
+					l2r_copy.append("%s %s/%s%s %s@%s:%s/%s &"%(cluster_config[cluster_name]["data_transfer"]["protocol"],o_dir,cs,scan_c,cluster_config[cluster_name]['username'],tn,cluster_config[cluster_name]["correlation_dir"],cs))
 				else:
 					commands.append('%s %s/%s%s/%s.%s.ctrl %s 2>&1 | tee %s/logs/sfxc_run_%s.log'%(sfxc_exec,o_dir,cs,scan_c,exper,scan_c,inputs["vex_file"],o_dir,scan_c))
 				if inputs['do_clock_search'] == True:
