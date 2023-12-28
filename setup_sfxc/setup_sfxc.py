@@ -28,7 +28,8 @@ recorrelate = inputs['recorrelate_targets']
 ctrl_file, ss, ss_s = build_master_ctrl_file(inputs=inputs,
 											 vexfile=vexfile)
 
-build_directory_structure(recorrelate=recorrelate,
+build_directory_structure(o_dir=o_dir,
+						  recorrelate=recorrelate,
 						  clocksearch=inputs['do_clock_search'],
 						  scans=ss)
 
