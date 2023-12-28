@@ -18,7 +18,7 @@ casa_exec="singularity exec /SOFTWARE/CASA/casa-6.5.5-modular.sif python"
 correlator="sfxc"
 parallelise_scans=True
 multi_cluster=True
-cluster_config=./cluster_config.json
+cluster_config="./cluster_config.json"
 ##################################
 
 #### CLOCK SEARCH ####
