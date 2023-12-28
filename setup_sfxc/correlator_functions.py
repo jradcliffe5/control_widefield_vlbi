@@ -252,16 +252,16 @@ def build_master_ctrl_file(inputs,vexfile):
 	scans = []
 	ss_temp = {}
 	for i in list(ss.keys()):
-		if ast.literal_eval(inputs['do_clock_search']) == True:
-			if i.capitalize() in ast.literal_eval(inputs['fringe_finder_scans']):
+		if inputs['do_clock_search'] == True:
+			if i.capitalize() in inputs['fringe_finder_scans']:
 				scans.append(i.capitalize())
 				ss_temp[i] = ss[i]
 		else:
 			scans.append(i.capitalize())
 	ctrl_file['scans']=scans
-	if ast.literal_eval(inputs['do_clock_search']) == True:
+	if inputs['do_clock_search'] == True:
 		ss = ss_temp
-		ctrl_file["number_channels"] = ast.literal_eval(inputs['clock_nchannels'])
+		ctrl_file["number_channels"] = inputs['clock_nchannels']
 	return ctrl_file, ss, ss_s
 
 def build_directory_structure(o_dir="",recorrelate=False,clocksearch=False,scans={}):
