@@ -370,6 +370,7 @@ def build_directory_structure(exper,o_dir="",bb_loc="",recorrelate=False,clockse
 		os.mkdir("%s/logs"%(o_dir))
 	if cluster_name != "localhost":
 		rc_mkdir.append("mkdir %s/logs"%cluster_config[cluster_name]["correlation_dir"])
+		rc_mkdir.append("mkdir %s/baseband"%cluster_config[cluster_name]["correlation_dir"])
 	
 
 	if clocksearch == True:
@@ -409,7 +410,7 @@ def build_directory_structure(exper,o_dir="",bb_loc="",recorrelate=False,clockse
 					skip = ''
 				else:
 					skip = ' &'
-				rc_copy.append("%s %s/%s %s@%s:%s/%s%s%s"%(cluster_config[cluster_name]["data_transfer"]["protocol"],bb_loc,j,cluster_config[cluster_name]['username'],tn,cluster_config[cluster_name]["correlation_dir"],cs,scan_c,skip))
+				rc_copy.append("%s %s/%s %s@%s:%s/%s%s/baseband%s"%(cluster_config[cluster_name]["data_transfer"]["protocol"],bb_loc,j,cluster_config[cluster_name]['username'],tn,cluster_config[cluster_name]["correlation_dir"],cs,scan_c,skip))
 				c+=1
 	return rc_mkdir, rc_copy, cs
 
@@ -466,6 +467,7 @@ def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},
 	else:
 		remote=True
 		r_dir = cluster_config[cluster_name]["correlation_dir"]
+		bb_loc = "%s/baseband" %r_dir 
 	commands = []
 	l2r_copy = []
 	if inputs['parallelise_scans'] == True:
@@ -478,10 +480,15 @@ def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},
 				else:
 					srcs = ", ".join(vexfile['SCHED'][scan_c]['source'])
 				print('Making the following correlator scans: %s for sources: %s'%(scan_c,srcs))
-				sub_ctrl["delay_directory"] = "file://%s/%s%s_delays"%(o_dir,cs,exper)
-				sub_ctrl["tsys_file"] = "file://%s/%s%s/%s.tsys"%(o_dir,cs,scan_c,exper)
-				sub_ctrl['output_file'] = "file://%s/%s%s/%s.%s.cor"%(o_dir,cs,scan_c,exper,scan_c)
-				sub_ctrl['scans']=[scan_c]
+				if remote == True:
+					sub_ctrl["delay_directory"] = "file://%s/%s%s_delays"%(r_dir,cs,exper)
+					sub_ctrl["tsys_file"] = "file://%s/%s%s/%s.tsys"%(r_dir,cs,scan_c,exper)
+					sub_ctrl['output_file'] = "file://%s/%s%s/%s.%s.cor"%(r_dir,cs,scan_c,exper,scan_c)
+					sub_ctrl["delay_directory"] = "file://%s/%s%s_delays"%(r_dir,cs,exper)
+				else:
+					sub_ctrl["tsys_file"] = "file://%s/%s%s/%s.tsys"%(o_dir,cs,scan_c,exper)
+					sub_ctrl['output_file'] = "file://%s/%s%s/%s.%s.cor"%(o_dir,cs,scan_c,exper,scan_c)
+					sub_ctrl['scans']=[scan_c]
 				sub_ctrl['start']=vexfile['SCHED'][scan_c]['start']
 				if inputs['do_clock_search'] == True:
 					os.mkdir("%s/%s%s/plots"%(o_dir,cs,scan_c))
