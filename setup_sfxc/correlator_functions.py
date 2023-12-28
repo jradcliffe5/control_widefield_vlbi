@@ -135,8 +135,7 @@ def write_hpc_headers(step,params):
 	if ((hpc_opts['job_manager'] == 'pbs')|(hpc_opts['job_manager'] == 'bash')|(hpc_opts['job_manager'] == 'slurm')):
 		pass
 	else:
-		print('Incorrect job manager, please select from pbs, slurm or bash')
-		sys.exit()
+		raise Exception('Incorrect job manager, please select from pbs, slurm or bash')
 
 	for i in ['partition','walltime','nodetype']:
 		if params[step]["hpc_options"][i] == 'default':
@@ -192,24 +191,7 @@ def write_hpc_headers(step,params):
 				}
 
 	hpc_header= ['#!/bin/bash']
-	'''
-	if step == 'apply_to_all':
-		file = open("%s/target_files.txt"%params['global']['cwd'], "r")
-		nonempty_lines = [line.strip("\n") for line in file if line != "\n"]
-		line_count = len(nonempty_lines)
-		file.close()
-		if params[step]['hpc_options']['max_jobs'] == -1:
-			tasks = '0-'+str(line_count-1)
-		else:
-			if (line_count-1) > params[step]['hpc_options']['max_jobs']:
-				tasks = '0-'+str(line_count-1)+'%'+str(params[step]['hpc_options']['max_jobs'])
-			else:
-				tasks = '0-'+str(line_count-1)
-		hpc_dict['slurm']['array_job'] = '#SBATCH --array='+tasks
-		hpc_dict['pbs']['array_job'] = '#PBS -t '+tasks
-		hpc_dict['bash']['array_job'] = ''
-		hpc_opts['array_job'] = -1
-	'''
+
 
 	hpc_job = hpc_opts['job_manager']
 	for i in hpc_opts.keys():
@@ -217,11 +199,7 @@ def write_hpc_headers(step,params):
 			if hpc_opts[i] != '':
 				if hpc_dict[hpc_opts['job_manager']][i] !='':
 					hpc_header.append(hpc_dict[hpc_job][i])
-
-
-	with open('job_%s.%s'%(step,hpc_job), 'w') as filehandle:
-		for listitem in hpc_header:
-			filehandle.write('%s\n' % listitem)
+	return hpc_header
 
 def rmfiles(files):
 	for i in files:
@@ -464,11 +442,12 @@ def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},
 		rc = 0
 	if cluster_name == 'localhost':
 		remote=False
+		commands = ["!#/bin/bash"]
 	else:
 		remote=True
 		r_dir = cluster_config[cluster_name]["correlation_dir"]
 		bb_loc = "%s/baseband" %r_dir 
-	commands = []
+		commands = write_hpc_headers
 	l2r_copy = []
 	if inputs['parallelise_scans'] == True:
 		for i in scans.keys():

@@ -15,7 +15,11 @@
             "job_manager":"slurm",
             "ncore_per_node": [24,24,24,24],
             "partitions": ["Main","HighMem","GPUV100","GPU"],
-            "memory":["230G","500G","230G","230G"]
+            "memory":["230G","500G","230G","230G"],
+            "nodetype":"",
+            "mpiprocs":-1,
+            "HPC_project_code":"",
+            "email_progress":"jack.radcliffe@up.ac.za"
         },
         "correlation_constraints":
         {
