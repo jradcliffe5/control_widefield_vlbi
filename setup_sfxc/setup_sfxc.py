@@ -28,19 +28,44 @@ recorrelate = inputs['recorrelate_targets']
 ctrl_file, ss, ss_s = build_master_ctrl_file(inputs=inputs,
 											 vexfile=vexfile)
 
-build_directory_structure(o_dir=o_dir,
-						  recorrelate=recorrelate,
-						  clocksearch=inputs['do_clock_search'],
-						  scans=ss)
+if inputs['multi_cluster'] == True:
+	if os.path.exists(inputs['cluster_config']) == False:
+		raise Exception('Cluster configuration file (%s) does not exist'%inputs['cluster_config'])
+	if inputs['do_clock_search'] == True:
+		raise Exception('Multi cluster not supported for clock searches, please turn it off.')
+	cluster_params = load_json('%s'%inputs['cluster_config'])
+	c_names = ['localhost']+list(cluster_params.keys())
+	if not (len(c_names)==len(inputs['correlation_share_ratios'])):
+		raise AssertionError('Ratios and number of clusters are mismatched')
+	scans = split_scans(scan_dict=ss,ratios=inputs['correlation_share_ratios'],names=c_names)
+else:
+	c_names = ['localhost']
+	ratios=[1]
+	scans = {'localhost':ss}
 
-corr_files = generate_correlator_environment(exper=exper,
-												vexfile=vexfile,
-												scans=ss,
-												datasources=ss_s,
-												cluster_name="localhost",
-												inputs=inputs,
-												ctrl_file=ctrl_file)
+for i in c_names:
+	if i != "localhost":
+		remote_commands = []
+		write_hpc_headers()
+	
+	cs = build_directory_structure(o_dir=o_dir,
+									recorrelate=recorrelate,
+									clocksearch=inputs['do_clock_search'],
+									scans=scans[i])
 
+	generate_correlator_environment(exper=exper,
+									vexfile=vexfile,
+									scans=scans[i],
+									datasources=ss_s,
+									cluster_name=i,
+									inputs=inputs,
+									ctrl_file=ctrl_file)
+
+corr_files = list_correlation_outputs(scans=ss,
+									exper=exper,
+									cs=cs,
+									vexfile=vexfile,
+									calibrator=inputs['calibrator_target'])
 commands = []
 print('Building script for conversion to measurement sets')
 ms_output = inputs['ms_output']

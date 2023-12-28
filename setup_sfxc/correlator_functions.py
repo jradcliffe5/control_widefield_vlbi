@@ -1,4 +1,4 @@
-import os, glob, re, datetime, ast
+import os, glob, re, datetime, sys
 import numpy as np
 import json, collections
 from collections import OrderedDict
@@ -123,6 +123,105 @@ def write_job(step,commands,job_manager,write):
 	with open('./job_%s.%s'%(step,job_manager), write) as filehandle:
 			for listitem in commands:
 				filehandle.write('%s\n' % listitem)
+
+def write_hpc_headers(step,params):
+	hpc_opts = {}
+	hpc_opts['job_manager'] = params['global']['job_manager']
+	hpc_opts['job_name'] = 'sfxc_%s'%step
+	hpc_opts['email_progress'] = params['global']["email_progress"] 
+	hpc_opts['hpc_account'] = params['global']['HPC_project_code']
+	hpc_opts['error'] = step
+
+	if ((hpc_opts['job_manager'] == 'pbs')|(hpc_opts['job_manager'] == 'bash')|(hpc_opts['job_manager'] == 'slurm')):
+		pass
+	else:
+		print('Incorrect job manager, please select from pbs, slurm or bash')
+		sys.exit()
+
+	for i in ['partition','walltime','nodetype']:
+		if params[step]["hpc_options"][i] == 'default':
+			hpc_opts[i] = params['global']['default_%s'%i]
+		else:
+			hpc_opts[i] = params[step]["hpc_options"][i]
+	for i in ['nodes','cpus','mpiprocs','mem']:
+		if params[step]["hpc_options"][i] == -1:
+			hpc_opts[i] = params['global']['default_%s'%i]
+		else:
+			hpc_opts[i] = params[step]["hpc_options"][i]
+	
+
+	hpc_dict = {'slurm':{
+					 'partition'     :'#SBATCH --partition=%s'%hpc_opts['partition'],
+					 'nodetype'      :'',
+					 'cpus'          :'#SBATCH --tasks-per-node %s'%hpc_opts['cpus'], 
+					 'nodes'         :'#SBATCH -N %s-%s'%(hpc_opts['nodes'],hpc_opts['nodes']),
+					 'mpiprocs'      :'', 
+					 'walltime'      :'#SBATCH --time=%s'%hpc_opts['walltime'],
+					 'job_name'      :'#SBATCH -J %s'%hpc_opts['job_name'],
+					 'hpc_account'   :'#SBATCH --account %s'%hpc_opts['hpc_account'],
+					 'mem'           :'#SBATCH --mem=%s'%hpc_opts['mem'],
+					 'email_progress':'#SBATCH --mail-type=BEGIN,END,FAIL\n#SBATCH --mail-user=%s'%hpc_opts['email_progress'],
+					 'error':'#SBATCH -o logs/%s.sh.stdout.log\n#SBATCH -e logs/%s.sh.stderr.log'%(hpc_opts['error'],hpc_opts['error'])
+					},
+				'pbs':{
+					 'partition'     :'#PBS -q %s'%hpc_opts['partition'],
+					 'nodetype'      :'',
+					 'cpus'          :'#PBS -l select=%s:ncpus=%s:mpiprocs=%s:nodetype=%s'%(hpc_opts['nodes'],hpc_opts['cpus'],hpc_opts['mpiprocs'],hpc_opts['nodetype']), 
+					 'nodes'         :'',
+					 'mpiprocs'      :'', 
+					 'mem'           :'',
+					 'walltime'      :'#PBS -l walltime=%s'%hpc_opts['walltime'],
+					 'job_name'      :'#PBS -N %s'%hpc_opts['job_name'],
+					 'hpc_account'   :'#PBS -P %s'%hpc_opts['hpc_account'],
+					 'email_progress':'#PBS -m abe -M %s'%hpc_opts['email_progress'],
+					 'error':'#PBS -o logs/%s.sh.stdout.log\n#PBS -e logs/%s.sh.stderr.log'%(hpc_opts['error'],hpc_opts['error'])
+					},
+				'bash':{
+					 'partition'     :'',
+					 'nodetype'      :'',
+					 'cpus'          :'', 
+					 'nodes'         :'',
+					 'mpiprocs'      :'', 
+					 'walltime'      :'',
+					 'job_name'      :'',
+					 'hpc_account'   :'',
+					 'mem'           :'',
+					 'email_progress':'',
+					 'error':''
+					}
+				}
+
+	hpc_header= ['#!/bin/bash']
+	'''
+	if step == 'apply_to_all':
+		file = open("%s/target_files.txt"%params['global']['cwd'], "r")
+		nonempty_lines = [line.strip("\n") for line in file if line != "\n"]
+		line_count = len(nonempty_lines)
+		file.close()
+		if params[step]['hpc_options']['max_jobs'] == -1:
+			tasks = '0-'+str(line_count-1)
+		else:
+			if (line_count-1) > params[step]['hpc_options']['max_jobs']:
+				tasks = '0-'+str(line_count-1)+'%'+str(params[step]['hpc_options']['max_jobs'])
+			else:
+				tasks = '0-'+str(line_count-1)
+		hpc_dict['slurm']['array_job'] = '#SBATCH --array='+tasks
+		hpc_dict['pbs']['array_job'] = '#PBS -t '+tasks
+		hpc_dict['bash']['array_job'] = ''
+		hpc_opts['array_job'] = -1
+	'''
+
+	hpc_job = hpc_opts['job_manager']
+	for i in hpc_opts.keys():
+		if i != 'job_manager':
+			if hpc_opts[i] != '':
+				if hpc_dict[hpc_opts['job_manager']][i] !='':
+					hpc_header.append(hpc_dict[hpc_job][i])
+
+
+	with open('job_%s.%s'%(step,hpc_job), 'w') as filehandle:
+		for listitem in hpc_header:
+			filehandle.write('%s\n' % listitem)
 
 def rmfiles(files):
 	for i in files:
@@ -277,6 +376,8 @@ def build_directory_structure(o_dir="",recorrelate=False,clocksearch=False,scans
 		if recorrelate == False:
 			rmdirs(["%s/%s"%(o_dir,cs)])
 			os.mkdir("%s/%s"%(o_dir,cs))
+			if remote_ctrl != False:
+				remote_ctrl.append('mkdir ')
 
 	for i in scans.keys():
 		scan_c = i.capitalize()
@@ -284,7 +385,7 @@ def build_directory_structure(o_dir="",recorrelate=False,clocksearch=False,scans
 			pass
 		else:
 			os.mkdir("%s/%s%s"%(o_dir,cs,scan_c))
-	return
+	return cs
 
 def remote_mkdir(dir="",remote=False,commands=[]):
 	if remote==True:
@@ -339,7 +440,6 @@ def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},
 	else:
 		remote=True
 	commands = []
-	corr_files = {}
 	if inputs['parallelise_scans'] == True:
 		commands = remote_mkdir(dir="%s/%s%s_delays"%(o_dir,cs,exper),remote=remote,commands=commands)
 		for i in scans.keys():
@@ -384,22 +484,6 @@ def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},
 				commands.append('%s %s/%s%s/%s.%s.ctrl %s 2>&1 | tee %s/logs/sfxc_run.log'%(sfxc_exec,o_dir,cs,scan_c,exper,scan_c,inputs["vex_file"],o_dir))
 				if inputs['do_clock_search'] == True:
 					commands.append('%s %s %s/%s%s/%s.%s.cor %s/%s%s/plots'%(produce_html_plot_exec,inputs["vex_file"],o_dir,cs,scan_c,exper,scan_c,o_dir,cs,scan_c))
-			for j in vexfile['SCHED'][scan_c]['source']:
-				if j == inputs["calibrator_target"]:
-					if exper in list(corr_files.keys()):
-						corr_files[exper] = corr_files[exper]+["%s%s/%s.%s.cor_%s"%(cs,scan_c,exper,scan_c,j)]
-					else:
-						corr_files[exper] = ["%s%s/%s.%s.cor_%s"%(cs,scan_c,exper,scan_c,j)]
-				elif len(vexfile['SCHED'][scan_c]['source']) == 1:
-					if exper in list(corr_files.keys()):
-						corr_files[exper] = corr_files[exper] + ["%s%s/%s.%s.cor"%(cs,scan_c,exper,scan_c)]
-					else:
-						corr_files[exper] = ["%s%s/%s.%s.cor"%(cs,scan_c,exper,scan_c)]
-				else:
-					if j in list(corr_files.keys()):
-						corr_files[j] = corr_files[j] + ["%s%s/%s.%s.cor_%s"%(cs,scan_c,exper,scan_c,j)]
-					else:
-						corr_files[j] = ["%s%s/%s.%s.cor_%s"%(cs,scan_c,exper,scan_c,j)]
 			else:
 				pass
 		if inputs['do_clock_search'] == True:
@@ -444,4 +528,26 @@ def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},
 		rmfiles(["%s/%s%s.ctrl"%(o_dir,cs,inputs['exper_name'])])
 		with open("%s/%s%s.ctrl"%(o_dir,cs,inputs['exper_name']), "w") as outfile:
 			json.dump(ctrl_file, outfile, indent=4)
+	return 
+
+def list_correlation_outputs(scans, exper, cs, vexfile={},calibrator=""):
+	corr_files = {}
+	for i in scans.keys():
+		scan_c = i.capitalize()
+		for j in vexfile['SCHED'][scan_c]['source']:
+			if j == calibrator:
+				if exper in list(corr_files.keys()):
+					corr_files[exper] = corr_files[exper]+["%s%s/%s.%s.cor_%s"%(cs,scan_c,exper,scan_c,j)]
+				else:
+					corr_files[exper] = ["%s%s/%s.%s.cor_%s"%(cs,scan_c,exper,scan_c,j)]
+			elif len(vexfile['SCHED'][scan_c]['source']) == 1:
+				if exper in list(corr_files.keys()):
+					corr_files[exper] = corr_files[exper] + ["%s%s/%s.%s.cor"%(cs,scan_c,exper,scan_c)]
+				else:
+					corr_files[exper] = ["%s%s/%s.%s.cor"%(cs,scan_c,exper,scan_c)]
+			else:
+				if j in list(corr_files.keys()):
+					corr_files[j] = corr_files[j] + ["%s%s/%s.%s.cor_%s"%(cs,scan_c,exper,scan_c,j)]
+				else:
+					corr_files[j] = ["%s%s/%s.%s.cor_%s"%(cs,scan_c,exper,scan_c,j)]
 	return corr_files

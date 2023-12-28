@@ -1,0 +1,30 @@
+{
+    "ilifu":
+    {
+        "username": "jradcliffe5",
+        "correlation_dir": "/scratch3/users/jradcliffe5/correlation",
+        "head_node": "slurm.ilifu.ac.za",
+        "data_transfer":
+        {
+            "protocol": "rsync -ar --progress",
+            "node"    : "transfer.ilifu.ac.za"
+        },
+        "cluster_specification": 
+        {
+            "job_manager":"slurm",
+            "ncore_per_node": [24,24,24,24],
+            "partitions": ["Main","HighMem","GPUV100","GPU"],
+            "memory":["230G","500G","230G","230G"]
+        },
+        "correlation_constraints":
+        {
+            "max_nodes" : 3,
+            "max_ncores_per_node": 24,
+            "max_partitions": ["Main"],
+            "max_memory": ["200G"],
+            "max_walltime": "2-00:00:00",
+            "max_nodes_per_scan": 1
+        }
+
+    }
+}

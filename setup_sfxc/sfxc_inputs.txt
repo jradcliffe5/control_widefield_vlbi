@@ -19,7 +19,7 @@ correlator="sfxc"
 parallelise_scans=True
 multi_cluster=False
 correlation_share_ratios = [0.8,0.2]
-cluster_config="./cluster_config.json"
+cluster_config="./cluster_config_template.json"
 ##################################
 
 #### CLOCK SEARCH ####
