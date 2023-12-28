@@ -315,7 +315,7 @@ def split_scans(scan_dict,ratios=[],names=[]):
 			newdict[names[j]][i] = scan_dict[i]
 	return newdict
 
-def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},c_name="",inputs={},ctrl_file={}):
+def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},cluster_name="",inputs={},ctrl_file={}):
 	"""
 	Function aims to generate the environment for the ctrl files
 	"""
@@ -334,7 +334,7 @@ def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},
 		rc = 1
 	else:
 		rc = 0
-	if c_name == 'localhost':
+	if cluster_name == 'localhost':
 		remote=False
 	else:
 		remote=True
