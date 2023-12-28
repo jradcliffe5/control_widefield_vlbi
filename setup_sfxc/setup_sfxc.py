@@ -38,8 +38,7 @@ corr_files = generate_correlator_environment(exper=exper,
 												datasources=ss_s,
 												cluster_name="localhost",
 												inputs=inputs,
-												ctrl_file=ctrl_file,
-												recorrelate=recorrelate)
+												ctrl_file=ctrl_file)
 
 commands = []
 print('Building script for conversion to measurement sets')

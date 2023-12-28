@@ -195,14 +195,15 @@ def find_stop(dt,scan_length):
 
 def build_master_ctrl_file(inputs,vexfile):
 	ctrl_file = {}
+	bb_loc = inputs['baseband_location']
 	### READ INPUT FILE ###
 	for i in ["exper_name","cross_polarize","number_channels","normalize","slices_per_integration","setup_station","integr_time","message_level","slices_per_integration","LO_offset","multi_phase_center","sub_integr_time","fft_size_correlation"]:
-		ctrl_file[i] = ast.literal_eval(inputs[i])
+		ctrl_file[i] = inputs[i]
 	########################
 
 	#### MAKE CHANNELS #####
 	corr_chans = []
-	for i in range(ast.literal_eval(inputs['correlator_channels'])):
+	for i in range(inputs['correlator_channels']):
 		corr_chans.append('CH%02d'%(i+1))
 	ctrl_file["channels"] = corr_chans
 	########################
@@ -314,10 +315,21 @@ def split_scans(scan_dict,ratios=[],names=[]):
 			newdict[names[j]][i] = scan_dict[i]
 	return newdict
 
-def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},c_name="",inputs={},ctrl_file={},recorrelate=False):
+def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},c_name="",inputs={},ctrl_file={}):
 	"""
 	Function aims to generate the environment for the ctrl files
 	"""
+	o_dir = inputs['output_dir']
+	exper = inputs['exper_name']
+	bb_loc = inputs['baseband_location']
+	o_dir = inputs["output_dir"]
+	sfxc_exec = inputs['sfxc_exec']
+	produce_html_plot_exec = inputs['produce_html_plot_exec']
+	recorrelate = inputs['recorrelate_targets']
+	if inputs['do_clock_search'] == True:
+		cs = "clock_search/"
+	else:
+		cs = "correlation/"
 	if recorrelate == True:
 		rc = 1
 	else:
