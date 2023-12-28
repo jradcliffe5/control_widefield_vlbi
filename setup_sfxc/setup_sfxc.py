@@ -44,14 +44,22 @@ else:
 	scans = {'localhost':ss}
 
 for i in c_names:
-	if i != "localhost":
-		remote_commands = []
-		write_hpc_headers()
+	if i !="localhost":
+		l2r_commands = ["!#/bin/bash"]
 	
-	cs = build_directory_structure(o_dir=o_dir,
+	l2r, cs = build_directory_structure(o_dir=o_dir,
+									 bb_loc=bb_loc,
 									recorrelate=recorrelate,
 									clocksearch=inputs['do_clock_search'],
-									scans=scans[i])
+									scans=scans[i],
+									data_sources=ss_s,
+									cluster_name=i,
+									cluster_config=cluster_params)
+	if i !="localhost":
+		l2r_commands.extend(l2r)
+		l2r_commands.append('sbatch -W %s/job_run_sfxc_%s'%(cluster_params[i]["correlation_dir"],i))
+	
+
 
 	generate_correlator_environment(exper=exper,
 									vexfile=vexfile,

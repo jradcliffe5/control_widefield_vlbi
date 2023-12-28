@@ -363,9 +363,13 @@ def build_master_ctrl_file(inputs,vexfile):
 		ctrl_file["number_channels"] = inputs['clock_nchannels']
 	return ctrl_file, ss, ss_s
 
-def build_directory_structure(o_dir="",recorrelate=False,clocksearch=False,scans={}):
+def build_directory_structure(o_dir="",bb_loc="",recorrelate=False,clocksearch=False,scans={},data_sources={},cluster_name="localhost",cluster_config={}):
+	rc = []
 	if os.path.exists("%s/logs"%(o_dir)) == False:
 		os.mkdir("%s/logs"%(o_dir))
+	if cluster_name != "localhost":
+		rc.append("mkdir %s/logs"%cluster_config[cluster_name]["correlation_dir"])
+	
 
 	if clocksearch == True:
 		cs = "clock_search/"
@@ -376,8 +380,8 @@ def build_directory_structure(o_dir="",recorrelate=False,clocksearch=False,scans
 		if recorrelate == False:
 			rmdirs(["%s/%s"%(o_dir,cs)])
 			os.mkdir("%s/%s"%(o_dir,cs))
-			if remote_ctrl != False:
-				remote_ctrl.append('mkdir ')
+		if cluster_name != "localhost":
+			rc.append("mkdir %s/%s"%(cluster_config[cluster_name]["correlation_dir"],cs))
 
 	for i in scans.keys():
 		scan_c = i.capitalize()
@@ -385,7 +389,18 @@ def build_directory_structure(o_dir="",recorrelate=False,clocksearch=False,scans
 			pass
 		else:
 			os.mkdir("%s/%s%s"%(o_dir,cs,scan_c))
-	return cs
+			if cluster_name != "localhost":
+				rc.append("mkdir %s/%s%s"%(cluster_config[cluster_name]["correlation_dir"],cs,scan_c))
+	for i in scans.keys():
+		scan_c = i.capitalize()
+		if cluster_name != "localhost":
+			for j in data_sources[i]:
+				if cluster_config[cluster_name]["data_transfer"]["node"] != "":
+					tn = cluster_config[cluster_name]["data_transfer"]["node"]
+				else:
+					tn = cluster_config[cluster_name]["head_node"]
+				rc.append("%s %s/%s %s@%s:/%s/%s%s"%(cluster_config[cluster_name]["data_transfer"]["protocol"],bb_loc,j,tn,cluster_config[cluster_name]["correlation_dir"],cs,scan_c))
+	return rc, cs
 
 def remote_mkdir(dir="",remote=False,commands=[]):
 	if remote==True:
