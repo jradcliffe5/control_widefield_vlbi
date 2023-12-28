@@ -7,7 +7,8 @@
         "data_transfer":
         {
             "protocol": "rsync -ar --progress",
-            "node"    : "transfer.ilifu.ac.za"
+            "node"    : "transfer.ilifu.ac.za",
+            "n_transfers": 5
         },
         "cluster_specification": 
         {
