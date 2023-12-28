@@ -58,6 +58,7 @@ for i in c_names:
 	if i !="localhost":
 		l2r_commands.extend(l2r)
 		l2r_commands.append('sbatch -W %s/job_run_sfxc_%s'%(cluster_params[i]["correlation_dir"],i))
+		print(l2r_commands)
 	
 
 
