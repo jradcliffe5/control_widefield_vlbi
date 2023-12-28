@@ -78,7 +78,8 @@ for i in c_names:
 			l2r_commands.append('bash %s/job_run_sfxc_%s.%s'%(cluster_params[i]["correlation_dir"],i,cluster_params[i]["cluster_specification"]["job_manager"]))
 		else:
 			raise Exception('Job manager not recognised. Software supports only SLURM, PBS Pro and bash')
-		write_job(step='run_l2r_%s'%i,commands=l2r_commands,job_manager='bash',write='w')
+		write_job(step='run_l2r_%s'%i,commands=l2r_mkdir,job_manager='bash',write='w')
+		write_job(step='run_copy_%s'%i,commands=l2r_copy,job_manager='bash',write='w')
 
 corr_files = list_correlation_outputs(scans=ss,
 									exper=exper,

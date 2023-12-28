@@ -534,7 +534,7 @@ def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},
 			write_job(step='run_clocksearch_sfxc',commands=commands,job_manager='bash',write='w')
 		else:
 			commands.append('rm chex.*')
-			write_job(step='run_sfxc',commands=commands,job_manager='slurm',write='a')
+			write_job(step='run_sfxc_%s'%cluster_name,commands=commands,job_manager='bash',write='a')
 	else:
 		data_sources = {}
 		if inputs['delay_directory'] == "":
