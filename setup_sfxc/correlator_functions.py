@@ -340,7 +340,7 @@ def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},
 		remote=True
 	commands = []
 	corr_files = {}
-	if ast.literal_eval(inputs['parallelise_scans']) == True:
+	if inputs['parallelise_scans'] == True:
 		commands = remote_mkdir(dir="%s/%s%s_delays"%(o_dir,cs,exper),remote=remote,commands=commands)
 		for i in scans.keys():
 			scan_c = i.capitalize()
@@ -356,10 +356,10 @@ def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},
 				sub_ctrl['output_file'] = "file://%s/%s%s/%s.%s.cor"%(o_dir,cs,scan_c,exper,scan_c)
 				sub_ctrl['scans']=[scan_c]
 				sub_ctrl['start']=vexfile['SCHED'][scan_c]['start']
-				if ast.literal_eval(inputs['do_clock_search']) == True:
+				if inputs['do_clock_search'] == True:
 					os.mkdir("%s/%s%s/plots"%(o_dir,cs,scan_c))
-					sub_ctrl['start']=find_stop(vexfile['SCHED'][scan_c]['start'],ast.literal_eval(inputs['begin_delay']))
-					sub_ctrl['stop']=find_stop(sub_ctrl['start'],ast.literal_eval(inputs['time_on']))
+					sub_ctrl['start']=find_stop(vexfile['SCHED'][scan_c]['start'],inputs['begin_delay'])
+					sub_ctrl['stop']=find_stop(sub_ctrl['start'],inputs['time_on'])
 				else:
 					scan_length = int(vexfile['SCHED'][scan_c]["station"][0][2].split(" sec")[0])
 					sub_ctrl['stop']=find_stop(vexfile['SCHED'][scan_c]['start'],scan_length)
@@ -382,10 +382,10 @@ def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},
 				with open("%s/%s%s/%s.%s.ctrl"%(o_dir,cs,scan_c,exper,scan_c), "w") as outfile:
 					json.dump(sub_ctrl, outfile, indent=4)
 				commands.append('%s %s/%s%s/%s.%s.ctrl %s 2>&1 | tee %s/logs/sfxc_run.log'%(sfxc_exec,o_dir,cs,scan_c,exper,scan_c,ast.literal_eval(inputs["vex_file"]),o_dir))
-				if ast.literal_eval(inputs['do_clock_search']) == True:
-					commands.append('%s %s %s/%s%s/%s.%s.cor %s/%s%s/plots'%(produce_html_plot_exec,ast.literal_eval(inputs["vex_file"]),o_dir,cs,scan_c,exper,scan_c,o_dir,cs,scan_c))
+				if inputs['do_clock_search'] == True:
+					commands.append('%s %s %s/%s%s/%s.%s.cor %s/%s%s/plots'%(produce_html_plot_exec,inputs["vex_file"],o_dir,cs,scan_c,exper,scan_c,o_dir,cs,scan_c))
 			for j in vexfile['SCHED'][scan_c]['source']:
-				if j == ast.literal_eval(inputs["calibrator_target"]):
+				if j == inputs["calibrator_target"]:
 					if exper in list(corr_files.keys()):
 						corr_files[exper] = corr_files[exper]+["%s%s/%s.%s.cor_%s"%(cs,scan_c,exper,scan_c,j)]
 					else:
@@ -402,27 +402,27 @@ def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},
 						corr_files[j] = ["%s%s/%s.%s.cor_%s"%(cs,scan_c,exper,scan_c,j)]
 			else:
 				pass
-		if ast.literal_eval(inputs['do_clock_search']) == True:
+		if inputs['do_clock_search'] == True:
 			write_job(step='run_clocksearch_sfxc',commands=commands,job_manager='bash',write='w')
 		else:
 			commands.append('rm chex.*')
 			write_job(step='run_sfxc',commands=commands,job_manager='bash',write='w')
 	else:
 		data_sources = {}
-		if ast.literal_eval(inputs['delay_directory']) == "":
+		if inputs['delay_directory'] == "":
 			rmdirs(["%s/%s%s_delays"%(o_dir,cs,exper)])
 			os.mkdir("%s/%s%s_delays"%(o_dir,cs,exper))
 			ctrl_file["delay_directory"] = "file://%s/%s%s_delays"%(o_dir,cs,exper)
 		else:
 			ctrl_file["delay_directory"] = "file://%s/%s%s"%(o_dir,cs,exper)
-		if ast.literal_eval(inputs['tsys_file']) == "":
+		if inputs['tsys_file'] == "":
 			ctrl_file["tsys_file"] = "file://%s/%s%s.tsys"%(o_dir,cs,exper)
 		else:
 			ctrl_file["tsys_file"] = "file://%s/%s%s"%(o_dir,cs,exper)
-		if ast.literal_eval(inputs['output_file']) == "":
-			ctrl_file["output_file"] = "file://%s/%s%s.cor"%(o_dir,cs,ast.literal_eval(inputs["exper_name"]))
+		if inputs['output_file'] == "":
+			ctrl_file["output_file"] = "file://%s/%s%s.cor"%(o_dir,cs,inputs["exper_name"])
 		else:
-			ctrl_file["output_file"] = "file://%s/%s%s"%(o_dir,cs,ast.literal_eval(inputs["output_file"]))
+			ctrl_file["output_file"] = "file://%s/%s%s"%(o_dir,cs,inputs["output_file"])
 		for i in scans.keys():
 			if ctrl_file['multi_phase_center'] == "auto":
 				if len(vexfile['SCHED'][i.capitalize()]['source']) > 1:
@@ -441,7 +441,7 @@ def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},
 		ctrl_file['stop']=find_stop(vexfile['SCHED'][i.capitalize()]['start'],scan_length)
 		ctrl_file['data_sources'] = data_sources
 
-		rmfiles(["%s/%s%s.ctrl"%(o_dir,cs,ast.literal_eval(inputs['exper_name']))])
-		with open("%s/%s%s.ctrl"%(o_dir,cs,ast.literal_eval(inputs['exper_name'])), "w") as outfile:
+		rmfiles(["%s/%s%s.ctrl"%(o_dir,cs,inputs['exper_name'])])
+		with open("%s/%s%s.ctrl"%(o_dir,cs,inputs['exper_name']), "w") as outfile:
 			json.dump(ctrl_file, outfile, indent=4)
 	return corr_files
