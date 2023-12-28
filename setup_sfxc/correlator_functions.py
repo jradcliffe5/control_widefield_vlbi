@@ -510,7 +510,7 @@ def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},
 				if remote == True:
 					mcpn, hpc_c = build_hpc_command(cluster_config=cluster_config[cluster_name])
 					sfxc_exec = "singularity exec %s/sfxc_ipp.sif mpirun -n %s sfxc"%(r_dir,mcpn)
-					commands.append('%s %s/%s%s/%s.%s.ctrl %s 2>&1 | tee %s/logs/sfxc_run_%s.log'%(hpc_c,sfxc_exec,r_dir,cs,scan_c,exper,scan_c,inputs["vex_file"],r_dir,scan_c))
+					commands.append('%s %s %s/%s%s/%s.%s.ctrl %s 2>&1 | tee %s/logs/sfxc_run_%s.log'%(hpc_c,sfxc_exec,r_dir,cs,scan_c,exper,scan_c,inputs["vex_file"],r_dir,scan_c))
 				else:
 					commands.append('%s %s/%s%s/%s.%s.ctrl %s 2>&1 | tee %s/logs/sfxc_run_%s.log'%(sfxc_exec,o_dir,cs,scan_c,exper,scan_c,inputs["vex_file"],o_dir,scan_c))
 				if inputs['do_clock_search'] == True:
