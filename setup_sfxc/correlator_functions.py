@@ -160,7 +160,7 @@ def write_hpc_headers(cluster_name, cluster_params):
 	if cp[cn]["correlation_constraints"]["max_memory"] == []:
 		hpc_opts['mem'] = cp[cn]["cluster_specification"]["memory"][0]
 	else:
-		hpc_opts['cpus'] = cp[cn]["correlation_constraints"]["max_memory"]
+		hpc_opts['mem'] = cp[cn]["correlation_constraints"]["max_memory"]
 
 
 	
