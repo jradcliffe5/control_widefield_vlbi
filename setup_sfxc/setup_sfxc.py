@@ -54,6 +54,8 @@ for i in c_names:
 									 clocksearch=inputs['do_clock_search'],
 									 scans=scans[i],
 									 data_sources=ss_s,
+									 scp=inputs['singularity_container_path'],
+									 vex_loc=inputs['vexfile'],
 									 cluster_name=i,
 									 cluster_config=cluster_params)
 	if i !="localhost":

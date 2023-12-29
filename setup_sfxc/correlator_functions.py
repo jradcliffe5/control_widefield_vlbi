@@ -357,9 +357,10 @@ def build_master_ctrl_file(inputs,vexfile):
 		ctrl_file["number_channels"] = inputs['clock_nchannels']
 	return ctrl_file, ss, ss_s
 
-def build_directory_structure(exper,o_dir="",bb_loc="",recorrelate=False,clocksearch=False,scans={},data_sources={},cluster_name="localhost",cluster_config={}):
+def build_directory_structure(exper,o_dir="",bb_loc="",recorrelate=False,clocksearch=False,scans={},scp="",data_sources={},cluster_name="localhost",cluster_config={},vex_loc=""):
 	rc_mkdir = ["!#/bin/bash"]
 	rc_copy = ["!#/bin/bash"]
+
 	if os.path.exists("%s/logs"%(o_dir)) == False:
 		os.mkdir("%s/logs"%(o_dir))
 	if cluster_name != "localhost":
@@ -389,6 +390,11 @@ def build_directory_structure(exper,o_dir="",bb_loc="",recorrelate=False,clockse
 			os.mkdir("%s/%s%s"%(o_dir,cs,scan_c))
 			if cluster_name != "localhost":
 				rc_mkdir.append("mkdir %s/%s%s"%(cluster_config[cluster_name]["correlation_dir"],cs,scan_c))
+	
+	## COPY COMMANDS
+	rc_copy.append('%s %s/* %s'%(cluster_config[cluster_name]["data_transfer"]["protocol"],scp,cluster_config[cluster_name]["correlation_dir"]))
+	rc_copy.append('%s %s %s'%(cluster_config[cluster_name]["data_transfer"]["protocol"],vex_loc,cluster_config[cluster_name]["correlation_dir"]))
+	
 	c=0
 	for i in scans.keys():
 		scan_c = i.capitalize()

@@ -18,6 +18,7 @@ casa_exec="singularity exec /SOFTWARE/CASA/casa-6.5.5-modular.sif python"
 correlator="sfxc"
 parallelise_scans=True
 multi_cluster=False
+singularity_container_path="/home/Jack/DATA/correlation_containers"
 correlation_share_ratios = [0.8,0.2]
 cluster_config="./cluster_config_template.json"
 ##################################
