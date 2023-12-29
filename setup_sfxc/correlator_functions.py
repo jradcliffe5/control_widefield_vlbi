@@ -359,7 +359,7 @@ def build_master_ctrl_file(inputs,vexfile):
 
 def build_directory_structure(exper,o_dir="",bb_loc="",recorrelate=False,clocksearch=False,scans={},scp="",data_sources={},cluster_name="localhost",cluster_config={},vex_loc=""):
 	rc_mkdir = []
-	rc_copy = ["!#/bin/bash"]
+	rc_copy = ["#!/bin/bash"]
 
 	if os.path.exists("%s/logs"%(o_dir)) == False:
 		os.mkdir("%s/logs"%(o_dir))
@@ -465,7 +465,7 @@ def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},
 		rc = 0
 	if cluster_name == 'localhost':
 		remote=False
-		commands = ["!#/bin/bash"]
+		commands = ["#!/bin/bash"]
 		job_manager='bash'
 	else:
 		remote=True
