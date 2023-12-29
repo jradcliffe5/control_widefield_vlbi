@@ -408,7 +408,7 @@ def build_directory_structure(exper,o_dir="",bb_loc="",recorrelate=False,clockse
 				if cluster_config[cluster_name]["data_transfer"]['n_transfers'] < 0:
 					skip=' &'
 				elif c%(cluster_config[cluster_name]["data_transfer"]['n_transfers']) == 0:
-					skip = '; wait; '
+					skip = ' &; wait; '
 				else:
 					skip = ' &'
 				rc_copy.append("%s %s/%s %s@%s:%s/baseband%s"%(cluster_config[cluster_name]["data_transfer"]["protocol"],bb_loc,j,cluster_config[cluster_name]['username'],tn,cluster_config[cluster_name]["correlation_dir"],skip))
