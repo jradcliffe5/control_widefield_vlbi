@@ -539,6 +539,8 @@ def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},
 		else:
 			commands.append('rm chex.*')
 			write_job(step='run_sfxc_%s'%cluster_name,commands=commands,job_manager=job_manager,write='a')
+			if remote == True:
+				l2r_copy.append("%s %s/run_sfxc_%s.%s %s@%s:%s/%s &"%(cluster_config[cluster_name]["data_transfer"]["protocol"],o_dir,cluster_name, job_manager,cluster_config[cluster_name]['username'],tn,cluster_config[cluster_name]["correlation_dir"],cs))
 	else:
 		data_sources = {}
 		if inputs['delay_directory'] == "":
