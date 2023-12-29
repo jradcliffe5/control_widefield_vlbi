@@ -55,7 +55,7 @@ for i in c_names:
 									 scans=scans[i],
 									 data_sources=ss_s,
 									 scp=inputs['singularity_container_path'],
-									 vex_loc=inputs['vexfile'],
+									 vex_loc=inputs['vex_file'],
 									 cluster_name=i,
 									 cluster_config=cluster_params)
 	if i !="localhost":
