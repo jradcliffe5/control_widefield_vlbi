@@ -392,7 +392,7 @@ def build_directory_structure(exper,o_dir="",bb_loc="",recorrelate=False,clockse
 				rc_mkdir.append("mkdir %s/%s%s"%(cluster_config[cluster_name]["correlation_dir"],cs,scan_c))
 	
 	## COPY COMMANDS
-	if i !="localhost":
+	if cluster_name !="localhost":
 		rc_copy.append('%s %s/* %s'%(cluster_config[cluster_name]["data_transfer"]["protocol"],scp,cluster_config[cluster_name]["correlation_dir"]))
 		rc_copy.append('%s %s %s'%(cluster_config[cluster_name]["data_transfer"]["protocol"],vex_loc,cluster_config[cluster_name]["correlation_dir"]))
 	
