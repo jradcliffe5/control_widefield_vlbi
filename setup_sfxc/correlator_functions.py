@@ -472,7 +472,7 @@ def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},
 		r_dir = cluster_config[cluster_name]["correlation_dir"]
 		bb_loc = "%s/baseband" %r_dir 
 		commands = write_hpc_headers(cluster_name, cluster_config)
-		job_manager=cluster_config["cluster_specification"]["job_manager"]
+		job_manager=cluster_config[cluster_name]["cluster_specification"]["job_manager"]
 	l2r_copy = []
 	if inputs['parallelise_scans'] == True:
 		for i in scans.keys():
