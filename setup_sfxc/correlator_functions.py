@@ -124,29 +124,45 @@ def write_job(step,commands,job_manager,write):
 			for listitem in commands:
 				filehandle.write('%s\n' % listitem)
 
-def write_hpc_headers(step,params):
+def write_hpc_headers(cluster_name, cluster_params):
+	cn = cluster_name
+	cp = cluster_params
 	hpc_opts = {}
-	hpc_opts['job_manager'] = params['global']['job_manager']
-	hpc_opts['job_name'] = 'sfxc_%s'%step
-	hpc_opts['email_progress'] = params['global']["email_progress"] 
-	hpc_opts['hpc_account'] = params['global']['HPC_project_code']
-	hpc_opts['error'] = step
+	hpc_opts['job_manager'] = cp[cn]["cluster_specification"]["job_manager"]
+	hpc_opts['job_name'] = 'sfxc'
+	hpc_opts['email_progress'] = cp[cn]["cluster_specification"]["email_progress"] 
+	hpc_opts['hpc_account'] = cp[cn]["cluster_specification"]['HPC_project_code']
+	hpc_opts['error'] = "sfxc"
+	hpc_opts['nodetype'] = cp[cn]["cluster_specification"]['nodetype']
+	hpc_opts['walltime'] = cp[cn]["correlation_constraints"]['max_walltime']
 
 	if ((hpc_opts['job_manager'] == 'pbs')|(hpc_opts['job_manager'] == 'bash')|(hpc_opts['job_manager'] == 'slurm')):
 		pass
 	else:
 		raise Exception('Incorrect job manager, please select from pbs, slurm or bash')
 
-	for i in ['partition','walltime','nodetype']:
-		if params[step]["hpc_options"][i] == 'default':
-			hpc_opts[i] = params['global']['default_%s'%i]
+	if cp[cn]["correlation_constraints"]["max_partitions"] == []:
+		hpc_opts['partition'] = ",".join(cp[cn]["cluster_specification"]["max_partitions"])
+	else:
+		hpc_opts['partition'] = ",".join(cp[cn]["correlation_constraints"]["max_partitions"])
+
+	for i in ['nodes']:
+		if cp[cn]["correlation_constraints"]["max_%s"%i] == -1:
+			hpc_opts[i] = cp[cn]["cluster_specification"]["%s"]
 		else:
-			hpc_opts[i] = params[step]["hpc_options"][i]
-	for i in ['nodes','cpus','mpiprocs','mem']:
-		if params[step]["hpc_options"][i] == -1:
-			hpc_opts[i] = params['global']['default_%s'%i]
-		else:
-			hpc_opts[i] = params[step]["hpc_options"][i]
+			hpc_opts[i] = cp[cn]["correlation_constraints"]["max_%s"%i]
+	if cp[cn]["correlation_constraints"]["max_ncores_per_node"] == []:
+			hpc_opts['cpus'] = cp[cn]["cluster_specification"]["ncores_per_node"][0]
+			hpc_opts['mpiprocs']  = cp[cn]["cluster_specification"]["ncores_per_node"][0]
+	else:
+		hpc_opts['cpus'] = cp[cn]["correlation_constraints"]["max_ncores_per_node"]
+		hpc_opts['mpiprocs'] = cp[cn]["correlation_constraints"]["max_ncores_per_node"]
+	if cp[cn]["correlation_constraints"]["max_memory"] == []:
+		hpc_opts['mem'] = cp[cn]["cluster_specification"]["memory"][0]
+	else:
+		hpc_opts['cpus'] = cp[cn]["correlation_constraints"]["max_memory"]
+
+
 	
 
 	hpc_dict = {'slurm':{
@@ -447,7 +463,7 @@ def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},
 		remote=True
 		r_dir = cluster_config[cluster_name]["correlation_dir"]
 		bb_loc = "%s/baseband" %r_dir 
-		commands = write_hpc_headers
+		commands = write_hpc_headers(cluster_name, cluster_config)
 	l2r_copy = []
 	if inputs['parallelise_scans'] == True:
 		for i in scans.keys():
@@ -567,7 +583,7 @@ def build_hpc_command(cluster_config):
 	if (cluster_config["correlation_constraints"]["max_memory"] == ""):
 		mm = cluster_config["cluster_specification"]["memory"][0]
 	else:
-		mm = cluster_config["correlation_constraints"]["max_memory"]
+		mm = cluster_config["correlation_constraints"]["max_memory"][0]
 	if jm == 'slurm':
 		return mcpn, "srun -N %d -n %d -m %s -p %s" % (mnps,mcpn,mm,mp)
 	elif jm == 'pbs':

@@ -13,6 +13,7 @@
         "cluster_specification": 
         {
             "job_manager":"slurm",
+            "nodes":40,
             "ncore_per_node": [24,24,24,24],
             "partitions": ["Main","HighMem","GPUV100","GPU"],
             "memory":["230G","500G","230G","230G"],
