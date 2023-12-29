@@ -155,12 +155,12 @@ def write_hpc_headers(cluster_name, cluster_params):
 			hpc_opts['cpus'] = cp[cn]["cluster_specification"]["ncores_per_node"][0]
 			hpc_opts['mpiprocs']  = cp[cn]["cluster_specification"]["ncores_per_node"][0]
 	else:
-		hpc_opts['cpus'] = cp[cn]["correlation_constraints"]["max_ncores_per_node"]
-		hpc_opts['mpiprocs'] = cp[cn]["correlation_constraints"]["max_ncores_per_node"]
+		hpc_opts['cpus'] = cp[cn]["correlation_constraints"]["max_ncores_per_node"][0]
+		hpc_opts['mpiprocs'] = cp[cn]["correlation_constraints"]["max_ncores_per_node"][0]
 	if cp[cn]["correlation_constraints"]["max_memory"] == []:
 		hpc_opts['mem'] = cp[cn]["cluster_specification"]["memory"][0]
 	else:
-		hpc_opts['mem'] = cp[cn]["correlation_constraints"]["max_memory"]
+		hpc_opts['mem'] = cp[cn]["correlation_constraints"]["max_memory"][0]
 
 
 	
@@ -407,7 +407,7 @@ def build_directory_structure(exper,o_dir="",bb_loc="",recorrelate=False,clockse
 			for j in data_sources[i]:
 				if cluster_config[cluster_name]["data_transfer"]['n_transfers'] < 0:
 					skip=' &'
-				elif c%(cluster_config[cluster_name]["data_transfer"]['n_transfers']+1) == 0:
+				elif c%(cluster_config[cluster_name]["data_transfer"]['n_transfers']) == 0:
 					skip = '; wait; '
 				else:
 					skip = ' &'
@@ -466,11 +466,13 @@ def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},
 	if cluster_name == 'localhost':
 		remote=False
 		commands = ["!#/bin/bash"]
+		job_manager='bash'
 	else:
 		remote=True
 		r_dir = cluster_config[cluster_name]["correlation_dir"]
 		bb_loc = "%s/baseband" %r_dir 
 		commands = write_hpc_headers(cluster_name, cluster_config)
+		job_manager=cluster_config["cluster_specification"]["job_manager"]
 	l2r_copy = []
 	if inputs['parallelise_scans'] == True:
 		for i in scans.keys():
@@ -536,7 +538,7 @@ def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},
 			write_job(step='run_clocksearch_sfxc',commands=commands,job_manager='bash',write='w')
 		else:
 			commands.append('rm chex.*')
-			write_job(step='run_sfxc_%s'%cluster_name,commands=commands,job_manager='bash',write='a')
+			write_job(step='run_sfxc_%s'%cluster_name,commands=commands,job_manager=job_manager,write='a')
 	else:
 		data_sources = {}
 		if inputs['delay_directory'] == "":
