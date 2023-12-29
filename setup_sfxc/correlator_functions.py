@@ -393,17 +393,17 @@ def build_directory_structure(exper,o_dir="",bb_loc="",recorrelate=False,clockse
 	
 	## COPY COMMANDS
 	if cluster_name !="localhost":
-		rc_copy.append('%s %s/* %s'%(cluster_config[cluster_name]["data_transfer"]["protocol"],scp,cluster_config[cluster_name]["correlation_dir"]))
-		rc_copy.append('%s %s %s'%(cluster_config[cluster_name]["data_transfer"]["protocol"],vex_loc,cluster_config[cluster_name]["correlation_dir"]))
+		if cluster_config[cluster_name]["data_transfer"]["node"] != "":
+			tn = cluster_config[cluster_name]["data_transfer"]["node"]
+		else:
+			tn = cluster_config[cluster_name]["head_node"]
+		rc_copy.append('%s %s/* %s@%s:%s'%(cluster_config[cluster_name]["data_transfer"]["protocol"],scp,cluster_config[cluster_name]['username'],tn,cluster_config[cluster_name]["correlation_dir"]))
+		rc_copy.append('%s %s %s@%s:%s'%(cluster_config[cluster_name]["data_transfer"]["protocol"],vex_loc,cluster_config[cluster_name]['username'],tn,cluster_config[cluster_name]["correlation_dir"]))
 	
-	c=0
+	c=1
 	for i in scans.keys():
 		scan_c = i.capitalize()
 		if cluster_name != "localhost":
-			if cluster_config[cluster_name]["data_transfer"]["node"] != "":
-					tn = cluster_config[cluster_name]["data_transfer"]["node"]
-			else:
-				tn = cluster_config[cluster_name]["head_node"]
 			for j in data_sources[i]:
 				if cluster_config[cluster_name]["data_transfer"]['n_transfers'] < 0:
 					skip=' &'
