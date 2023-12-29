@@ -45,7 +45,7 @@ else:
 
 for i in c_names:
 	if i !="localhost":
-		l2r_commands = []
+		l2r_commands = ["!#/bin/bash"]
 	
 	l2r_mkdir, l2r_copy, cs = build_directory_structure(exper=exper,
 									 o_dir=o_dir,

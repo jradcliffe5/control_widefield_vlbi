@@ -358,7 +358,7 @@ def build_master_ctrl_file(inputs,vexfile):
 	return ctrl_file, ss, ss_s
 
 def build_directory_structure(exper,o_dir="",bb_loc="",recorrelate=False,clocksearch=False,scans={},scp="",data_sources={},cluster_name="localhost",cluster_config={},vex_loc=""):
-	rc_mkdir = ["!#/bin/bash"]
+	rc_mkdir = []
 	rc_copy = ["!#/bin/bash"]
 
 	if os.path.exists("%s/logs"%(o_dir)) == False:
