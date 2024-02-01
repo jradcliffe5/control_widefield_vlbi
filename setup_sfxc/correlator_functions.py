@@ -378,12 +378,12 @@ def build_directory_structure(exper,o_dir="",bb_loc="",postprocessonly=False,rec
 			if postprocessonly == False:
 				rmdirs(["%s/%s"%(o_dir,cs),"%s/post_processing"%(o_dir),"%s/calibration"%(o_dir)])
 				os.mkdir("%s/%s"%(o_dir,cs))
+				os.mkdir("%s/%s%s_delays"%(o_dir,cs,exper))
 			else:
 				rmdirs(["%s/post_processing"%(o_dir),"%s/calibration"%(o_dir)])
 			os.mkdir("%s/calibration"%(o_dir))
 			os.mkdir("%s/calibration/raw_uv"%(o_dir))
 			os.mkdir("%s/post_processing"%(o_dir))
-			os.mkdir("%s/%s%s_delays"%(o_dir,cs,exper))
 		if cluster_name != "localhost":
 			rc_mkdir.append("mkdir %s/%s"%(cluster_config[cluster_name]["correlation_dir"],cs))
 			rc_mkdir.append("mkdir %s/%s%s_delays"%(cluster_config[cluster_name]["correlation_dir"],cs,exper))
