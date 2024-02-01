@@ -84,7 +84,7 @@ def chunkert(f, l, cs, verbose=True):
 
 if usecasacore == True:
     percent = lambda x, y: (float(x)/float(y))*100.0
-
+    tb = casatools.table()
     print(sys.argv[i])
     tb.open(msdata,nomodify=False)
     total_number = 0
