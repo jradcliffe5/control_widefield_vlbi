@@ -377,9 +377,9 @@ def build_directory_structure(exper,o_dir="",bb_loc="",postprocessonly=False,rec
 		if ((recorrelate == False)&(cluster_name == "localhost")):
 			if postprocessonly == False:
 				rmdirs(["%s/%s"%(o_dir,cs),"%s/post_processing"%(o_dir),"%s/calibration"%(o_dir)])
+				os.mkdir("%s/%s"%(o_dir,cs))
 			else:
 				rmdirs(["%s/post_processing"%(o_dir),"%s/calibration"%(o_dir)])
-			os.mkdir("%s/%s"%(o_dir,cs))
 			os.mkdir("%s/calibration"%(o_dir))
 			os.mkdir("%s/calibration/raw_uv"%(o_dir))
 			os.mkdir("%s/post_processing"%(o_dir))
@@ -460,8 +460,11 @@ def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},
 	o_dir = inputs["output_dir"]
 	sfxc_exec = inputs['sfxc_exec']
 	produce_html_plot_exec = inputs['produce_html_plot_exec']
-	recorrelate = inputs['recorrelate_targets']
-	if inputs['do_clock_search'] == True:
+	if inputs['correlator_mode'] == 'recorrelatetargets':
+		recorrelate = True
+	else:
+		recorrelate = False
+	if inputs['correlator_mode'] == 'clocksearch':
 		cs = "clock_search/"
 	else:
 		cs = "correlation/"
