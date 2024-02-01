@@ -16,6 +16,7 @@ casa_exec="singularity exec /SOFTWARE/CASA/casa-6.5.5-modular.sif python"
 
 #### CORRELATOR CONFIGURATION ####
 correlator="sfxc"
+correlator_mode="" #[clocksearch|correlate|postprocess|recorrelatetargets]
 parallelise_scans=True
 multi_cluster=False
 singularity_container_path="/home/Jack/DATA/correlation_containers"
@@ -52,12 +53,10 @@ message_level=1
 
 #### MULTI PHASE CENTRE ####
 multi_phase_center="auto"
-recorrelate_targets=False
 calibrator_target="R1_D"
 sub_integr_time=13056
 fft_size_correlation=16384
 ############################
 
 #### POST-PROCESSING ####
-ms_output = ""
 flag_threshold=0.7

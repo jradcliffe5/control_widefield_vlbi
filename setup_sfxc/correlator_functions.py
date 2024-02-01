@@ -357,7 +357,7 @@ def build_master_ctrl_file(inputs,vexfile):
 		ctrl_file["number_channels"] = inputs['clock_nchannels']
 	return ctrl_file, ss, ss_s
 
-def build_directory_structure(exper,o_dir="",bb_loc="",recorrelate=False,clocksearch=False,scans={},scp="",data_sources={},cluster_name="localhost",cluster_config={},vex_loc=""):
+def build_directory_structure(exper,o_dir="",bb_loc="",postprocessonly=False,recorrelate=False,clocksearch=False,scans={},scp="",data_sources={},cluster_name="localhost",cluster_config={},vex_loc=""):
 	rc_mkdir = []
 	rc_copy = ["#!/bin/bash"]
 
@@ -375,8 +375,13 @@ def build_directory_structure(exper,o_dir="",bb_loc="",recorrelate=False,clockse
 	else:
 		cs = "correlation/"
 		if ((recorrelate == False)&(cluster_name == "localhost")):
-			rmdirs(["%s/%s"%(o_dir,cs)])
+			if postprocessonly == False:
+				rmdirs(["%s/%s"%(o_dir,cs),"%s/post_processing"%(o_dir),"%s/calibration"%(o_dir)])
+			else:
+				rmdirs(["%s/post_processing"%(o_dir),"%s/calibration"%(o_dir)])
 			os.mkdir("%s/%s"%(o_dir,cs))
+			os.mkdir("%s/calibration"%(o_dir))
+			os.mkdir("%s/calibration/raw_uv"%(o_dir))
 			os.mkdir("%s/post_processing"%(o_dir))
 			os.mkdir("%s/%s%s_delays"%(o_dir,cs,exper))
 		if cluster_name != "localhost":

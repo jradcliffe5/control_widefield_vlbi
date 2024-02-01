@@ -22,7 +22,26 @@ o_dir = inputs["output_dir"]
 vexfile = vex.Vex(inputs["vex_file"])
 sfxc_exec = inputs['sfxc_exec']
 produce_html_plot_exec = inputs['produce_html_plot_exec']
-recorrelate = inputs['recorrelate_targets']
+
+if inputs['correlator_mode'] == 'clocksearch':
+	inputs['do_clock_search'] = True
+	recorrelate=False
+	postprocessonly=False
+elif inputs['correlator_mode'] == 'correlate':
+	inputs['do_clock_search'] = False
+	recorrelate=False
+	postprocessonly=False
+elif inputs['correlator_mode'] == 'postprocess':
+	inputs['do_clock_search'] = False
+	recorrelate=False
+	postprocessonly=True
+elif inputs['correlator_mode'] == 'recorrelatetargets':
+	inputs['do_clock_search'] = False
+	recorrelate=True
+	postprocessonly=False
+else:
+	print('Correlator mode invalid. Can only be one of clocksearch|correlate|postprocess|recorrelatetargets')
+	sys.exit()
 
 ### MAKE CTRL FILE TEMPLATE FOR WHOLE CORRELATION ###
 ctrl_file, ss, ss_s = build_master_ctrl_file(inputs=inputs,
@@ -54,6 +73,7 @@ for i in c_names:
 									 recorrelate=recorrelate,
 									 clocksearch=inputs['do_clock_search'],
 									 scans=scans[i],
+									 postprocessonly=postprocessonly,
 									 data_sources=ss_s,
 									 scp=inputs['singularity_container_path'],
 									 vex_loc=inputs['vex_file'],
@@ -91,39 +111,28 @@ corr_files = list_correlation_outputs(scans=ss,
 									cs=cs,
 									vexfile=vexfile,
 									calibrator=inputs['calibrator_target'])
+
 commands = []
 print('Building script for conversion to measurement sets')
-ms_output = inputs['ms_output']
 for j,i in enumerate(list(corr_files.keys())):
 	print('Source %s .. done'%i)
-	if ms_output =="":
-		commands.append('%s %s -o %s/post_processing/%s_%d_1.ms 2>&1 | tee %s/logs/j2ms2_%s.log &'%(inputs["j2ms2_exec"]," ".join(corr_files[i]),o_dir,exper,j+1,i,o_dir))
-	else:
-		commands.append('%s %s -o %s/post_processing/%s_%d_1.ms 2>&1 | tee %s/logs/j2ms2_%s.log &'%(inputs["j2ms2_exec"]," ".join(corr_files[i]),ms_output,i,o_dir,exper,j+1,exper,j+1))
+	commands.append('%s %s -o %s/post_processing/%s_%d_1.ms 2>&1 | tee %s/logs/j2ms2_%s.log &'%(inputs["j2ms2_exec"]," ".join(corr_files[i]),o_dir,exper,j+1,i,o_dir))
 commands.reverse()
 commands[-1] = commands[-1].split(' &')[0]
-if ms_output !="":
-	for i in list(corr_files.keys()):
-			commands.append('cp -rv %s/%s.ms %s &'%(ms_output,i,o_dir))
-	commands[-1] = commands[-1].split(' &')[0]
 write_job(step='run_j2ms2',commands=commands,job_manager='bash',write='w')
+
 print('Building script for flagging of low correlator weights')
 commands = ['parallel -eta -j 40 %s sfxc_helperscripts/post_processing/flag_weights.py {} %.3f True ::: %s/post_processing/*.ms 2>&1 | tee %s/logs/flag_weights.log'%(inputs['casa_exec'],inputs['flag_threshold'],o_dir,o_dir)]
 commands.append('mv *.log logs')
 write_job(step='run_flag_data',commands=commands,job_manager='bash',write='w')
+
 print('Building script for conversion to FITS-IDI files')
 commands = []
-ms_output = inputs['ms_output']
 for j,i in enumerate(list(corr_files.keys())):
 	print('Source %s .. done'%i)
-	if ms_output =="":
-		commands.append('%s %s/post_processing/%s_%d_1.ms %s/post_processing/%s_%d_1.IDI 2>&1 | tee %s/logs/tconvert_%s.log &'%(inputs["tconvert_exec"],o_dir,exper,j+1,o_dir,exper,j+1,o_dir,i))
-	else:
-		commands.append('%s %s/post_processing/%s_%d_1.ms %s/post_processing/%s_%d_1.IDI 2>&1 | tee %s/logs/tconvert_%s.log &'%(inputs["tconvert_exec"],ms_output,exper,j+1,o_dir,exper,j+1,o_dir,i))
+	commands.append('%s %s/post_processing/%s_%d_1.ms %s/post_processing/%s_%d_1.IDI 2>&1 | tee %s/logs/tconvert_%s.log &'%(inputs["tconvert_exec"],o_dir,exper,j+1,o_dir,exper,j+1,o_dir,j+1))
 commands.reverse()
 commands[-1] = commands[-1].split(' &')[0]
-if ms_output !="":
-	for i in list(corr_files.keys()):
-			commands.append('cp -rv %s/%s.ms %s &'%(ms_output,i,o_dir))
-	commands[-1] = commands[-1].split(' &')[0]
+print('Moving phase centre with calibrators for calibration')
+commands.append('cp -rv %s/post_processing/%s_1_1.IDI* %s/calibration/raw_uv/'%(o_dir,exper,o_dir))
 write_job(step='run_tconvert',commands=commands,job_manager='bash',write='w')
