@@ -108,6 +108,7 @@ if ms_output !="":
 write_job(step='run_j2ms2',commands=commands,job_manager='bash',write='w')
 print('Building script for flagging of low correlator weights')
 commands = ['parallel -eta -j 40 %s sfxc_helperscripts/post_processing/flag_weights.py {} %.3f True ::: %s/post_processing/*.ms 2>&1 | tee %s/logs/flag_weights.log'%(inputs['casa_exec'],inputs['flag_threshold'],o_dir,o_dir)]
+commands.append(['mv *.log logs'])
 write_job(step='run_flag_data',commands=commands,job_manager='bash',write='w')
 print('Building script for conversion to FITS-IDI files')
 commands = []
