@@ -41,6 +41,7 @@ if inputs['multi_cluster'] == True:
 else:
 	c_names = ['localhost']
 	ratios=[1]
+	cluster_params = {}
 	scans = {'localhost':ss}
 
 for i in c_names:
