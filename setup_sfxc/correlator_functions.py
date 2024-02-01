@@ -377,6 +377,7 @@ def build_directory_structure(exper,o_dir="",bb_loc="",recorrelate=False,clockse
 		if ((recorrelate == False)&(cluster_name == "localhost")):
 			rmdirs(["%s/%s"%(o_dir,cs)])
 			os.mkdir("%s/%s"%(o_dir,cs))
+			os.mkdir("%s/post_processing"%(o_dir))
 			os.mkdir("%s/%s%s_delays"%(o_dir,cs,exper))
 		if cluster_name != "localhost":
 			rc_mkdir.append("mkdir %s/%s"%(cluster_config[cluster_name]["correlation_dir"],cs))

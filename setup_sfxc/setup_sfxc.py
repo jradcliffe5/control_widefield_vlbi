@@ -97,9 +97,9 @@ ms_output = inputs['ms_output']
 for j,i in enumerate(list(corr_files.keys())):
 	print('Source %s .. done'%i)
 	if ms_output =="":
-		commands.append('%s %s -o %s/%s_%d_1.ms 2>&1 | tee %s/logs/j2ms2_%s.log &'%(inputs["j2ms2_exec"]," ".join(corr_files[i]),o_dir,exper,j+1,i,o_dir))
+		commands.append('%s %s -o %s/post_processing/%s_%d_1.ms 2>&1 | tee %s/logs/j2ms2_%s.log &'%(inputs["j2ms2_exec"]," ".join(corr_files[i]),o_dir,exper,j+1,i,o_dir))
 	else:
-		commands.append('%s %s -o %s/%s_%d_1.ms 2>&1 | tee %s/logs/j2ms2_%s.log &'%(inputs["j2ms2_exec"]," ".join(corr_files[i]),ms_output,i,o_dir,exper,j+1,exper,j+1))
+		commands.append('%s %s -o %s/post_processing/%s_%d_1.ms 2>&1 | tee %s/logs/j2ms2_%s.log &'%(inputs["j2ms2_exec"]," ".join(corr_files[i]),ms_output,i,o_dir,exper,j+1,exper,j+1))
 commands[-1] = commands[-1].split(' &')[0]
 if ms_output !="":
 	for i in list(corr_files.keys()):
@@ -107,7 +107,7 @@ if ms_output !="":
 	commands[-1] = commands[-1].split(' &')[0]
 write_job(step='run_j2ms2',commands=commands,job_manager='bash',write='w')
 print('Building script for flagging of low correlator weights')
-commands = ['parallel -eta -j 40 %s sfxc_helperscripts/post_processing/flag_weights.py {} %.3f True ::: *.ms 2>&1 | tee %s/logs/flag_weights.log'%(inputs['casa_exec'],inputs['flag_threshold'],o_dir)]
+commands = ['parallel -eta -j 40 %s sfxc_helperscripts/post_processing/flag_weights.py {} %.3f True ::: %s/post_processing/*.ms 2>&1 | tee %s/logs/flag_weights.log'%(inputs['casa_exec'],inputs['flag_threshold'],o_dir,o_dir)]
 write_job(step='run_flag_data',commands=commands,job_manager='bash',write='w')
 print('Building script for conversion to FITS-IDI files')
 commands = []
@@ -115,9 +115,9 @@ ms_output = inputs['ms_output']
 for j,i in enumerate(list(corr_files.keys())):
 	print('Source %s .. done'%i)
 	if ms_output =="":
-		commands.append('%s %s/%s_%d_1.ms %s/%s_%d_1.IDI 2>&1 | tee %s/logs/tconvert_%s.log &'%(inputs["tconvert_exec"],o_dir,exper,j+1,o_dir,exper,j+1,o_dir,i))
+		commands.append('%s %s/post_processing/%s_%d_1.ms %s/post_processing/%s_%d_1.IDI 2>&1 | tee %s/logs/tconvert_%s.log &'%(inputs["tconvert_exec"],o_dir,exper,j+1,o_dir,exper,j+1,o_dir,i))
 	else:
-		commands.append('%s %s/%s_%d_1.ms %s/%s_%d_1.IDI 2>&1 | tee %s/logs/tconverr_%s.log &'%(inputs["tconvert_exec"],ms_output,exper,j+1,o_dir,exper,j+1,o_dir,i))
+		commands.append('%s %s/post_processing/%s_%d_1.ms %s/post_processing/%s_%d_1.IDI 2>&1 | tee %s/logs/tconvert_%s.log &'%(inputs["tconvert_exec"],ms_output,exper,j+1,o_dir,exper,j+1,o_dir,i))
 commands[-1] = commands[-1].split(' &')[0]
 if ms_output !="":
 	for i in list(corr_files.keys()):
