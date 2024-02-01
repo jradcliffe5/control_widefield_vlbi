@@ -45,7 +45,19 @@ import sys, ast
 import numpy as np
 #from rich import progress
 
-__version__ = '3.3.1'
+try:
+	# CASA 6
+	import casatools
+	from casatasks import *
+	casalog.showconsole(True)
+	casa6=True
+except:
+	# CASA 5
+	from casac import casac as casatools
+	from taskinit import casalog
+	casa6=False
+
+__version__ = '3.4-pretoria'
 help_msdata = 'Measurement set containing the data to be corrected.'
 help_threshold = 'Visibilities with a weight below this value will be flagged. Must be positive.'
 help_v = 'Only checks the visibilities to flag (do not flag the data).'
@@ -60,7 +72,7 @@ msdata = sys.argv[i]
 threshold = float(sys.argv[i+1])
 verbose = ast.literal_eval(sys.argv[i+2])
 
-usecasacore = False
+usecasacore = True
 
 assert threshold > 0.0
 
