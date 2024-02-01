@@ -115,9 +115,9 @@ ms_output = inputs['ms_output']
 for j,i in enumerate(list(corr_files.keys())):
 	print('Source %s .. done'%i)
 	if ms_output =="":
-		commands.append('%s %s %s/%s_%d_1.ms %s/%s_%d_1.IDI 2>&1 | tee %s/logs/tconvert_%s.log &'%(inputs["tconvert_exec"],o_dir,exper,j+1,o_dir,exper,j+1,o_dir,i))
+		commands.append('%s %s/%s_%d_1.ms %s/%s_%d_1.IDI 2>&1 | tee %s/logs/tconvert_%s.log &'%(inputs["tconvert_exec"],o_dir,exper,j+1,o_dir,exper,j+1,o_dir,i))
 	else:
-		commands.append('%s %s %s/%s_%d_1.ms %s/%s_%d_1.IDI 2>&1 | tee %s/logs/tconverr_%s.log &'%(inputs["tconvert_exec"],ms_output,exper,j+1,o_dir,exper,j+1,o_dir,i))
+		commands.append('%s %s/%s_%d_1.ms %s/%s_%d_1.IDI 2>&1 | tee %s/logs/tconverr_%s.log &'%(inputs["tconvert_exec"],ms_output,exper,j+1,o_dir,exper,j+1,o_dir,i))
 commands[-1] = commands[-1].split(' &')[0]
 if ms_output !="":
 	for i in list(corr_files.keys()):
