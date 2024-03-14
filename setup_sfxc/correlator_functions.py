@@ -291,7 +291,7 @@ def build_master_ctrl_file(inputs,vexfile):
 	bb_loc = inputs['baseband_location']
 	### READ INPUT FILE ###
 	for i in ["exper_name","cross_polarize","number_channels","normalize","slices_per_integration","setup_station","integr_time","message_level","slices_per_integration","LO_offset","multi_phase_center","sub_integr_time","fft_size_correlation"]:
-		if ctrl_file[i] !=-1:
+		if inputs[i] !=-1:
 			ctrl_file[i] = inputs[i]
 	########################
 
