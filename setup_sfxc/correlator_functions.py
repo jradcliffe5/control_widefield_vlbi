@@ -296,7 +296,7 @@ def build_master_ctrl_file(inputs,vexfile):
 	########################
 			
 	####### BUFFERS ########
-	ctrl_file["output_buffer_size"] = "auto"
+	#ctrl_file["output_buffer_size"] = "auto"
 	########################
 	
 	#### MAKE CHANNELS #####
