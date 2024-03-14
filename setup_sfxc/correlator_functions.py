@@ -294,7 +294,11 @@ def build_master_ctrl_file(inputs,vexfile):
 		if inputs[i] !=-1:
 			ctrl_file[i] = inputs[i]
 	########################
-
+			
+	####### BUFFERS ########
+	ctrl_file["output_buffer_size"] = "auto"
+	########################
+	
 	#### MAKE CHANNELS #####
 	corr_chans = []
 	for i in range(inputs['correlator_channels']):
