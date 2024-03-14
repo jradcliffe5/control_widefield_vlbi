@@ -495,13 +495,13 @@ def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},
 					srcs = ", ".join(vexfile['SCHED'][scan_c]['source'])
 				print('Making the following correlator scans: %s for sources: %s'%(scan_c,srcs))
 				if remote == True:
-					sub_ctrl["delay_directory"] = "file://%s/%s%s_delays"%(r_dir,cs,exper)
 					sub_ctrl["tsys_file"] = "file://%s/%s%s/%s.tsys"%(r_dir,cs,scan_c,exper)
 					sub_ctrl['output_file'] = "file://%s/%s%s/%s.%s.cor"%(r_dir,cs,scan_c,exper,scan_c)
 					sub_ctrl["delay_directory"] = "file://%s/%s%s_delays"%(r_dir,cs,exper)
 				else:
 					sub_ctrl["tsys_file"] = "file://%s/%s%s/%s.tsys"%(o_dir,cs,scan_c,exper)
 					sub_ctrl['output_file'] = "file://%s/%s%s/%s.%s.cor"%(o_dir,cs,scan_c,exper,scan_c)
+					sub_ctrl["delay_directory"] = "file://%s/%s%s_delays"%(o_dir,cs,exper)
 				sub_ctrl['scans']=[scan_c]
 				sub_ctrl['start']=vexfile['SCHED'][scan_c]['start']
 				if inputs['do_clock_search'] == True:
