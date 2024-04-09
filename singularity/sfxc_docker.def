@@ -18,7 +18,7 @@ RUN source /opt/intel/oneapi/compiler/latest/env/vars.sh && source /opt/intel/on
 #&& cd trunk/sfxc \
 && git clone https://github.com/aardk/sfxc-new \
 && mv sfxc-new sfxc \
-&& cd sfxc \
+&& cd sfxc/sfxc \
 && ./compile.sh \
 && ./configure CXX=mpicxx --enable-ipp\
 && make \
