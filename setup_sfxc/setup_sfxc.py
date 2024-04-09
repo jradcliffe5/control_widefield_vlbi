@@ -116,7 +116,7 @@ commands = []
 print('Building script for conversion to measurement sets')
 for j,i in enumerate(list(corr_files.keys())):
 	print('Source %s .. done'%i)
-	commands.append('%s %s -o %s/post_processing/%s_%d_1.ms 2>&1 | tee %s/logs/j2ms2_%s.log &'%(inputs["j2ms2_exec"]," ".join(corr_files[i]),o_dir,exper,j+1,i,o_dir))
+	commands.append('%s %s -o %s/post_processing/%s_%d_1.ms 2>&1 | tee %s/logs/j2ms2_%s.log &'%(inputs["j2ms2_exec"]," ".join(corr_files[i]),o_dir,exper,j+1,o_dir,i))
 commands.reverse()
 commands[-1] = commands[-1].split(' &')[0]
 write_job(step='run_j2ms2',commands=commands,job_manager='bash',write='w')
