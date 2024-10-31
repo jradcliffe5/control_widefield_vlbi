@@ -1,2 +1,2 @@
-# sfxc_helperscripts
-helper scripts for the UP astro implementation of sfxc
+# control_widefield_vlbi
+Control software for wide-field VLBI correlation, post-processing and calibration
