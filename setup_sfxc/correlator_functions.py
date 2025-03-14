@@ -539,7 +539,7 @@ def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},
 						del_tels.append(k)
 				if del_tels !=[]:
 					for index in sorted(del_tels, reverse=True):
-						del scans[index]
+						del scans[i][index]
 				sub_ctrl['data_sources'] = data_sources
 				with open("%s/%s%s/%s.%s.ctrl"%(o_dir,cs,scan_c,exper,scan_c), "w") as outfile:
 					json.dump(sub_ctrl, outfile, indent=4)
