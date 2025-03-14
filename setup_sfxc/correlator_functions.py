@@ -528,6 +528,7 @@ def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},
 				else:
 					sub_ctrl['multi_phase_center'] = ctrl_file['multi_phase_center']
 				data_sources = {}
+				del_tels = []
 				for k,j in enumerate(scans[i]):
 					try:
 						if j in data_sources:
@@ -535,7 +536,10 @@ def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},
 						else:
 							data_sources[j] = ['file://%s/%s'%(bb_loc,datasources[i][k])]
 					except:
-						del scans[i][k]
+						del_tels.append(k)
+				if del_tels !=[]:
+					for index in sorted(del_tels, reverse=True):
+						del scans[index]
 				sub_ctrl['data_sources'] = data_sources
 				with open("%s/%s%s/%s.%s.ctrl"%(o_dir,cs,scan_c,exper,scan_c), "w") as outfile:
 					json.dump(sub_ctrl, outfile, indent=4)
