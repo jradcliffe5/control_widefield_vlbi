@@ -327,9 +327,10 @@ def build_master_ctrl_file(inputs,vexfile):
 				ds.append(search[0].split('/')[-1])
 				data_s[j] = search[0].split('/')[-1]
 			else:
-				if j not in data_s.keys():
-					data_s[j]=""
-				ds.append(data_s[j]) ## Uses last datasource if data not found 
+				try:
+					ds.append(data_s[j]) ## Uses last datasource if data not found
+				except:
+					pass
 		ss_s[i] = ds
 
 
@@ -508,7 +509,7 @@ def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},
 				else:
 					sub_ctrl["tsys_file"] = "file://%s/%s%s/%s.tsys"%(o_dir,cs,scan_c,exper)
 					sub_ctrl['output_file'] = "file://%s/%s%s/%s.%s.cor"%(o_dir,cs,scan_c,exper,scan_c)
-					sub_ctrl["delay_directory"] = "file://%s/%s%s_delays"%(o_dir,cs,exper)
+					sub_ctrl['delay_directory'] = "file://%s/%s%s_delays"%(o_dir,cs,exper)
 				sub_ctrl['scans']=[scan_c]
 				sub_ctrl['start']=vexfile['SCHED'][scan_c]['start']
 				if inputs['do_clock_search'] == True:
