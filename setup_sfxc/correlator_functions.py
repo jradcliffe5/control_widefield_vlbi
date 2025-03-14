@@ -323,7 +323,10 @@ def build_master_ctrl_file(inputs,vexfile):
 				ds.append(search[0])
 				data_s[j] = search[0]
 			else:
-				ds.append(data_s[j]) ## Uses last datasource if data not found 
+				try:
+					ds.append(data_s[j]) ## Uses last datasource if data not found 
+				except:
+					pass
 		ss_s[i] = ds
 
 
