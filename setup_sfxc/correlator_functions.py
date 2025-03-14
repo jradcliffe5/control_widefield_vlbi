@@ -327,8 +327,8 @@ def build_master_ctrl_file(inputs,vexfile):
 				ds.append(search[0].split('/')[-1])
 				data_s[j] = search[0].split('/')[-1]
 			else:
-                if j not in data_s.keys():
-                     data_s[j]=""
+				if j not in data_s.keys():
+					data_s[j]=""
 				ds.append(data_s[j]) ## Uses last datasource if data not found 
 		ss_s[i] = ds
 
