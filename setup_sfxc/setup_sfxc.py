@@ -63,6 +63,9 @@ else:
 	cluster_params = {}
 	scans = {'localhost':ss}
 
+save_json('%s/logs/scans.json'%o_dir,ss)
+save_json('%s/logs/datasources.json'%o_dir,ss_s)
+
 for i in c_names:
 	if i !="localhost":
 		l2r_commands = ["#!/bin/bash"]
@@ -83,7 +86,7 @@ for i in c_names:
 		l2r_commands.append('if [ \"$1\" = \"A\" ]; then')
 		l2r_commands.extend(l2r_mkdir)
 		l2r_commands.append('fi')
-
+	
 	l2r_copy.extend(generate_correlator_environment(exper=exper,
 									vexfile=vexfile,
 									scans=scans[i],
@@ -106,8 +109,7 @@ for i in c_names:
 		write_job(step='run_l2r_%s'%i,commands=l2r_commands,job_manager='bash',write='w')
 		write_job(step='run_copy_%s'%i,commands=l2r_copy,job_manager='bash',write='w')
 
-save_json('%s/logs/scans.json'%o_dir,ss)
-save_json('%s/logs/datasources.json'%o_dir,cs)
+
 corr_files = list_correlation_outputs(scans=ss,
 									exper=exper,
 									cs=cs,
