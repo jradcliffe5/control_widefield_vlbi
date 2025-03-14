@@ -319,8 +319,8 @@ def build_master_ctrl_file(inputs,vexfile):
 		for j in ss[i]:
 			search = glob.glob('%s/%s_%s*_%s.*'%(bb_loc,ctrl_file['exper_name'].lower(),j.lower(),i.lower()))
 			if len(search)==1:
-				ds.append(search[0])
-				data_s[j] = search[0]
+				ds.append(search[0].split('/')[-1])
+				data_s[j] = search[0].split('/')[-1]
 			else:
 				if j not in data_s.keys():
 					data_s[j] = ""
