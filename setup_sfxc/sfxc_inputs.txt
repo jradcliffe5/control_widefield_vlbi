@@ -25,7 +25,6 @@ cluster_config="./cluster_config_template.json"
 ##################################
 
 #### CLOCK SEARCH ####
-do_clock_search=False
 fringe_finder_scans=[]
 begin_delay = 40
 time_on = 4
