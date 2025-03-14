@@ -529,10 +529,13 @@ def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},
 					sub_ctrl['multi_phase_center'] = ctrl_file['multi_phase_center']
 				data_sources = {}
 				for k,j in enumerate(scans[i]):
-					if j in data_sources:
-						data_sources[j] = data_sources[j]+['file://%s/%s'%(bb_loc,datasources[i][k])]
-					else:
-						data_sources[j] = ['file://%s/%s'%(bb_loc,datasources[i][k])]
+					try:
+						if j in data_sources:
+							data_sources[j] = data_sources[j]+['file://%s/%s'%(bb_loc,datasources[i][k])]
+						else:
+							data_sources[j] = ['file://%s/%s'%(bb_loc,datasources[i][k])]
+					except:
+						del scans[i][k]
 				sub_ctrl['data_sources'] = data_sources
 				with open("%s/%s%s/%s.%s.ctrl"%(o_dir,cs,scan_c,exper,scan_c), "w") as outfile:
 					json.dump(sub_ctrl, outfile, indent=4)
@@ -542,7 +545,7 @@ def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},
 					commands.append('%s %s %s/%s%s/%s.%s.ctrl %s 2>&1 | tee %s/logs/sfxc_run_%s.log'%(hpc_c,sfxc_exec,r_dir,cs,scan_c,exper,scan_c,inputs["vex_file"],r_dir,scan_c))
 
 					if cluster_config[cluster_name]["data_transfer"]["node"] != "":
-							tn = cluster_config[cluster_name]["data_transfer"]["node"]
+						tn = cluster_config[cluster_name]["data_transfer"]["node"]
 					else:
 						tn = cluster_config[cluster_name]["head_node"]
 					l2r_copy.append("%s %s/%s%s %s@%s:%s/%s &"%(cluster_config[cluster_name]["data_transfer"]["protocol"],o_dir,cs,scan_c,cluster_config[cluster_name]['username'],tn,cluster_config[cluster_name]["correlation_dir"],cs))
