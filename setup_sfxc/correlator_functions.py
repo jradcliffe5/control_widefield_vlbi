@@ -322,10 +322,13 @@ def build_master_ctrl_file(inputs,vexfile):
 	for i in ss.keys(): 
 		ds = []
 		for j in ss[i]:
-			if os.path.exists('%s/%s_%s_%s.m5a'%(bb_loc,ctrl_file['exper_name'].lower(),j.lower(),i.lower())):
-				ds.append('%s_%s_%s.m5a'%(ctrl_file['exper_name'].lower(),j.lower(),i.lower()))
-				data_s[j] = '%s_%s_%s.m5a'%(ctrl_file['exper_name'].lower(),j.lower(),i.lower())
+			search = glob.glob('%s/%s_%s*_%s.*'%(bb_loc,ctrl_file['exper_name'].lower(),j.lower(),i.lower()))
+			if len(search)==1:
+				ds.append(search[0].split('/')[-1])
+				data_s[j] = search[0].split('/')[-1]
 			else:
+                if j not in data_s.keys():
+                     data_s[j]=""
 				ds.append(data_s[j]) ## Uses last datasource if data not found 
 		ss_s[i] = ds
 
