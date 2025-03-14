@@ -42,6 +42,7 @@ else:
 	c_names = ['localhost']
 	ratios=[1]
 	scans = {'localhost':ss}
+	cluster_params={}
 
 for i in c_names:
 	if i !="localhost":
