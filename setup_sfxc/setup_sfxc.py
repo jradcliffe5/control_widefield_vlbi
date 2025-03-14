@@ -86,8 +86,8 @@ for i in c_names:
 		write_job(step='run_l2r_%s'%i,commands=l2r_commands,job_manager='bash',write='w')
 		write_job(step='run_copy_%s'%i,commands=l2r_copy,job_manager='bash',write='w')
 
-save_json('%s/logs/scans.json',ss)
-save_json('%s/logs/data_sources.json',cs)
+save_json('%s/logs/scans.json'%o_dir,ss)
+save_json('%s/logs/data_sources.json'%o_dir,cs)
 corr_files = list_correlation_outputs(scans=ss,
 									exper=exper,
 									cs=cs,
