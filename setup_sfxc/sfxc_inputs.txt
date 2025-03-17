@@ -28,9 +28,9 @@ cluster_config="./cluster_config_template.json"
 
 #### CLOCK SEARCH ####
 fringe_finder_scans=[]
-begin_delay = 40
+begin_delay = 100
 time_on = 4
-clock_nchannels = 512
+clock_nchannels = 256
 #######################
 
 #### OUTPUTS ####

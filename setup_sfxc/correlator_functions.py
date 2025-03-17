@@ -488,7 +488,7 @@ def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},
 		remote=False
 		commands = ["#!/bin/bash"]
 		if inputs["calc_dir"] != "":
-			commands.append("export SINGULARITY_CALC_DIR=\"%s\""%inputs["calc_dir"])
+			commands.append("export SINGULARITYENV_CALC_DIR=\"%s\""%inputs["calc_dir"])
 		job_manager='bash'
 	else:
 		remote=True
