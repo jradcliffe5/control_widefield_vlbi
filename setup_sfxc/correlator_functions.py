@@ -294,10 +294,6 @@ def build_master_ctrl_file(inputs,vexfile):
 		if inputs[i] !=-1:
 			ctrl_file[i] = inputs[i]
 	########################
-			
-	####### BUFFERS ########
-	#ctrl_file["output_buffer_size"] = "auto"
-	########################
 	
 	#### MAKE CHANNELS #####
 	corr_chans = []
@@ -317,12 +313,18 @@ def build_master_ctrl_file(inputs,vexfile):
 	################################
 
 	#### GET BASEBAND DATA PER SCAN #####
+	## Get any custom baseband to station mapping from the input file ##
+	bb_mapping = dict(inputs["station_to_bb_mapping"])
 	ss_s = {}
 	data_s = {}
 	for i in ss.keys(): 
 		ds = []
 		for j in ss[i]:
-			search = glob.glob('%s/%s_%s*_%s.*'%(bb_loc,ctrl_file['exper_name'].lower(),j.lower(),i.lower()))
+			if j in bb_mapping.keys():
+				st = bb_mapping[j]
+			else:
+				st = j.lower()
+			search = glob.glob('%s/%s_%s*_%s.*'%(bb_loc,ctrl_file['exper_name'].lower(),st,i.lower()))
 			if len(search)==1:
 				ds.append(search[0].split('/')[-1])
 				data_s[j] = search[0].split('/')[-1]

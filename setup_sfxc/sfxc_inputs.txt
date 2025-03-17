@@ -17,6 +17,7 @@ casa_exec="singularity exec /SOFTWARE/CASA/casa-6.5.5-modular.sif python"
 #### CORRELATOR CONFIGURATION ####
 correlator="sfxc"
 correlator_mode="correlate" #[clocksearch|correlate|postprocess|recorrelatetargets]
+station_to_bb_mapping={}
 parallelise_scans=True
 multi_cluster=False
 singularity_container_path="/home/Jack/DATA/correlation_containers"
