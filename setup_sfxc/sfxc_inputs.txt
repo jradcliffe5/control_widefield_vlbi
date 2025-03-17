@@ -7,6 +7,7 @@ exper_name="EK051E"
 baseband_location="/home/Jack/DATA/ek051e/baseband"
 output_dir="/DATA/radcliffe/ek051e"
 vex_file="ek051e.vix"
+calc_dir="/DATA/radcliffe/correlation_software/geo"
 sfxc_exec="singularity exec sfxc_ipp.sif mpirun -n 32 sfxc"
 produce_html_plot_exec="singularity exec sfxc_ipp.sif produce_html_plotpage"
 j2ms2_exec="singularity run --app j2ms2 /SOFTWARE/jive-casa/jive-casa.img" 
@@ -47,6 +48,7 @@ integr_time=2.0
 slices_per_integration=8
 correlator_channels=16
 setup_station="Ef"
+window_function="HANN"
 LO_offset={}
 message_level=1
 ###########################

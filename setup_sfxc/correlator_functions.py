@@ -290,7 +290,7 @@ def build_master_ctrl_file(inputs,vexfile):
 	ctrl_file = {}
 	bb_loc = inputs['baseband_location']
 	### READ INPUT FILE ###
-	for i in ["exper_name","cross_polarize","number_channels","normalize","slices_per_integration","setup_station","integr_time","message_level","slices_per_integration","LO_offset","multi_phase_center","sub_integr_time","fft_size_correlation"]:
+	for i in ["exper_name","cross_polarize","number_channels","normalize","slices_per_integration","setup_station","integr_time","message_level","slices_per_integration","LO_offset","multi_phase_center","sub_integr_time","fft_size_correlation","window_function"]:
 		if inputs[i] !=-1:
 			ctrl_file[i] = inputs[i]
 	########################
@@ -332,7 +332,7 @@ def build_master_ctrl_file(inputs,vexfile):
 				try:
 					ds.append(data_s[j]) ## Uses last datasource if data not found
 				except:
-					pass
+					ds.append("")
 		ss_s[i] = ds
 
 
@@ -383,6 +383,7 @@ def build_directory_structure(exper,o_dir="",bb_loc="",postprocessonly=False,rec
 		cs = "clock_search/"
 		rmdirs(["%s/%s"%(o_dir,cs)])
 		os.mkdir("%s/%s"%(o_dir,cs))
+		os.mkdir("%s/%s%s_delays"%(o_dir,cs,exper))
 	else:
 		cs = "correlation/"
 		if ((recorrelate == False)&(cluster_name == "localhost")):
@@ -486,6 +487,8 @@ def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},
 	if cluster_name == 'localhost':
 		remote=False
 		commands = ["#!/bin/bash"]
+		if inputs["calc_dir"] != "":
+			commands.append("export SINGULARITY_CALC_DIR=\"%s\""%inputs["calc_dir"])
 		job_manager='bash'
 	else:
 		remote=True
@@ -521,7 +524,6 @@ def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},
 				else:
 					scan_length = int(vexfile['SCHED'][scan_c]["station"][0][2].split(" sec")[0])
 					sub_ctrl['stop']=find_stop(vexfile['SCHED'][scan_c]['start'],scan_length)
-				sub_ctrl['stations'] = scans[i]
 				if ctrl_file['multi_phase_center'] == 'auto':
 					if len(vexfile['SCHED'][scan_c]['source']) > 1:
 						sub_ctrl['multi_phase_center'] = True
@@ -530,18 +532,19 @@ def generate_correlator_environment(exper="",vexfile={},scans={},datasources={},
 				else:
 					sub_ctrl['multi_phase_center'] = ctrl_file['multi_phase_center']
 				data_sources = {}
-				del_tels = []
 				for k,j in enumerate(scans[i]):
-					try:
-						if j in data_sources:
-							data_sources[j] = data_sources[j]+['file://%s/%s'%(bb_loc,datasources[i][k])]
-						else:
-							data_sources[j] = ['file://%s/%s'%(bb_loc,datasources[i][k])]
-					except:
-						del_tels.append(k)
-				if del_tels !=[]:
-					for index in sorted(del_tels, reverse=True):
-						del scans[i][index]
+					if j in data_sources:
+						data_sources[j] = data_sources[j]+['file://%s/%s'%(bb_loc,datasources[i][k])]
+					else:
+						data_sources[j] = ['file://%s/%s'%(bb_loc,datasources[i][k])]
+				del_idx = []
+				for q in data_sources.keys():
+					if (data_sources[q] == ['file://%s/'%(bb_loc)]):
+						del_idx.append(q)
+				for key in del_idx:
+					data_sources.pop(key, None)
+					scans[i].remove(key)
+				sub_ctrl['stations'] = scans[i]
 				sub_ctrl['data_sources'] = data_sources
 				with open("%s/%s%s/%s.%s.ctrl"%(o_dir,cs,scan_c,exper,scan_c), "w") as outfile:
 					json.dump(sub_ctrl, outfile, indent=4)
