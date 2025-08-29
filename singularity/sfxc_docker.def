@@ -17,11 +17,10 @@ RUN chmod 777 l_BaseKit_p_2023.2.0.49397_offline.sh
 RUN ./l_BaseKit_p_2023.2.0.49397_offline.sh -a -s --eula accept
 RUN rm l_BaseKit_p_2023.2.0.49397_offline.sh
 RUN source /opt/intel/oneapi/compiler/latest/env/vars.sh && source /opt/intel/oneapi/setvars.sh \
-#&& svn checkout https://svn.astron.nl/sfxc/trunk \
-#&& cd trunk/sfxc \
 && git clone https://code.jive.eu/JIVE/sfxc.git \
-#&& mv sfxc-new sfxc \
-&& cd sfxc/sfxc \
+&& cd sfxc \
+&& git checkout stable-5.1 \
+&& cd sfxc \
 && ./compile.sh \
 && ./configure CXX=mpicxx --enable-ipp\
 && make \

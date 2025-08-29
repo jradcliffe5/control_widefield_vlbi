@@ -1,5 +1,5 @@
 #!/bin/bash
-docker image remove -f "$(docker images -a -q)"
+docker rmi -f $(docker images -aq)
 docker rm -v -f "$(docker ps -qa)"
 rm sfxc_ipp.simg
 docker build -t sfxc_ipp:latest -f sfxc_docker.def .
