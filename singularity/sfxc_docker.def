@@ -26,6 +26,6 @@ RUN source /opt/intel/oneapi/compiler/latest/env/vars.sh && source /opt/intel/on
 && make \
 && make install \
 && make clean \
-&& cd cd vex \
+&& cd vex \
 && python setup.py build \
 && python setup.py install \
