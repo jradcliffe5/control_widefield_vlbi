@@ -8,7 +8,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN echo "deb http://archive.debian.org/debian/ stretch contrib main non-free" | tee -a /etc/apt/sources.list
 RUN apt-get update
 RUN apt-get update && apt-get install -y wget gnupg procps
-RUN apt -y install git make openmpi-bin openmpi-common libopenmpi-dev libgtk2.0-dev openmpi-doc subversion autoconf libtool bison flex libgsl0-dev libfftw3-dev libopenmpi-dev gfortran g++-multilib gfortran-multilib g++ fftw-dev python2.7
+RUN apt -y install git make openmpi-bin openmpi-common libopenmpi-dev libgtk2.0-dev openmpi-doc subversion autoconf libtool bison flex libgsl0-dev libfftw3-dev libopenmpi-dev gfortran g++-multilib gfortran-multilib g++ fftw-dev python2.7 python3-ply python3-qwt5
 RUN dpkg-reconfigure -f noninteractive tzdata
 RUN apt-get clean all
 RUN ln -s /usr/bin/python2.7 /usr/bin/python
