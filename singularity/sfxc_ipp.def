@@ -1,0 +1,108 @@
+Bootstrap: docker
+From: debian:bullseye
+
+%environment
+    export ACL_BOARD_VENDOR_PATH="/opt/Intel/OpenCLFPGA/oneAPI/Boards"
+    export ADVISOR_2023_DIR="/opt/intel/oneapi/advisor/2023.2.0"
+    export APM="/opt/intel/oneapi/advisor/2023.2.0/perfmodels"
+    export CCL_CONFIGURATION="cpu_gpu_dpcpp"
+    export CCL_ROOT="/opt/intel/oneapi/ccl/2021.10.0"
+    export CLASSPATH="/opt/intel/oneapi/mpi/2021.10.0//lib/mpi.jar:/opt/intel/oneapi/dal/2023.2.0/lib/onedal.jar"
+    export CMAKE_PREFIX_PATH="/opt/intel/oneapi/tbb/2021.10.0/env/..:/opt/intel/oneapi/ipp/2021.9.0/lib/cmake/ipp:/opt/intel/oneapi/dnnl/2023.2.0/cpu_dpcpp_gpu_dpcpp/../lib/cmake:/opt/intel/oneapi/dal/2023.2.0:/opt/intel/oneapi/compiler/2023.2.0/linux/IntelDPCPP:/opt/intel/oneapi/ccl/2021.10.0/lib/cmake/oneCCL"
+    export CMPLR_ROOT="/opt/intel/oneapi/compiler/2023.2.0"
+    export CPATH="/opt/intel/oneapi/tbb/2021.10.0/env/../include:/opt/intel/oneapi/mpi/2021.10.0//include:/opt/intel/oneapi/mkl/2023.2.0/include:/opt/intel/oneapi/ippcp/2021.8.0/include:/opt/intel/oneapi/ipp/2021.9.0/include:/opt/intel/oneapi/dpl/2022.2.0/linux/include:/opt/intel/oneapi/dpcpp-ct/2023.2.0/include:/opt/intel/oneapi/dnnl/2023.2.0/cpu_dpcpp_gpu_dpcpp/include:/opt/intel/oneapi/dev-utilities/2021.10.0/include:/opt/intel/oneapi/dal/2023.2.0/include:/opt/intel/oneapi/compiler/2023.2.0/linux/lib/oclfpga/include:/opt/intel/oneapi/ccl/2021.10.0/include/cpu_gpu_dpcpp"
+    export DAALROOT="/opt/intel/oneapi/dal/2023.2.0"
+    export DALROOT="/opt/intel/oneapi/dal/2023.2.0"
+    export DAL_MAJOR_BINARY="1"
+    export DAL_MINOR_BINARY="1"
+    export DEBIAN_FRONTEND="noninteractive"
+    export DIAGUTIL_PATH="/opt/intel/oneapi/vtune/2023.2.0/sys_check/vtune_sys_check.py:/opt/intel/oneapi/dpcpp-ct/2023.2.0/sys_check/sys_check.sh:/opt/intel/oneapi/debugger/2023.2.0/sys_check/debugger_sys_check.py:/opt/intel/oneapi/compiler/2023.2.0/sys_check/sys_check.sh:/opt/intel/oneapi/advisor/2023.2.0/sys_check/advisor_sys_check.py:"
+    export DNNLROOT="/opt/intel/oneapi/dnnl/2023.2.0/cpu_dpcpp_gpu_dpcpp"
+    export DPCT_BUNDLE_ROOT="/opt/intel/oneapi/dpcpp-ct/2023.2.0"
+    export DPL_ROOT="/opt/intel/oneapi/dpl/2022.2.0"
+    export FI_PROVIDER_PATH="/opt/intel/oneapi/mpi/2021.10.0//libfabric/lib/prov:/usr/lib64/libfabric"
+    export FPGA_VARS_ARGS="intel64"
+    export FPGA_VARS_DIR="/opt/intel/oneapi/compiler/2023.2.0/linux/lib/oclfpga"
+    export GDB_INFO="/opt/intel/oneapi/debugger/2023.2.0/documentation/info/"
+    export INFOPATH="/opt/intel/oneapi/debugger/2023.2.0/gdb/intel64/lib"
+    export INTELFPGAOCLSDKROOT="/opt/intel/oneapi/compiler/2023.2.0/linux/lib/oclfpga"
+    export INTEL_PYTHONHOME="/opt/intel/oneapi/debugger/2023.2.0/dep"
+    export IPPCP_TARGET_ARCH="intel64"
+    export IPPCRYPTOROOT="/opt/intel/oneapi/ippcp/2021.8.0"
+    export IPPROOT="/opt/intel/oneapi/ipp/2021.9.0"
+    export IPP_TARGET_ARCH="intel64"
+    export I_MPI_ROOT="/opt/intel/oneapi/mpi/2021.10.0"
+    export LD_LIBRARY_PATH="/opt/intel/oneapi/tbb/2021.10.0/env/../lib/intel64/gcc4.8:/opt/intel/oneapi/mpi/2021.10.0//libfabric/lib:/opt/intel/oneapi/mpi/2021.10.0//lib/release:/opt/intel/oneapi/mpi/2021.10.0//lib:/opt/intel/oneapi/mkl/2023.2.0/lib/intel64:/opt/intel/oneapi/ippcp/2021.8.0/lib/intel64:/opt/intel/oneapi/ipp/2021.9.0/lib/intel64:/opt/intel/oneapi/dnnl/2023.2.0/cpu_dpcpp_gpu_dpcpp/lib:/opt/intel/oneapi/debugger/2023.2.0/gdb/intel64/lib:/opt/intel/oneapi/debugger/2023.2.0/libipt/intel64/lib:/opt/intel/oneapi/debugger/2023.2.0/dep/lib:/opt/intel/oneapi/dal/2023.2.0/lib/intel64:/opt/intel/oneapi/compiler/2023.2.0/linux/lib:/opt/intel/oneapi/compiler/2023.2.0/linux/lib/x64:/opt/intel/oneapi/compiler/2023.2.0/linux/lib/oclfpga/host/linux64/lib:/opt/intel/oneapi/compiler/2023.2.0/linux/compiler/lib/intel64_lin:/opt/intel/oneapi/ccl/2021.10.0/lib/cpu_gpu_dpcpp:/.singularity.d/libs"
+    export LIBRARY_PATH="/opt/intel/oneapi/tbb/2021.10.0/env/../lib/intel64/gcc4.8:/opt/intel/oneapi/mpi/2021.10.0//libfabric/lib:/opt/intel/oneapi/mpi/2021.10.0//lib/release:/opt/intel/oneapi/mpi/2021.10.0//lib:/opt/intel/oneapi/mkl/2023.2.0/lib/intel64:/opt/intel/oneapi/ippcp/2021.8.0/lib/intel64:/opt/intel/oneapi/ipp/2021.9.0/lib/intel64:/opt/intel/oneapi/dnnl/2023.2.0/cpu_dpcpp_gpu_dpcpp/lib:/opt/intel/oneapi/dal/2023.2.0/lib/intel64:/opt/intel/oneapi/compiler/2023.2.0/linux/compiler/lib/intel64_lin:/opt/intel/oneapi/compiler/2023.2.0/linux/lib:/opt/intel/oneapi/ccl/2021.10.0/lib/cpu_gpu_dpcpp"
+    export MANPATH="/opt/intel/oneapi/mpi/2021.10.0/man:/opt/intel/oneapi/debugger/2023.2.0/documentation/man:/opt/intel/oneapi/compiler/2023.2.0/documentation/en/man/common:/usr/local/man:/usr/share/man:"
+    export MKLROOT="/opt/intel/oneapi/mkl/2023.2.0"
+    export NLSPATH="/opt/intel/oneapi/mkl/2023.2.0/lib/intel64/locale/%l_%t/%N:/opt/intel/oneapi/compiler/2023.2.0/linux/compiler/lib/intel64_lin/locale/%l_%t/%N"
+    export OCL_ICD_FILENAMES="libintelocl_emu.so:libalteracl.so:/opt/intel/oneapi/compiler/2023.2.0/linux/lib/x64/libintelocl.so"
+    export ONEAPI_ROOT="/opt/intel/oneapi"
+    export PATH="/opt/intel/oneapi/vtune/2023.2.0/bin64:/opt/intel/oneapi/mpi/2021.10.0//libfabric/bin:/opt/intel/oneapi/mpi/2021.10.0//bin:/opt/intel/oneapi/mkl/2023.2.0/bin/intel64:/opt/intel/oneapi/dpcpp-ct/2023.2.0/bin:/opt/intel/oneapi/dev-utilities/2021.10.0/bin:/opt/intel/oneapi/debugger/2023.2.0/gdb/intel64/bin:/opt/intel/oneapi/compiler/2023.2.0/linux/lib/oclfpga/bin:/opt/intel/oneapi/compiler/2023.2.0/linux/bin/intel64:/opt/intel/oneapi/compiler/2023.2.0/linux/bin:/opt/intel/oneapi/advisor/2023.2.0/bin64:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+    export PKG_CONFIG_PATH="/opt/intel/oneapi/vtune/2023.2.0/include/pkgconfig/lib64:/opt/intel/oneapi/tbb/2021.10.0/env/../lib/pkgconfig:/opt/intel/oneapi/mpi/2021.10.0/lib/pkgconfig:/opt/intel/oneapi/mkl/2023.2.0/lib/pkgconfig:/opt/intel/oneapi/ippcp/2021.8.0/lib/pkgconfig:/opt/intel/oneapi/dpl/2022.2.0/lib/pkgconfig:/opt/intel/oneapi/dnnl/2023.2.0/cpu_dpcpp_gpu_dpcpp/../lib/pkgconfig:/opt/intel/oneapi/dal/2023.2.0/lib/pkgconfig:/opt/intel/oneapi/compiler/2023.2.0/lib/pkgconfig:/opt/intel/oneapi/ccl/2021.10.0/lib/pkgconfig:/opt/intel/oneapi/advisor/2023.2.0/include/pkgconfig/lib64:"
+    export PYTHONPATH="/opt/intel/oneapi/advisor/2023.2.0/pythonapi"
+    export CALC_DIR="sfxc/lib/calc10/data"
+
+%post
+    export DEBIAN_FRONTEND=noninteractive
+    export TMPDIR=/build-tmp
+    mkdir -p /build-tmp
+
+    # gpgv cannot function in this build environment; disable signature checking globally
+    mkdir -p /etc/apt/apt.conf.d
+    echo 'Acquire::AllowInsecureRepositories "true";' >  /etc/apt/apt.conf.d/99insecure
+    echo 'APT::Get::AllowUnauthenticated "true";'     >> /etc/apt/apt.conf.d/99insecure
+
+    rm -rf /var/lib/apt/lists/*
+    apt-get update
+    apt-get install -y wget procps git make openmpi-bin openmpi-common libopenmpi-dev \
+        libgtk2.0-dev openmpi-doc subversion autoconf libtool bison flex libgsl0-dev \
+        libfftw3-dev gfortran g++-multilib gfortran-multilib g++ fftw-dev python3 \
+        python3-pip python3-ply python3-pyqt5 python2.7 gnuplot build-essential \
+        libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev curl llvm \
+        libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev \
+        python-ply
+    dpkg-reconfigure -f noninteractive tzdata
+    apt-get clean all
+
+    wget https://registrationcenter-download.intel.com/akdlm/IRC_NAS/992857b9-624c-45de-9701-f6445d845359/l_BaseKit_p_2023.2.0.49397_offline.sh
+    chmod 777 l_BaseKit_p_2023.2.0.49397_offline.sh
+    ./l_BaseKit_p_2023.2.0.49397_offline.sh -a -s --eula accept
+    rm l_BaseKit_p_2023.2.0.49397_offline.sh
+
+    # Install pip and numpy for Python 2.7 (numpy dropped Py2 after 1.16.x)
+    curl https://bootstrap.pypa.io/pip/2.7/get-pip.py -o /tmp/get-pip.py
+    python2.7 /tmp/get-pip.py
+    pip2 install 'numpy==1.16.6'
+    rm /tmp/get-pip.py
+
+    # Wrap f77 so older Fortran code (calc10) compiles with newer gfortran
+    F77_REAL=$(which f77 || which gfortran)
+    printf '#!/bin/bash\nexec %s -fallow-argument-mismatch "$@"\n' "$F77_REAL" > /usr/local/bin/f77
+    chmod +x /usr/local/bin/f77
+
+    bash -c "
+        set -e
+        source /opt/intel/oneapi/compiler/latest/env/vars.sh
+        source /opt/intel/oneapi/setvars.sh
+        #git clone https://github.com/aardk/sfxc.git
+        git clone https://code.jive.eu/JIVE/sfxc.git
+        cd sfxc
+        git checkout stable-5.1
+        cd sfxc
+        ./compile.sh
+        ./configure CXX=mpicxx --enable-ipp
+        make
+        make install
+        cd ../vex
+        python2.7 setup.py build
+        python2.7 setup.py install
+    "
+
+%runscript
+    exec "$@"
+
+%apprun sfxc
+    . /opt/intel/oneapi/setvars.sh
+    exec /usr/local/bin/sfxc "$@"
